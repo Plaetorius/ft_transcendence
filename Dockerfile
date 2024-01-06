@@ -16,7 +16,7 @@ COPY Pipfile Pipfile.lock* /code/
 RUN pipenv install --deploy --system
 
 # Copy project
-COPY src/ /code/
+COPY src/ /code/src/
 
 # Copy start script
 COPY start_django.sh /code/
