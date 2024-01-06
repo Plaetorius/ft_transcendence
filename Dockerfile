@@ -6,16 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Pipenv; done in Docker to encapsulate dependencies for better portability
-RUN pip install pipenv django psycopg2-binary
-
-
+RUN pip install pipenv 
+# django psycopg2-binary
 
 WORKDIR /code
 
 # Install dependencies
-# COPY Pipfile /code/
-# RUN pipenv install 
-# --deploy --ignore-pipfile --system
+COPY Pipfile Pipfile.lock* /code/
+RUN pipenv install --deploy --system
 
 # Generate Pipfile.lock
 # RUN pipenv lock
