@@ -15,8 +15,11 @@ WORKDIR /code
 COPY Pipfile Pipfile.lock* /code/
 RUN pipenv install --deploy --system
 
-# Generate Pipfile.lock
-# RUN pipenv lock
-
 # Copy project
 COPY src/ /code/
+
+# Copy start script
+COPY start_django.sh /code/
+
+# Give execution permissio to the script
+RUN chmod +x /code/start_django.sh
