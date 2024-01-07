@@ -1,18 +1,9 @@
-# Check if Pipfile exists
-check_pipfile:
-	@test -f Pipfile || (echo "Pipfile not found, please ensure Pipfile exists" && exit 1)
-
-# Install or upgrade pip and pipenv
-pip_dependencies: check_pipfile
-	pip install --upgrade pip pipenv
-
-# Lock the Pipfile
-lock_pipfile: pip_dependencies
-	pipenv lock
-
 # Build services
 build:
 	docker-compose build
+
+build-no-cache:
+	docker-compose build --no-cache
 
 # Start services in the foreground
 up:

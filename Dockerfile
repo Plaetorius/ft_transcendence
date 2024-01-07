@@ -12,14 +12,14 @@ RUN pip install pipenv
 WORKDIR /code
 
 # Install dependencies
-COPY Pipfile Pipfile.lock* /code/
+COPY services/django/dependencies/Pipfile services/django/dependencies/Pipfile.lock* /code/
 RUN pipenv install --deploy --system
 
 # Copy project
 COPY src/ /code/src/
 
 # Copy start script
-COPY start_django.sh /code/
+COPY services/django/scripts/start_django.sh /code/
 
-# Give execution permissio to the script
+# Give execution permission to the script
 RUN chmod +x /code/start_django.sh
