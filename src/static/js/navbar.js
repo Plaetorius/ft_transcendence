@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function() {
 
 // Toggles navbar on hamburger menu click
 document.getElementById('hamburgerMenu').addEventListener('click', function() {
@@ -25,3 +26,4 @@ window.addEventListener("scroll", () => {
 }, false);
 
 console.log('hey');
+});

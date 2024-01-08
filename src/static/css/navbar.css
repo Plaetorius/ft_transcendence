@@ -6,11 +6,11 @@
 }
 
 .navbar {
-	width: 25vw; /* TODO make responsive */
+	width: 20vw;
 	height: 100vh;
 	position: fixed;
 	top: 10vh;
-	left: -26vw;
+	left: -21vw;
 	background-color: white;
 	overflow-x: hidden;
 	transition: 0.3s;
@@ -33,7 +33,7 @@ nav .navbar-section {
 }
 
 nav .navbar-title {
-	font-family: 'Oswald Regular';
+	font-family: 'Oswald Regular', Calibri, sans-serif;
 	font-size: 4vh;
 	margin: 0px 0px;
 	text-transform: uppercase;
@@ -62,10 +62,18 @@ nav .navbar-title {
 	height: 4vh;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
 	.navbar {
 		width: 250px;
 		left: -260px;
 		padding-left: 10px;
 	}
 }
+
+/* @media (min-width:601px) and (max-width: 1000px) {
+	.navbar {
+		width: 250vw;
+		left: -31vw;
+		padding-left: 1vw;
+	}
+} */
