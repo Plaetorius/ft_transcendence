@@ -11,9 +11,12 @@
 <body>
     {% include 'navbar.html' %}
     {% include 'header.html' %}
-
-    {% block content %}
-    {% endblock content %}
+    <main>
+        {% block content %}
+        <h1> This is a default H1 </h1>
+        <p>This is a default paragraph</p>
+        {% endblock content %}
+    </main>
     <script src="{% static 'js/navbar.js' %}"></script>
 </body>
 </html>

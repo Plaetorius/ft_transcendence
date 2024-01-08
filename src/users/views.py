@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import User
 
-def user_profile_view(request):
-    return render(request, "users/profile.html") # Django automatically looks inside the app's template folder   
+def user_profile_view(request, username):
+    user = User.objects.get(username=username)
+    return render(request, 'users/profile.html', {'user': user})

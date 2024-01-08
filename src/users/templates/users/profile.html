@@ -1,1 +1,15 @@
-<h1> Profile </h1>
+{% extends 'base.html' %}
+
+{% block title %} My Profile {% endblock %}
+
+{% block content %}
+    <h1>{{ user.nickname }}</h1>
+    {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" style="width: 20vh;" alt="Profile Picture">
+    {% else %}
+        <p>No profile picture</p>
+    {% endif %}
+    <p><strong>Nickname:</strong> {{ user.nickname }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Bio:</strong> {{ user.bio }}</p>
+{% endblock content %}
