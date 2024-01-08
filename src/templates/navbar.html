@@ -1,0 +1,37 @@
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% endblock extra_css %}
+
+<nav class="navbar" id="navbar">
+    <section class="navbar-section">
+        <div class="navbar-title">
+            Games
+        </div>
+        <div class="navbar-games">
+            <a href="pong.html"><img src="{% static 'icons/pong.png' %}" class="navbar-icon"><div>Pong</div></a>
+            <a href="minesweeper.html"><img src="{% static 'icons/minesweeper.png' %}" class="navbar-icon"><div>Minesweeper</div></a>
+            <a href="tournaments.html"><img src="{% static 'icons/trophy.png' %}" class="navbar-icon"><div>Tournaments</div></a>
+        </div>
+    </section>
+    <section class="navbar-section">
+        <div class="navbar-title">
+            Social
+        </div>
+        <div class="navbar-social">
+            <a href="myprofile.html"><img src="{% static 'icons/default-profile-picture.png' %}" class="navbar-icon"><div>Profile</div></a>
+            <a href="myfriends.html"><img src="{% static 'icons/friends.png' %}" class="navbar-icon"><div>Friends</div></a>
+            <a href="mychats.html"><img src="{% static 'icons/chats.png' %}" class="navbar-icon"><div>Chats</div></a>
+            <a href="leaderboard.html"><img src="{% static 'icons/leaderboard.png' %}" class="navbar-icon"><div>Leaderboard</div></a>
+        </div>
+    </section>
+    <section class="navbar-section">
+        <div class="navbar-title">
+            Settings
+        </div>
+        <div class="navbar-settings">
+            <a href="mysettings.html"><img src="{% static '/icons/settings.png' %}" class="navbar-icon"><div>Settings</div></a>
+        </div>
+    </section>
+</nav>

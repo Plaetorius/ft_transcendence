@@ -1,0 +1,13 @@
+* {
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+body {
+	background-color: lightblue;
+	margin-bottom: 1000px;
+}
+
+main {
+	margin-top: 14vh;
+}

@@ -1,0 +1,19 @@
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% endblock extra_css %}
+
+<header class="header">
+    <section class="left-section">
+        <img src="{% static '/svgs/hamburger-menu.svg' %}" class="header-hamburger-menu" id="hamburgerMenu">
+        <img src="{% static '/icons/pong-logo.png' %}" class="header-logo">
+    </section>
+    <section class="middle-section">
+        <a href="pong.html"><img src="{% static '/icons/pong.png' %}" class="header-game"></a>
+        <a href="minesweeper.html"><img src="{% static '/icons/minesweeper.png' %}" class="header-game"></a>
+    </section>
+    <section class="right-section">
+        <a href="profiles/tgernez.html"><img src="{% static '/icons/default-profile-picture.png' %}" class="header-profile-picture"></a>
+    </section>
+</header>
