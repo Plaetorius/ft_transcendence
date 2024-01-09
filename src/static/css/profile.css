@@ -1,0 +1,84 @@
+@font-face {
+	font-family: 'Oswald Regular';
+	src: url('../fonts/Oswald-Regular.ttf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body main {
+    margin-top: 10vh;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+section .profile-card {
+    display: flex;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+.profile {
+    margin: 0px;
+    width: 100%;
+    background-color: darkblue;
+}
+
+section .profile-picture-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 26vw;
+    height: 26vw;
+    overflow: hidden;
+}
+
+section .profile-picture {
+    /* max-width: 100%; */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 50%;
+    border: solid 1px black;
+}
+
+section .profile-info {
+    margin-left: 2vw;
+    width: 70vw;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.profile-info-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-info-title {
+    margin-bottom: 0.5vh;
+    font-family: 'Oswald Regular';
+}
+
+.profile-info-number {
+
+}
+
+section .profile-username {
+    text-align: center;
+    font-family: 'Oswald Regular';
+    text-transform: uppercase;
+}

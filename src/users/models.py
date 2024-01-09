@@ -6,7 +6,6 @@ from django.conf import settings
 # User class, implementing AbstractUser for greater flex
 class User(AbstractUser):
     bio = models.TextField(max_length=500, blank=True)
-    nickname = models.CharField(max_length=100, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
 # Match history storage

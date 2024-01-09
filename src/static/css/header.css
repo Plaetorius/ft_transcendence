@@ -68,16 +68,8 @@ body header .right-section img {
 		height: 10vh;
 	}
 
-	body header .left-section {
-		margin-left: 3vw;
-	}
-
-	/* body header .left-section .header-hamburger-menu {
-		height: 3vh;
-	}
-	 */
 	body header .left-section .header-logo {
-		margin-left: 28vw;
+		margin-left: 24vw;
 		height: 4vh;
 	}
 
