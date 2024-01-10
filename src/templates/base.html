@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} Base Title {% endblock title%}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/general.css' %}"> -->
+    <!-- <link rel="stylesheet" href="{% static 'css/navbar.css' %}"> -->
+    <!-- <link rel="stylesheet" href="{% static 'css/header.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     {% block extra_css %}{% endblock extra_css %}
 </head>
 <body>
-    {% include 'navbar.html' %}
-    {% include 'header.html' %}
+    <!-- {% include 'navbar.html' %} -->
+    <!-- {% include 'header.html' %} -->
     <main>
         {% block content %}
         <h1> This is a default H1 </h1>
@@ -20,5 +21,6 @@
         {% endblock content %}
     </main>
     <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
