@@ -23,7 +23,7 @@ section {
 }
 
 .profile-card {
-    margin-top: -20vh;
+    margin-top: -30vw;
     display: flex;
     padding: 2vh 2vw;
     background-color: darkblue;
@@ -96,8 +96,7 @@ section {
 }
 
 .profile-stats {
-    margin-top: 20
-    vh;
+    margin-top: 30vw;
     position: sticky;
     top: 0; 
     background-color: aquamarine;
