@@ -7,5 +7,13 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<button type="button" class="btn btn-planet">Planet 1</button>
+<section id="planets-view">
+    <button type="button" id="planet-pong" class="btn-planet"><img src="{% static 'icons/pong.png' %}"></button>
+    <button type="button" id="planet-minesweeper" class="btn btn-planet"><img src="{% static 'icons/minesweeper.png' %}"></button>
+    <button type="button" id="planet-tournaments" class="btn btn-planet"><img src="{% static 'icons/trophy.png' %}"></button>
+    <button type="button" id="planet-friends" class="btn btn-planet"><img src="{% static 'icons/friends.png' %}"></button>
+    <button type="button" id="planet-chats" class="btn btn-planet"><img src="{% static 'icons/chats.png' %}" ></button>
+    <button type="button" id="planet-leaderboard" class="btn btn-planet"><img src="{% static 'icons/leaderboard.png' %}"></button>
+    <button type="button" id="planet-settings" class="btn btn-planet"><img src="{% static '/icons/settings.png' %}"></button>
+</section>
 {% endblock content %}

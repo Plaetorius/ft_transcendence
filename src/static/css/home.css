@@ -1,0 +1,83 @@
+body {
+    background-color: rgb(5, 5, 51);
+}
+
+.btn-planet img {
+    width: 60%;
+}
+
+@keyframes wave-animation {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(150%, -50%);
+    }
+}
+  
+section .btn-planet {
+    position: fixed;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
+#planet-pong {
+    top: 10%;
+    left: 10%;
+    background-color: blue;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-minesweeper {
+    top: 15%;
+    left: 65%;
+    background-color: lightblue;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-tournaments {
+    top: 30%;
+    left: 25%;
+    background-color: red;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-friends {
+    top: 45%;
+    left: 50%;
+    background-color: lightblue;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-chats {
+    top: 55%;
+    left: 35%;
+    background-color: lightblue;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-leaderboard {
+    top: 75%;
+    left: 35%;
+    background-color: lightblue;
+    width: 90px;
+    height: 90px;
+}
+
+#planet-settings {
+    top: 85%;
+    left: 65%;
+    background-color: lightblue;
+    width: 90px;
+    height: 90px;
+}

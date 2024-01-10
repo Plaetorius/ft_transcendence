@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-{% load static %}
+<!-- {% load static %} -->
 
-{% block extra_css %} <link rel="stylesheet" href="{% static 'css/profile.css' %}"> {% endblock extra_css %}
+<!-- {% block extra_css %} <link rel="stylesheet" href="{% static 'css/profile.css' %}"> {% endblock extra_css %} -->
 
 {% block title %} My Profile {% endblock %}
 
 {% block content %}
 <section class="profile">
-    <div class="profile-card">
+
+    <section class="profile-card">
         {% if user.profile_picture %}
             <div class="profile-picture-container">
                 <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
@@ -32,6 +33,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+    <section class="profile-stats">
+        <p>Hey</p>
+        <p>Second paragraph</p>
+    </section>
 </section>
 {% endblock content %}
