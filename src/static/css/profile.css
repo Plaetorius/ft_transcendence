@@ -23,7 +23,7 @@ section {
 }
 
 .profile-card {
-    margin-top: -30vw;
+    margin-top: -32.5vw;
     display: flex;
     padding: 2vh 2vw;
     background-color: darkblue;
@@ -99,7 +99,115 @@ section {
     margin-top: 30vw;
     position: sticky;
     top: 0; 
-    background-color: aquamarine;
+    background-color: white;
     z-index: 2;
     min-height: 100vh;
+	border-top-left-radius: 22px;
+	border-top-right-radius: 22px;
+	padding-top: 3vh;
+
+}
+
+h5 {
+	font-size: xx-large;
+	padding: 2vh 0;
+	color: rgb(64, 64, 64);
+}
+
+#recent-games h5 {
+	text-transform: uppercase;
+}
+
+#recent-trophies h5 {
+	text-transform: uppercase;
+}
+
+#stats h5 {
+	text-transform: uppercase;
+}
+
+#charts h5 {
+	text-transform: uppercase;
+}
+
+.bg-red {
+	/* background-color: red; */
+}
+
+.bg-blue {
+	/* background-color: blue; */
+}
+
+.bg-green {
+	/* background-color: green; */
+
+}
+
+.history-row {
+	box-shadow: inset 0px 0px 2px black;
+	width: 100%;
+	padding: 0.5vh 0vw;
+}
+
+.history-row:hover {
+	box-shadow: inset 0px 0px 0px black;
+}
+
+.win-row {
+	background-color: rgb(102, 191, 220);
+}
+
+.win-row:hover {
+	background-color: rgb(55, 173, 213);
+}
+
+.lose-row {
+	background-color: rgb(202, 67, 67);
+}
+
+.lose-row:hover {
+	background-color: rgb(214, 51, 51);
+}
+
+#history {
+	border: solid;
+}
+
+.history-profile-picture {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	border: 2px solid;
+	object-fit: cover;
+    object-position: center;
+	overflow: hidden;
+}
+
+.score {
+	font-size: xx-large;
+}
+
+.history-game-result {
+	font-size: x-large;
+	margin-bottom: -25px;
+	text-transform: capitalize;
+}
+
+.history-game-time {
+	/* font-size:  */
+	margin-top: -25px;
+	margin-bottom: 5px;
+}
+
+.history-gamemode {
+	margin-top: -10px;
+	font-size: small;
+	text-transform: uppercase;
+}
+
+.trophy-row {
+	box-shadow: inset 0px 0px 2px black;
+	width: 100%;
+	padding: 0.5vh 0vw;
+	background-color: grey;
 }
