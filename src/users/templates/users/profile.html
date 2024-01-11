@@ -38,35 +38,29 @@
     <section class="profile-stats container text-center">
 		<div class="row">
 
-			<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center p-0" id="recent-games">
+			<div class="col-12 col-md-6 d-flex flex-column align-items-center p-0" id="recent-games">
 				<h5>Recent Games</h5>
 				<div class="w-75 d-flex flex-column justify-content-center align-items-center" id="history">
+					{% include 'users/history-game.html' %}
 					<!-- Add include tag for users/history-game.html -->
 					<!-- For loop for the 5 last games -->
 				</div>
 			</div>
 			
-			<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center" id="recent-trophies">
+			<div class="col-12 col-md-6 d-flex flex-column align-items-center" id="recent-trophies">
 				<h5>Recent Trophies</h5>
-				<!-- <div class="w-75 d-flex flex-column justify-content-center align-items-center" id="trophies">
-					<div class="trophy-row container no-gutter">
-						<div class="col w-25 bg-blue">
-							I am on 25%
-						</div>
-						<div class="col w-75 bg-red">
-							I am on 75%
-						</div>
-					</div>
-				</div> -->
-				<!-- For loop for the 5 last trophies -->
+				<div class="w-75 d-flex flex-column justify-content-center align-items-center" id="trophies">
+					{% include 'users/achievement.html' %}
+					<!-- For loop for the 5 last trophies -->
+				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center" id="stats">
+			<div class="col-12 col-md-6 d-flex flex-column align-items-center" id="stats">
 				<h5>Stats</h5>
 				<!-- Show the stats -->
 			</div>
-			<div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center" id="charts">
+			<div class="col-12 col-md-6 d-flex flex-column align-items-center" id="charts">
 				<h5>Charts</h5>
 			</div>
 		</div>

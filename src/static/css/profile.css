@@ -112,6 +112,7 @@ h5 {
 	font-size: xx-large;
 	padding: 2vh 0;
 	color: rgb(64, 64, 64);
+	margin-bottom: 0;
 }
 
 #recent-games h5 {
@@ -131,15 +132,15 @@ h5 {
 }
 
 .bg-red {
-	/* background-color: red; */
+	background-color: red;
 }
 
 .bg-blue {
-	/* background-color: blue; */
+	background-color: blue;
 }
 
 .bg-green {
-	/* background-color: green; */
+	background-color: green;
 
 }
 
@@ -209,5 +210,36 @@ h5 {
 	box-shadow: inset 0px 0px 2px black;
 	width: 100%;
 	padding: 0.5vh 0vw;
-	background-color: grey;
+	background-color: rgb(192, 192, 192);
+}
+
+.trophy-row img {
+	max-width: 100%;
+	width: 70px;
+	height: 70px;
+}
+
+.trophy-date {
+	margin-top: -8px;
+	font-size: smaller;
+}
+
+.achievement-title {
+	font-size: larger;
+	font-weight: bolder;
+	text-transform: uppercase;
+}
+
+.achievement-desc {
+	font-size: x-small;
+}
+
+.achievement-reward {
+	font-size: smaller;
+	color: grey;
+}
+
+#trophies p {
+	padding: 0;
+	margin: 0;
 }
