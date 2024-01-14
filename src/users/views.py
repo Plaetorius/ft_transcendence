@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
 from .models import User
 from .forms import UserRegistrationForm
-
 
 def user_profile_view(request, username):
     user = User.objects.get(username=username)
@@ -14,15 +12,13 @@ def register_view(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            # return redirect('login')
+            return redirect('login')
     else:
         form = UserRegistrationForm()
     return render(request, "users/register.html", {'form': form})
 
-# @login_required
-def settings_view(request):
-    if not request.user.is_authenticated:
-        return redirect('register')    
+@login_required
+def settings_view(request):   
     user = request.user
     return render(request, 'users/settings.html', {'user': user})
 

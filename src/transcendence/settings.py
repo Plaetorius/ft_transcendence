@@ -133,3 +133,5 @@ AUTH_USER_MODEL = "users.User" # Retrieved by get_user_model()
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+LOGIN_URL = '/users/login'
+# DO NOT MODIFY THE LOGIN_URL_REDIRECT, it is good like it is
