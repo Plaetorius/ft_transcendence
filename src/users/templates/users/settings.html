@@ -1,6 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h5>{{ user.username }}</h5>
+<section>
+    <h5>{{ user.username }}</h5>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</section>
 
+{% if messages %}
+    {% for message in messages %}
+        <!-- TODO Display a Bootstrap card -->
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 {% endblock content %}

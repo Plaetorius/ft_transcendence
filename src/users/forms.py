@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -32,4 +33,7 @@ class UserRegistrationForm(UserCreationForm):
             user.save()
         return user
 
-# def UserSettingsForm()
+class UserSettingsForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'bio', 'profile_picture' ,'email')
