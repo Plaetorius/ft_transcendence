@@ -4,12 +4,22 @@
 <ul>    
 {% for friendship in friendships %}
     <li>{{ friendship }}</li>
+{% empty %}
+<p>No friends</p>
 {% endfor %}
 </ul>
 <h5>{{ user.username }}'s requests:</h5>
 <ul>
 {% for request in friend_requests %}
-    <li>{{ request }} <button action="{% url 'delete_friend_request' request.id %}">X</button></li>
+    <li>
+        <form action="{% url 'delete_friend_request' request.id %}" method="POST">
+            {% csrf_token %}
+            {{ request }}{{ request.id }}
+            <button type="submit">X</button>
+        </form>
+    </li>
+{% empty %}
+<p>No friend requests</p>
 {% endfor %}
 </ul>
 <form method="POST" action="{% url 'send_friend_request' user.id %}"> <!-- TODO check in function if user of the request is related to the friend_request -->

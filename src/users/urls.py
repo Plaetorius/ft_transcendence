@@ -19,5 +19,5 @@ urlpatterns = [
     path('all/', all_view, name='all'),
     path('friendships/', friendships_view, name='friendships'),
     path('user/<int:user_id>/send_friend_request/', send_friend_request_view, name='send_friend_request'),
-    path('friend_request/<int:request_id>/delete_friend_request', delete_friend_request, name='delete_friend_request')
+    path('delete_friend_request/<int:request_id>', delete_friend_request, name='delete_friend_request')
 ]

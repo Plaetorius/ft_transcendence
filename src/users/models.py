@@ -18,7 +18,7 @@ class MatchHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     game_type = models.CharField(max_length=100)
     score = models.IntegerField()
-    # TODO Change to the real Game`` class
+    # TODO Change to the real Game class
     date_played = models.DateTimeField(auto_now_add=True)
 
 # Private Message Class
@@ -49,7 +49,7 @@ class FriendRequest(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_received", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     # class Meta:
-    #     unique_together = ('from_user', 'to_user')
+        # unique_together = ('from_user', 'to_user')
     # TODO uncomment    
 
     def __str__(self):

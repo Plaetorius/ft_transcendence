@@ -1,5 +1,5 @@
 # users/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import User, Friendship, FriendRequest
@@ -46,7 +46,8 @@ def all_view(request):
 def friendships_view(request):
     user = request.user
     friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
-    return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships})
+    friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
+    return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
 
 @login_required
 def add_friendship_view(request, user_id): 
@@ -75,14 +76,20 @@ def send_friend_request_view(request, user_id):
 
 @login_required
 def delete_friend_request(request, request_id):
-    user = request.user
-    friend_request = FriendRequest.objects.get(id=request_id)
-    friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
-    friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
-    if not friend_request:
-        messages.failure("This request doesn't exist")
-        return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})     
-    if user != friend_request.to_user and user != friend_request.from_user:
-        messages.failure("Can't delete that friendship request")
-        return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})
-    
+    friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+    friend_request.delete()
+    messages.success(request, "Friend request deleted.")    
+    return redirect('friendships')
+    # user = request.user
+    # friend_request = FriendRequest.objects.get(id=request_id)
+    # friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
+    # friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
+    # if not friend_request:
+    #     messages.failure(request, "This request doesn't exist")
+    #     return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})     
+    # if user != friend_request.to_user and user != friend_request.from_user:
+    #     messages.failure(request, "Can't delete that friendship request")
+    #     return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})
+    # friend_request.delete()
+    # messages.success(request, "Friend request successfully removed")
+    # return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
