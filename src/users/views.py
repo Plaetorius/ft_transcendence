@@ -36,3 +36,7 @@ def settings_view(request):
 def login_view(request):
     return render(request, 'users/login.html')
     
+@login_required
+def all_view(request):
+    users = User.objects.all
+    return render(request, 'users/all.html', {'users': users})
