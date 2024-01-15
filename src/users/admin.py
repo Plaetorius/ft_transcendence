@@ -1,9 +1,10 @@
+# users/admin.py
 from django.contrib import admin
-from .models import User, MatchHistory, ChatMessage, Friendship, Achievement, FriendRequest
+from .models import User, MatchHistory, PrivateMessage, Friendship, Achievement, FriendRequest
 
 admin.site.register(User)
 admin.site.register(MatchHistory)
-admin.site.register(ChatMessage)
+admin.site.register(PrivateMessage)
 admin.site.register(Friendship)
 admin.site.register(Achievement)
 admin.site.register(FriendRequest)

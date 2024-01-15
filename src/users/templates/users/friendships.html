@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<h5>{{ user }}'s friendships:</h5>
+<h5>{{ user.username }}'s friendships:</h5>
 <ul>    
 {% for friendship in friendships %}
     <li>{{ friendship }}</li>
 {% endfor %}
 </ul>
-<form method="POST" action="{% url 'add_friendship' user.id %}">
+<h5>{{ user.username }}'s requests:</h5>
+<ul>
+{% for request in friend_requests %}
+    <li>{{ request }} <button action="{% url 'delete_friend_request' request.id %}">X</button></li>
+{% endfor %}
+</ul>
+<form method="POST" action="{% url 'send_friend_request' user.id %}"> <!-- TODO check in function if user of the request is related to the friend_request -->
     {% csrf_token %}
     <input type="text" name="friend_username" placeholder="Enter friend username">
     <button type="submit">Add friend</button>
