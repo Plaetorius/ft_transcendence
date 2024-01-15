@@ -9,6 +9,9 @@ class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default="profile_pictures/default.jpg")
     email = models.EmailField(unique=True, blank=False, null=False)
 
+    def __str__(self):
+        return f"{self.username}"
+
 # Match history Class
 class MatchHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -23,6 +26,9 @@ class ChatMessage(models.Model):
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.sender} -> {self.receiver}: {self.image}"
+
 # Friendship Class
 class Friendship(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friendships', on_delete=models.CASCADE)
@@ -30,6 +36,10 @@ class Friendship(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         unique_together = ('user', 'friend')
+    
+    def __str__(self):
+        return f"{self.user} -> {self.friend}"
+
 
 # Friend Request Class
 class FriendRequest(models.Model):
@@ -39,6 +49,9 @@ class FriendRequest(models.Model):
     class Meta:
         unique_together = ('from_user', 'to_user')
 
+    def __str__(self):
+        return f"{self.from_user} -> {self.to_user}"
+
 
 # Blocked User Class
 class BlockedUser(models.Model):
@@ -47,6 +60,9 @@ class BlockedUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         unique_together = ('blocker', 'blocked')
+    
+    def __str__(self):
+        return f"{self.blocker} -> {self.blocked}"
 
 # Achievement Class
 class Achievement(models.Model):

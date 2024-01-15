@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h5>{{ user }}'s friendships:</h5>
+<ul>    
+{% for friendship in friendships %}
+    <li>{{ friendship }}</li>
+{% endfor %}
+</ul>
+<form method="POST" action="{% url 'add_friendship' user.id %}">
+    {% csrf_token %}
+    <input type="text" name="friend_username" placeholder="Enter friend username">
+    <button type="submit">Add friend</button>
+</form>
+{% endblock %}
