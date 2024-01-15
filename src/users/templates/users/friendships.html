@@ -22,6 +22,15 @@
 <p>No friend requests</p>
 {% endfor %}
 </ul>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 <form method="POST" action="{% url 'send_friend_request' user.id %}"> <!-- TODO check in function if user of the request is related to the friend_request -->
     {% csrf_token %}
     <input type="text" name="friend_username" placeholder="Enter friend username">

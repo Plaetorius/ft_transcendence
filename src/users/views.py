@@ -62,15 +62,33 @@ def add_friendship_view(request, user_id):
 
 @login_required
 def send_friend_request_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
     if request.method == "POST":
-        friend_username = request.POST.get('friend_username')
-        user = User.objects.get(id=user_id)
-        friend = User.objects.get(username=friend_username)
-        if friend:
+        friend_username =   request.POST.get('friend_username')
+        if friend_username == user.username:
+            messages.error(request, "You cannot have yourself as a friend. Touch some grass!")
+            return redirect('friendships')
+        try:
+            friend = User.objects.get(username=friend_username)
+            if Friendship.objects.filter(user=user, friend=friend).exists() or \
+               Friendship.objects.filter(user=friend, friend=user).exists():
+                messages.error(request, "You are already friends.")
+                return redirect('friendships')
+            if FriendRequest.objects.filter(from_user=user, to_user=friend).exists() or \
+               FriendRequest.objects.filter(from_user=friend, to_user=user):
+                messages.error(request, "You already have a friend request pending")
+                return redirect('friendships')
+            
+            # Optional: Check if the user is blocked
+            # if BlockedUser.objects.filter(blocker=friend, blocked=user).exists():
+            #     messages.error(request, "This user has blocked you.")
+            #     return redirect('some_view')
+
             FriendRequest.objects.create(from_user=user, to_user=friend)
-            messages.success(request, 'Your request has been successfully sent!')
-            # TODO Check if to_user has blocked from_user
-    friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
+            messages.success(request, 'You have successfully sent a friend request')
+        except User.DoesNotExist:
+            messages.error(request, "The user doesn't exist")
+    friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(user=friend)
     friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
     return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
 

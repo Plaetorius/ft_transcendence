@@ -48,9 +48,8 @@ class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_sent", on_delete=models.CASCADE)
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_received", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    # class Meta:
-        # unique_together = ('from_user', 'to_user')
-    # TODO uncomment    
+    class Meta:
+        unique_together = ('from_user', 'to_user')
 
     def __str__(self):
         return f"FriendshipRequest: {self.from_user} -> {self.to_user}"
