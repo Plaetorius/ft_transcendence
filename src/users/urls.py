@@ -12,6 +12,7 @@ from .views import (
     friend_request_accept,
     friend_request_refuse,
     friendship_remove,
+
 )
 
 urlpatterns = [
@@ -25,4 +26,6 @@ urlpatterns = [
     path('friend_request_accept/<int:request_id>/', friend_request_accept, name='friend_request_accept'),
     path('friend_request_refuse/<int:request_id>/', friend_request_refuse, name='friend_request_refuse'),
     path('friendship_remove/<int:friendship_id>/', friendship_remove, name='friendship_remove'),
+    # path('block/<int:user_id>', block_user, name='block_user'),
+    # path('unblock/<int:user_id>', unblock_user, name='unblock_user'),
 ]
