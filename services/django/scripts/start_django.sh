@@ -10,4 +10,4 @@ echo "Starting server..."
 python src/manage.py runserver 0.0.0.0:8000
 
 sleep 1
-echo "from django.contrib.auth.models import User; User.objects.create_superuser('tgernez', 'tgernez@student.42.fr', 'tgernez')" | python manage.py shell
+python src/manage.py createsuperuser --username=tgernez --email=tgernez@student.42.fr --profile-picture=profile_pictures/tgernez.jpg
