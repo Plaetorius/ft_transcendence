@@ -11,6 +11,7 @@ from .views import (
     send_friend_request,
     friend_request_accept,
     friend_request_refuse,
+    friendship_remove,
 )
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
     path('all/', all_view, name='all'),
     path('friendships/', friendships_view, name='friendships'),
     path('send_friend_request/', send_friend_request, name='send_friend_request'),
-    path('friend_request_action/<int:request_id>/accept/', friend_request_accept, name='friend_request_accept'),
-    path('friend_request_action/<int:request_id>/refuse/', friend_request_refuse, name='friend_request_refuse'),
+    path('friend_request_accept/<int:request_id>/', friend_request_accept, name='friend_request_accept'),
+    path('friend_request_refuse/<int:request_id>/', friend_request_refuse, name='friend_request_refuse'),
+    path('friendship_remove/<int:friendship_id>/', friendship_remove, name='friendship_remove'),
 ]

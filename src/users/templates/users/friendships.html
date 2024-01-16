@@ -3,8 +3,14 @@
 <h5>{{ user.username }}'s friendships:</h5>
 <ul>    
 {% for friendship in friendships %}
+<!-- TODO disctinction between A to B and B to A friendships -->
     <li>
         <p>{{ friendship }} {{ friendship.id }}</p>
+        <a href="{% url 'user_profile' friendship.user %}">Profile</a>
+        <form action="{% url 'friendship_remove' friendship.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Remove</button>
+        </form>
     </li>
 {% empty %}
 <p>No friends</p>
@@ -26,7 +32,7 @@
         </form>
     </li>
 {% empty %}
-<p>No received friend requests</p>
+<p>No received friend requests.</p>
 {% endfor %}
 </ul>
 
@@ -41,7 +47,7 @@
         </form>
     </li>
 {% empty %}
-<p>No emitted friend requests</p>
+<p>No pending friend requests.</p>
 {% endfor %}
 </ul>
 

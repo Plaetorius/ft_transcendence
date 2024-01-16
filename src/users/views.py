@@ -49,7 +49,7 @@ def friendships_view(request):
     emitted_friend_requests = FriendRequest.objects.filter(from_user=user)
     received_friend_requests = FriendRequest.objects.filter(to_user=user)
     context = {'user': user, 'friendships': friendships, 'emitted_friend_requests': emitted_friend_requests, 'received_friend_requests': received_friend_requests}
-    return render(request, 'users/friendships.html', friendships_view_context(request))
+    return render(request, 'users/friendships.html', context)
 
 @login_required
 def send_friend_request(request):
@@ -83,11 +83,17 @@ def send_friend_request(request):
 
 
 @login_required
-def remove_friend(request, request_id):
+def friendship_remove(request, friendship_id):
     """
     Remove a friend
     """
-    # friendship = 
+    friendship = get_object_or_404(Friendship, id=friendship_id)
+    if not (request.user == friendship.user or request.user == friendship.friend):
+        messages.error(request, "Not friend with that person") # TODO remove
+        return redirect('friendships')
+    friendship.delete()
+    messages.success(request, "Friend removed!")
+    return redirect('friendships')
 
 @login_required
 def friend_request_accept(request, request_id):
@@ -109,7 +115,6 @@ def friend_request_accept(request, request_id):
 def friend_request_refuse(request, request_id):
     """
     Sent friend request cancellation and received friend request denyal
-
     """
     friend_request = None
     try:

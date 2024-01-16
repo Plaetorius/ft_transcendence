@@ -32,6 +32,7 @@ class PrivateMessage(models.Model):
         return f"Private Message: {self.sender} -> {self.receiver}: {self.image}"
 
 # Friendship Class
+# TODO reformat to user1 and user2?
 class Friendship(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friendships', on_delete=models.CASCADE)
     friend = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friends', on_delete=models.CASCADE)
