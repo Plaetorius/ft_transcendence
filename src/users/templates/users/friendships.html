@@ -3,35 +3,57 @@
 <h5>{{ user.username }}'s friendships:</h5>
 <ul>    
 {% for friendship in friendships %}
-    <li>{{ friendship }}</li>
+    <li>
+        <p>{{ friendship }} {{ friendship.id }}</p>
+    </li>
 {% empty %}
 <p>No friends</p>
 {% endfor %}
 </ul>
-<h5>{{ user.username }}'s requests:</h5>
+
+<h5>{{ user.username }}'s received friend requests:</h5>
 <ul>
-{% for request in friend_requests %}
+{% for request in received_friend_requests %}
     <li>
-        <form action="{% url 'delete_friend_request' request.id %}" method="POST">
+        <p>{{ request }} {{ request.id }}</p>
+        <form action="{% url 'friend_request_accept' request.id %}" method="POST">
             {% csrf_token %}
-            {{ request }}{{ request.id }}
-            <button type="submit">X</button>
+            <button type="submit">Accept</button>
+        </form>
+        <form action="{% url 'friend_request_refuse' request.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Refuse</button>
         </form>
     </li>
 {% empty %}
-<p>No friend requests</p>
+<p>No received friend requests</p>
+{% endfor %}
+</ul>
+
+<h5>{{ user.username }}'s emitted friend requests:</h5>
+<ul>
+{% for request in emitted_friend_requests %}
+    <li>
+        <form action="{% url 'friend_request_refuse' request.id %}" method="POST">
+            {% csrf_token %}
+            <p>{{ request }} {{ request.id }}</p>
+            <button type="submit">Cancel</button>
+        </form>
+    </li>
+{% empty %}
+<p>No emitted friend requests</p>
 {% endfor %}
 </ul>
 
 {% if messages %}
-    {% for message in messages %}
+    {% for message in messages %} 
         <div class="alert alert-{{ message.tags }}">
             {{ message }}
         </div>
     {% endfor %}
 {% endif %}
 
-<form method="POST" action="{% url 'send_friend_request' user.id %}"> <!-- TODO check in function if user of the request is related to the friend_request -->
+<form method="POST" action="{% url 'send_friend_request' %}"> <!-- TODO check in function if user of the request is related to the friend_request -->
     {% csrf_token %}
     <input type="text" name="friend_username" placeholder="Enter friend username">
     <button type="submit">Add friend</button>

@@ -8,8 +8,9 @@ from .views import (
     login_view,
     all_view,
     friendships_view,
-    send_friend_request_view,
-    delete_friend_request,
+    send_friend_request,
+    friend_request_accept,
+    friend_request_refuse,
 )
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
     path('all/', all_view, name='all'),
     path('friendships/', friendships_view, name='friendships'),
-    path('user/<int:user_id>/send_friend_request/', send_friend_request_view, name='send_friend_request'),
-    path('delete_friend_request/<int:request_id>', delete_friend_request, name='delete_friend_request') # TODO maybe add consistency between send and delete
+    path('send_friend_request/', send_friend_request, name='send_friend_request'),
+    path('friend_request_action/<int:request_id>/accept/', friend_request_accept, name='friend_request_accept'),
+    path('friend_request_action/<int:request_id>/refuse/', friend_request_refuse, name='friend_request_refuse'),
 ]

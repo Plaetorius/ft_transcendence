@@ -6,7 +6,8 @@ from .models import User, Friendship, FriendRequest
 from .forms import UserRegistrationForm, UserSettingsForm
 
 def user_profile_view(request, username):
-    user = User.objects.get(username=username)
+    # TODO can be upgraded to have better support if a user isn't found
+    user = get_object_or_404(User, username=username)
     return render(request, 'users/profile.html', {'user': user})
 
 def register_view(request):
@@ -28,7 +29,6 @@ def settings_view(request):
             form.save()
             messages.success(request, 'Your profile has been updated!')
             return redirect('settings')
-            # return render(request, 'users/settings.html', {'user': user, 'form': form})
     else:
         form = UserSettingsForm(instance=user)
     return render(request, 'users/settings.html', {'user': user, 'form': form})
@@ -46,25 +46,16 @@ def all_view(request):
 def friendships_view(request):
     user = request.user
     friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
-    friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
-    return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
+    emitted_friend_requests = FriendRequest.objects.filter(from_user=user)
+    received_friend_requests = FriendRequest.objects.filter(to_user=user)
+    context = {'user': user, 'friendships': friendships, 'emitted_friend_requests': emitted_friend_requests, 'received_friend_requests': received_friend_requests}
+    return render(request, 'users/friendships.html', friendships_view_context(request))
 
 @login_required
-def add_friendship_view(request, user_id): 
+def send_friend_request(request):
+    user = request.user
     if request.method == "POST":
         friend_username = request.POST.get('friend_username')
-        user = User.objects.get(id=user_id)
-        friend = User.objects.get(username=friend_username)
-        if friend:
-            Friendship.objects.create(user=user, friend=friend)
-    friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
-    return render(request, 'users/friendships.html', {'user': user, 'friendships:': friendships, 'requests:': requests})
-
-@login_required
-def send_friend_request_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if request.method == "POST":
-        friend_username =   request.POST.get('friend_username')
         if friend_username == user.username:
             messages.error(request, "You cannot have yourself as a friend. Touch some grass!")
             return redirect('friendships')
@@ -88,15 +79,51 @@ def send_friend_request_view(request, user_id):
             messages.success(request, 'You have successfully sent a friend request')
         except User.DoesNotExist:
             messages.error(request, "The user doesn't exist")
-    friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(user=friend)
-    friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
-    return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
+    return redirect('friendships')
+
 
 @login_required
-def delete_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+def remove_friend(request, request_id):
+    """
+    Remove a friend
+    """
+    # friendship = 
+
+@login_required
+def friend_request_accept(request, request_id):
+    """
+    Received friend request acceptation
+    """
+    friend_request = None
+    try:
+        friend_request = FriendRequest.objects.get(id=request_id, to_user=request.user)
+    except FriendRequest.DoesNotExist:
+        message.error(request, "No such friend request found")
+        return redirect('friendships')
+    Friendship.objects.create(user=request.user, friend=friend_request.from_user)
     friend_request.delete()
-    messages.success(request, "Friend request deleted.")    
+    messages.success(request, "Friend added!")
+    return redirect('friendships')
+
+@login_required
+def friend_request_refuse(request, request_id):
+    """
+    Sent friend request cancellation and received friend request denyal
+
+    """
+    friend_request = None
+    try:
+        friend_request = FriendRequest.objects.get(id=request_id, from_user=request.user)
+    except FriendRequest.DoesNotExist:
+        try:
+            friend_request = FriendRequest.objects.get(id=request_id, to_user=request.user)
+        except FriendRequest.DoesNotExist:
+            pass
+    if not friend_request:
+        messages.error(request, "No such friend request found.")
+        return redirect('friendships')
+    friend_request.delete()
+    messages.success(request, "Friend request deleted.")
     return redirect('friendships')
     # user = request.user
     # friend_request = FriendRequest.objects.get(id=request_id)
