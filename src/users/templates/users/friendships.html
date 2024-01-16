@@ -11,6 +11,11 @@
             {% csrf_token %}
             <button type="submit">Remove</button>
         </form>
+        <form action="{% url 'block_user' friendship.user.id %}" method="POST">
+            {% csrf_token %}
+            {{ friendship.user.username }}
+            <button type="submit">Block</button>
+        </form>
     </li>
 {% empty %}
 <p>No friends</p>
@@ -48,6 +53,32 @@
     </li>
 {% empty %}
 <p>No pending friend requests.</p>
+{% endfor %}
+</ul>
+
+<h5>{{ user.username }}'s blocked users:</h5>
+<ul>
+{% for block in blocked %}
+    <li>
+        <form action="{% url 'unblock_user' block.blocked.id %}" method="POST">
+            {% csrf_token %}
+            <p>{{ block }} {{ block.id }}</p>
+            <button type="submit">Unblock</button>
+        </form>
+    </li>
+{% empty %}
+<p>No blocked users.</p>
+{% endfor %}
+</ul>
+
+<h5>{{ user.username }}'s blocked by users:</h5>
+<ul>
+{% for block in blocked_by %}
+    <li>
+        <p>{{ block }} {{ block.id }}</p>
+    </li>
+{% empty %}
+<p>Blocked by no one.</p>
 {% endfor %}
 </ul>
 

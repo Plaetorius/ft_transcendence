@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import User, Friendship, FriendRequest
+from .models import User, Friendship, FriendRequest, BlockedUser
 from .forms import UserRegistrationForm, UserSettingsForm
 
 def user_profile_view(request, username):
@@ -48,7 +48,16 @@ def friendships_view(request):
     friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
     emitted_friend_requests = FriendRequest.objects.filter(from_user=user)
     received_friend_requests = FriendRequest.objects.filter(to_user=user)
-    context = {'user': user, 'friendships': friendships, 'emitted_friend_requests': emitted_friend_requests, 'received_friend_requests': received_friend_requests}
+    blocked = BlockedUser.objects.filter(blocker=user)
+    blocked_by = BlockedUser.objects.filter(blocked=user)
+    context = {
+        'user': user,
+        'friendships': friendships,
+        'emitted_friend_requests': emitted_friend_requests,
+        'received_friend_requests': received_friend_requests,
+        'blocked': blocked,
+        'blocked_by': blocked_by,
+        }
     return render(request, 'users/friendships.html', context)
 
 @login_required
@@ -130,16 +139,37 @@ def friend_request_refuse(request, request_id):
     friend_request.delete()
     messages.success(request, "Friend request deleted.")
     return redirect('friendships')
-    # user = request.user
-    # friend_request = FriendRequest.objects.get(id=request_id)
-    # friendships = Friendship.objects.filter(user=user) | Friendship.objects.filter(friend=user)
-    # friend_requests = FriendRequest.objects.filter(to_user=user) | FriendRequest.objects.filter(from_user=user)
-    # if not friend_request:
-    #     messages.failure(request, "This request doesn't exist")
-    #     return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})     
-    # if user != friend_request.to_user and user != friend_request.from_user:
-    #     messages.failure(request, "Can't delete that friendship request")
-    #     return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_request})
-    # friend_request.delete()
-    # messages.success(request, "Friend request successfully removed")
-    # return render(request, 'users/friendships.html', {'user': user, 'friendships': friendships, 'friend_requests': friend_requests})
+
+@login_required
+def block_user(request, user_id):
+    user = request.user
+    try:
+        to_block = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, "User does not exist")
+        return redirect('friendships')
+    if to_block == user:
+        messages.error(request, "You can't block yourself!")
+        return redirect('friendships')
+    BlockedUser.objects.create(blocker=user, blocked=to_block)
+    return redirect('friendships')
+
+@login_required 
+def unblock_user(request, user_id):
+    user = request.user
+    try:
+        to_unblock = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, "User does not exist")
+        return redirect('friendships')
+    if to_unblock == user:
+        messages.error(request, "You can't unblock yourself!")
+        return redirect('friendships')
+    try:
+        block_elem = BlockedUser.objects.get(blocker=user, blocked=to_unblock)
+    except BlockedUser.DoesNotExist:
+        messages.error(request, "You haven't blocked that user")
+        return redirect('friendships')
+    block_elem.delete()
+    return redirect('friendships')
+    
