@@ -1,0 +1,44 @@
+/* leaderboard.css */
+.bg-red {
+   background-color: red;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+.bg-blue {
+    background-color: blue;
+}
+
+#first-step {
+    background-color: gold;
+    height: 200px;
+    margin-top: auto;
+}
+
+#second-step {
+    background-color: silver;
+    height: 150px;
+    margin-top: auto;
+}
+
+#third-step {
+    background-color: rgb(180, 88, 45);
+    height: 100px;
+    margin-top: auto;
+}
+
+.podium-profile-picture {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    overflow-x: hidden;
+    object-fit: cover;
+    object-position: center;
+    transform: translateY(-125%);
+}
+
+.leaderboard-row {
+    margin-top: 15vh;
+}
