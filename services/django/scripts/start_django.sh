@@ -9,5 +9,5 @@ python src/manage.py migrate
 echo "Starting server..."
 python src/manage.py runserver 0.0.0.0:8000
 
-sleep 1
+sleep 5
 python src/manage.py createsuperuser --username=tgernez --email=tgernez@student.42.fr --profile-picture=profile_pictures/tgernez.jpg
