@@ -9,6 +9,7 @@ class User(AbstractUser):
     bio = models.TextField(max_length=500, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default="profile_pictures/default.jpg")
     email = models.EmailField(unique=True, blank=False, null=False)
+    elo = models.IntegerField(default=1000)
 
     def __str__(self):
         return f"User: {self.username}"
