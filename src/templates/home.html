@@ -9,12 +9,12 @@
 
 {% block content %}
 <section id="planets-view">
-    <button type="button" id="planet-pong" class="btn-planet"><img src="{% static 'icons/pong.png' %}"></button>
-    <button type="button" id="planet-minesweeper" class="btn btn-planet"><img src="{% static 'icons/minesweeper.png' %}"></button>
-    <button type="button" id="planet-tournaments" class="btn btn-planet"><img src="{% static 'icons/trophy.png' %}"></button>
-    <button type="button" id="planet-friends" class="btn btn-planet"><img src="{% static 'icons/friends.png' %}"></button>
-    <button type="button" id="planet-chats" class="btn btn-planet"><img src="{% static 'icons/chats.png' %}" ></button>
-    <button type="button" id="planet-leaderboard" class="btn btn-planet"><img src="{% static 'icons/leaderboard.png' %}"></button>
-    <button type="button" id="planet-settings" class="btn btn-planet"><img src="{% static '/icons/settings.png' %}"></button>
+    <a href="{% url 'pong_games' %}"><div id="planet-pong" class="btn-planet"><img src="{% static 'icons/pong.png' %}"></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-minesweeper" class="btn btn-planet"><img src="{% static 'icons/minesweeper.png' %}"></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-tournaments" class="btn btn-planet"><img src="{% static 'icons/trophy.png' %}"></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-friends" class="btn btn-planet"><img src="{% static 'icons/friends.png' %}"></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-chats" class="btn btn-planet"><img src="{% static 'icons/chats.png' %}" ></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-leaderboard" class="btn btn-planet"><img src="{% static 'icons/leaderboard.png' %}"></div></a>
+    <a href="{% url 'pong_games' %}"><div id="planet-settings" class="btn btn-planet"><img src="{% static '/icons/settings.png' %}"></div></a>
 </section>
 {% endblock content %}

@@ -1,4 +1,5 @@
 # pong/views.py
 from django.shortcuts import render
 
-# Create your views here.
+def games_view(request):
+    return render(request, 'pong/games.html')
