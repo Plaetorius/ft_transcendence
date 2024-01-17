@@ -8,6 +8,7 @@ body {
     width: 60%;
 }
 
+/* General styles for planets */
 section .btn-planet {
     position: fixed;
     border-radius: 50%;
@@ -16,67 +17,68 @@ section .btn-planet {
     align-items: center;
     border: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
 }
 
+/* Hover effect */
 section .btn-planet:hover {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
     transform: scale(1.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Individual planet styles */
 #planet-pong {
     top: 10%;
-    left: 10%;
-    background-color: blue;
-    width: 90px;
-    height: 90px;
+    left: 5%;
+    background-color: #4169E1; /* Royal Blue */
+    width: 200px;
+    height: 200px;
 }
 
 #planet-minesweeper {
-    top: 15%;
-    left: 65%;
-    background-color: lightblue;
-    width: 90px;
-    height: 90px;
+    top: 20%;
+    left: 70%;
+    background-color: #FFD700; /* Gold */
+    width: 160px;
+    height: 160px;
 }
 
 #planet-tournaments {
-    top: 30%;
-    left: 25%;
-    background-color: red;
-    width: 90px;
-    height: 90px;
+    top: 40%;
+    left: 20%;
+    background-color: #DC143C; /* Crimson */
+    width: 240px;
+    height: 240px;
 }
 
 #planet-friends {
-    top: 45%;
-    left: 50%;
-    background-color: lightblue;
-    width: 90px;
-    height: 90px;
+    top: 70%;
+    left: 30%;
+    background-color: #32CD32; /* Lime Green */
+    width: 140px;
+    height: 140px;
 }
 
 #planet-chats {
-    top: 55%;
-    left: 35%;
-    background-color: lightblue;
-    width: 90px;
-    height: 90px;
+    top: 60%;
+    left: 60%;
+    background-color: #FFA07A; /* Light Salmon */
+    width: 220px;
+    height: 220px;
 }
 
 #planet-leaderboard {
-    top: 75%;
-    left: 35%;
-    background-color: lightblue;
-    width: 90px;
-    height: 90px;
+    top: 45%;
+    left: 50%;
+    background-color: #20B2AA; /* Light Sea Green */
+    width: 180px;
+    height: 180px;
 }
 
 #planet-settings {
-    top: 85%;
-    left: 65%;
-    background-color: lightblue;
-    width: 90px;
-    height: 90px;
+    top: 80%;
+    left: 15%;
+    background-color: #FF69B4; /* Hot Pink */
+    width: 210px;
+    height: 210px;
 }
