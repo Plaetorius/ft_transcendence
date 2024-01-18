@@ -8,6 +8,7 @@ Django = "*"
 psycopg2-binary = ">=2.8"
 Pillow = "*"
 channels = "*"
+channels_redis = "*"
 daphne = "*"
 
 [dev-packages]

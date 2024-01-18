@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import User, Friendship, FriendRequest, BlockedUser
 from .forms import UserRegistrationForm, UserSettingsForm
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found
@@ -113,10 +115,20 @@ def friend_request_accept(request, request_id):
     try:
         friend_request = FriendRequest.objects.get(id=request_id, to_user=request.user)
     except FriendRequest.DoesNotExist:
-        message.error(request, "No such friend request found")
+        messages.error(request, "No such friend request found")
         return redirect('friendships')
     Friendship.objects.create(user=request.user, friend=friend_request.from_user)
     friend_request.delete()
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"user_{request.user.username}",
+        {
+            "type": "friend_request_accepted",
+            "message": {
+                "friend_username": request.user.username
+            }
+        }
+    )
     messages.success(request, "Friend added!")
     return redirect('friendships')
 

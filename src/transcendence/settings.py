@@ -53,6 +53,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],  # TODO Use env variables Use the Redis server URL
+        },
+    },
+}
+
 ROOT_URLCONF = "transcendence.urls"
 
 TEMPLATES = [

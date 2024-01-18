@@ -18,6 +18,10 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "7474:6379"
 
 volumes:
   postgres_data:

@@ -1,21 +1,17 @@
-"""
-ASGI config for transcendence project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.0/howto/deployment/asgi/
-"""
-
+# asgi.py
 import os
-
-from channels.routing import ProtocolTypeRouter
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "transcendence.settings")
-
-application = get_asgi_application()
+from django.urls import path
+from users.consumers import FriendRequestConsumer
+from django.urls import re_path
 
 application = ProtocolTypeRouter({
-    "http": application,
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter([
+            re_path(r'^ws/friend-requests/(?P<username>\w+)/$', FriendRequestConsumer.as_asgi()),
+        ])
+    ),
 })

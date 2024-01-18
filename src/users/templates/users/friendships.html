@@ -95,4 +95,21 @@
     <input type="text" name="friend_username" placeholder="Enter friend username">
     <button type="submit">Add friend</button>
 </form>
+<script type="text/javascript">
+    const username = "{{ user.username }}";
+    const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`);
+
+    webSocket.onopen = function(event) {
+
+    }
+
+    webSocket.onmessage = function(event) {
+        alert('RECU');
+        // Handle incoming WebSocket messages here
+    };
+
+    webSocket.onclose = function(event) {
+        // Handle WebSocket closing here
+    };
+</script>
 {% endblock %}
