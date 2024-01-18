@@ -2,12 +2,16 @@
 {% block content %}
 <h5>{{ user.username }}'s friendships:</h5>
 {% include 'friendships/friendlist.html' %}
+
 <h5>{{ user.username }}'s received friend requests:</h5>
 {% include 'friendships/friendrequestlist.html' %}
+
 <h5>{{ user.username }}'s emitted friend requests:</h5>
 {% include 'friendships/emittedfriendrequestlist.html' %}
+
 <h5>{{ user.username }}'s blocked users:</h5>
 {% include 'friendships/blockeduserlist.html' %}
+
 {% if messages %}
     {% for message in messages %} 
         <div class="alert alert-{{ message.tags }}">
@@ -16,7 +20,7 @@
     {% endfor %}
 {% endif %}
 
-<form method="POST" action="{% url 'send_friend_request' %}"> <!-- TODO check in function if user of the request is related to the friend_request -->
+<form method="POST" action="{% url 'send_friend_request' %}">
     {% csrf_token %}
     <input type="text" name="friend_username" placeholder="Enter friend username">
     <button type="submit">Add friend</button>

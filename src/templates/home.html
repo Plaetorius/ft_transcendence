@@ -6,15 +6,15 @@
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 {% block title %}Home{% endblock %}
-
+{% block header %}{% extends 'header-home.html' %}{% endblock navbar %}
 {% block content %}
 <section id="planets-view">
     <a href="{% url 'pong_games' %}"><div id="planet-pong" class="btn-planet"><img src="{% static 'icons/pong.png' %}"></div></a>
     <a href="{% url 'pong_games' %}"><div id="planet-minesweeper" class="btn btn-planet"><img src="{% static 'icons/minesweeper.png' %}"></div></a>
     <a href="{% url 'pong_games' %}"><div id="planet-tournaments" class="btn btn-planet"><img src="{% static 'icons/trophy.png' %}"></div></a>
-    <a href="{% url 'pong_games' %}"><div id="planet-friends" class="btn btn-planet"><img src="{% static 'icons/friends.png' %}"></div></a>
+    <a href="{% url 'friendships' %}"><div id="planet-friends" class="btn btn-planet"><img src="{% static 'icons/friends.png' %}"></div></a>
     <a href="{% url 'pong_games' %}"><div id="planet-chats" class="btn btn-planet"><img src="{% static 'icons/chats.png' %}" ></div></a>
-    <a href="{% url 'pong_games' %}"><div id="planet-leaderboard" class="btn btn-planet"><img src="{% static 'icons/leaderboard.png' %}"></div></a>
+    <a href="{% url 'leaderboard' %}"><div id="planet-leaderboard" class="btn btn-planet"><img src="{% static 'icons/leaderboard.png' %}"></div></a>
     <a href="{% url 'pong_games' %}"><div id="planet-settings" class="btn btn-planet"><img src="{% static '/icons/settings.png' %}"></div></a>
 </section>
 {% endblock content %}
