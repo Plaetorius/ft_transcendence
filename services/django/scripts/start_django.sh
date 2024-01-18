@@ -7,7 +7,6 @@ python src/manage.py migrate
 
 # Start server
 echo "Starting server..."
-python src/manage.py runserver 0.0.0.0:8000
-
-sleep 5
-python src/manage.py createsuperuser --username=tgernez --email=tgernez@student.42.fr --profile-picture=profile_pictures/tgernez.jpg
+# runserver is asynchronous, any command after \
+# that will be executed once the server is shutdown
+python src/manage.py runserver 0.0.0.0:8000 
