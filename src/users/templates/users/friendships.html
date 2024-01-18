@@ -1,87 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 <h5>{{ user.username }}'s friendships:</h5>
-<ul>    
-{% for friendship in friendships %}
-<!-- TODO disctinction between A to B and B to A friendships -->
-    <li>
-        <p>{{ friendship }} {{ friendship.id }}</p>
-        <a href="{% url 'user_profile' friendship.user %}">Profile</a>
-        <form action="{% url 'friendship_remove' friendship.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Remove</button>
-        </form>
-        <form action="{% url 'block_user' friendship.user.id %}" method="POST">
-            {% csrf_token %}
-            {{ friendship.user.username }}
-            <button type="submit">Block</button>
-        </form>
-    </li>
-{% empty %}
-<p>No friends</p>
-{% endfor %}
-</ul>
-
+{% include 'friendships/friendlist.html' %}
 <h5>{{ user.username }}'s received friend requests:</h5>
-<ul>
-{% for request in received_friend_requests %}
-    <li>
-        <p>{{ request }} {{ request.id }}</p>
-        <form action="{% url 'friend_request_accept' request.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Accept</button>
-        </form>
-        <form action="{% url 'friend_request_refuse' request.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Refuse</button>
-        </form>
-    </li>
-{% empty %}
-<p>No received friend requests.</p>
-{% endfor %}
-</ul>
-
+{% include 'friendships/friendrequestlist.html' %}
 <h5>{{ user.username }}'s emitted friend requests:</h5>
-<ul>
-{% for request in emitted_friend_requests %}
-    <li>
-        <form action="{% url 'friend_request_refuse' request.id %}" method="POST">
-            {% csrf_token %}
-            <p>{{ request }} {{ request.id }}</p>
-            <button type="submit">Cancel</button>
-        </form>
-    </li>
-{% empty %}
-<p>No pending friend requests.</p>
-{% endfor %}
-</ul>
-
+{% include 'friendships/emittedfriendrequestlist.html' %}
 <h5>{{ user.username }}'s blocked users:</h5>
-<ul>
-{% for block in blocked %}
-    <li>
-        <form action="{% url 'unblock_user' block.blocked.id %}" method="POST">
-            {% csrf_token %}
-            <p>{{ block }} {{ block.id }}</p>
-            <button type="submit">Unblock</button>
-        </form>
-    </li>
-{% empty %}
-<p>No blocked users.</p>
-{% endfor %}
-</ul>
-
-<h5>{{ user.username }}'s blocked by users:</h5>
-<ul>
-{% for block in blocked_by %}
-    <li>
-        <p>{{ block }} {{ block.id }}</p>
-    </li>
-{% empty %}
-<p>Blocked by no one.</p>
-{% endfor %}
-</ul>
-
+{% include 'friendships/blockeduserlist.html' %}
 {% if messages %}
     {% for message in messages %} 
         <div class="alert alert-{{ message.tags }}">
@@ -105,6 +31,7 @@
 
     webSocket.onmessage = function(event) {
         alert('RECU');
+        // TODO update db and context above
         // Handle incoming WebSocket messages here
     };
 
