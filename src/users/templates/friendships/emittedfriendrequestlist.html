@@ -1,0 +1,13 @@
+<ul>
+    {% for request in emitted_friend_requests %}
+    <li>
+        <form action="{% url 'friend_request_refuse' request.id %}" method="POST">
+            {% csrf_token %}
+            <p>{{ request }} {{ request.id }}</p>
+            <button type="submit">Cancel</button>
+        </form>
+    </li>
+    {% empty %}
+        <p>No pending friend requests.</p>
+    {% endfor %}
+</ul>

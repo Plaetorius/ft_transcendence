@@ -1,0 +1,13 @@
+<ul>
+    {% for block in blocked %}
+    <li>
+        <form action="{% url 'unblock_user' block.blocked.id %}" method="POST">
+            {% csrf_token %}
+            <p>{{ block }} {{ block.id }}</p>
+            <button type="submit">Unblock</button>
+        </form>
+    </li>
+    {% empty %}
+        <p>No blocked users.</p>
+    {% endfor %}
+</ul>
