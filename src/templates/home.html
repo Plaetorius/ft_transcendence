@@ -5,8 +5,8 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
-{% block title %}Home{% endblock %}
-{% block header %}{% extends 'header-home.html' %}{% endblock navbar %}
+{% block title %}Home{% endblock title %}
+{% block header %}{% include 'header-home.html' %}{% endblock header %}
 {% block content %}
 <section id="planets-view">
     <a href="{% url 'pong_games' %}"><div id="planet-pong" class="btn-planet"><img src="{% static 'icons/pong.png' %}"></div></a>

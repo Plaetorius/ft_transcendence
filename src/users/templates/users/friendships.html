@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <h5>{{ user.username }}'s friendships:</h5>
-{% include 'friendships/friendlist.html' %}
+{% include 'friendships/friends-list.html' %}
 
 <h5>{{ user.username }}'s received friend requests:</h5>
-{% include 'friendships/friendrequestlist.html' %}
+{% include 'friendships/friend-requests-list.html' %}
 
 <h5>{{ user.username }}'s emitted friend requests:</h5>
-{% include 'friendships/emittedfriendrequestlist.html' %}
+{% include 'friendships/emitted-friend-requests-list.html' %}
 
 <h5>{{ user.username }}'s blocked users:</h5>
-{% include 'friendships/blockeduserlist.html' %}
+{% include 'friendships/blocked-users-list.html' %}
 
 {% if messages %}
     {% for message in messages %} 
