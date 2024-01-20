@@ -23,7 +23,9 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
 
     async def friend_request_accepted(self, event):
         # Send message to WebSocket
-        await self.send(text_data=json.dumps(event["message"]))
+        event["message"] = "Requete recue ouuuuu"
+        message = {"message": "Request has been received"}
+        await self.send(text_data=json.dumps(message))
 
     async def receive(self, text_data):
        pass

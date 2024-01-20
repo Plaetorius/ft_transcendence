@@ -98,7 +98,11 @@ def friendship_remove(request, friendship_id):
     """
     Remove a friend
     """
-    friendship = get_object_or_404(Friendship, id=friendship_id)
+    friendship = None
+    try:
+        friendship = Friendship.objects.get(id=friendship_id)
+    except Friendship.DoesNotExist:
+        return redirect('friendships')
     if not (request.user == friendship.user or request.user == friendship.friend):
         messages.error(request, "Not friend with that person") # TODO remove
         return redirect('friendships')
@@ -184,4 +188,11 @@ def unblock_user(request, user_id):
         return redirect('friendships')
     block_elem.delete()
     return redirect('friendships')
-    
+
+@login_required
+def chat_view(request):
+    return render(request, 'users/chat.html')
+
+@login_required
+def room_view(request, room_name):
+    return render(request, 'users/room.html', {'room_name': room_name})

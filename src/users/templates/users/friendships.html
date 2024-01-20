@@ -12,6 +12,12 @@
 <h5>{{ user.username }}'s blocked users:</h5>
 {% include 'friendships/blocked-users-list.html' %}
 
+<form method="POST" action="{% url 'send_friend_request' %}">
+    {% csrf_token %}
+    <input type="text" name="friend_username" placeholder="Enter friend username">
+    <button type="submit">Add friend</button>
+</form>
+
 {% if messages %}
     {% for message in messages %} 
         <div class="alert alert-{{ message.tags }}">
@@ -20,11 +26,6 @@
     {% endfor %}
 {% endif %}
 
-<form method="POST" action="{% url 'send_friend_request' %}">
-    {% csrf_token %}
-    <input type="text" name="friend_username" placeholder="Enter friend username">
-    <button type="submit">Add friend</button>
-</form>
 <script type="text/javascript">
     const username = "{{ user.username }}";
     const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`);
@@ -34,7 +35,10 @@
     }
 
     webSocket.onmessage = function(event) {
-        alert('RECU');
+        const messageData = JSON.parse(event.data);
+        const messageText = messageData.message;
+        alert(messageText);
+        
         // TODO update db and context above
         // Handle incoming WebSocket messages here
     };
