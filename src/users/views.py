@@ -188,11 +188,3 @@ def unblock_user(request, user_id):
         return redirect('friendships')
     block_elem.delete()
     return redirect('friendships')
-
-@login_required
-def chat_view(request):
-    return render(request, 'users/chat.html')
-
-@login_required
-def room_view(request, room_name):
-    return render(request, 'users/room.html', {'room_name': room_name})

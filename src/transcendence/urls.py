@@ -26,6 +26,7 @@ urlpatterns = [
     path('leaderboard', leaderboard_view, name="leaderboard"),
     path('pong/', include('pong.urls')),
     path('users/', include('users.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 if settings.DEBUG:

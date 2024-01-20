@@ -2,7 +2,7 @@
 {% block title %} Chat Room {% endblock title %}
 {% block content %}
 <div>
-    <textarea id="chat-log" cols="100" rows="20"></textarea>
+    <div id="chat-log" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
 </div>
 <div>
     <input id="chat-message-input" type="text" size="100">
@@ -17,7 +17,11 @@
 
     chatSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        document.querySelector('#chat-log').value += (data.message + '\n');
+        const messageElement = document.createElement('p');
+        messageElement.textContent = data.message
+        document.querySelector('#chat-log').appendChild(messageElement);
+        const chatLog = document.querySelector('#chat-log');
+        chatLog.scrollTop = chatLog.scrollHeight;
     };
 
     chatSocket.onclose = (e) => {
