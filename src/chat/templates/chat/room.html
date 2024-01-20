@@ -6,6 +6,7 @@
 </div>
 <div>
     <input id="chat-message-input" type="text" size="100">
+    <button id="btn-send-invite">Send invite</button>
 </div>
 <div>
     <input id="chat-message-submit" type="button" value="Send">
@@ -17,9 +18,14 @@
 
     chatSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        const messageElement = document.createElement('p');
-        messageElement.textContent = data.message
-        document.querySelector('#chat-log').appendChild(messageElement);
+        if (data.message === "/invite") {
+            chatInvite();
+        }
+        else {
+            const messageElement = document.createElement('p');
+            messageElement.textContent = data.message
+            document.querySelector('#chat-log').appendChild(messageElement);
+        }
         const chatLog = document.querySelector('#chat-log');
         chatLog.scrollTop = chatLog.scrollHeight;
     };
@@ -41,5 +47,17 @@
         chatSocket.send(JSON.stringify({ message }));
         messageInputDom.value = '';  
     };
+
+    document.querySelector('#btn-send-invite').onclick = (e) => {
+        const message = "/invite";
+        chatSocket.send(JSON.stringify({ message }));
+        messageInputDom.value = '';  
+    }
+
+    function chatInvite() {
+        const inviteElement = document.createElement('p');
+        inviteElement.textContent = "You received a pong invitation!";
+        document.querySelector("#chat-log").appendChild(inviteElement);
+    }
 </script>
 {% endblock content %}
