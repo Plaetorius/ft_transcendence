@@ -29,6 +29,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
+#TODO check if everything is on HTTPS
+
 # Application definition
 
 INSTALLED_APPS = [

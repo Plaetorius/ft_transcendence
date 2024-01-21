@@ -29,7 +29,7 @@
 {% block script %}
 <script type="text/javascript">
     const username = "{{ user.username }}";
-    const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`);
+    const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`); // TODO Use WSS
 
     webSocket.onopen = function(event) {
 

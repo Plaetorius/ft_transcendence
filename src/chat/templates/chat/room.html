@@ -26,7 +26,7 @@
     }
 
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
-    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
+    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`); // TODO use WSS instead of WS
     
     chatSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
