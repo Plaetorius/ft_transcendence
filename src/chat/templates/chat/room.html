@@ -12,10 +12,12 @@
     <input id="chat-message-submit" type="button" value="Send">
 </div>
 {{ room_name|json_script:"room-name" }}
+{% endblock content %}
+{% block script %}
 <script>
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
-
+    
     chatSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         if (data.message === "/invite") {
@@ -29,35 +31,35 @@
         const chatLog = document.querySelector('#chat-log');
         chatLog.scrollTop = chatLog.scrollHeight;
     };
-
+    
     chatSocket.onclose = (e) => {
         console.error('Chat socket closed unexpectedly');
     };
-
+    
     document.querySelector('#chat-message-input').focus();
     document.querySelector('#chat-message-input').onkeyup = (e) => {
         if (e.key === 'Enter') {
             document.querySelector('#chat-message-submit').click();
         }
     };
-
+    
     document.querySelector('#chat-message-submit').onclick = (e) => {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({ message }));
         messageInputDom.value = '';  
     };
-
+    
     document.querySelector('#btn-send-invite').onclick = (e) => {
         const message = "/invite";
         chatSocket.send(JSON.stringify({ message }));
         messageInputDom.value = '';  
     }
-
+    
     function chatInvite() {
         const inviteElement = document.createElement('p');
         inviteElement.textContent = "You received a pong invitation!";
         document.querySelector("#chat-log").appendChild(inviteElement);
     }
 </script>
-{% endblock content %}
+{% endblock script %}

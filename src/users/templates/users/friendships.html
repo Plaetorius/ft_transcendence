@@ -25,7 +25,8 @@
         </div>
     {% endfor %}
 {% endif %}
-
+{% endblock content %}
+{% block script %}
 <script type="text/javascript">
     const username = "{{ user.username }}";
     const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`);
@@ -47,4 +48,4 @@
         // Handle WebSocket closing here
     };
 </script>
-{% endblock %}
+{% endblock script %}
