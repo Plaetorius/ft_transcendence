@@ -10,4 +10,5 @@ def chat_view(request):
 
 @login_required
 def room_view(request, room_name):
-    return render(request, 'chat/room.html', {'room_name': room_name})
+    user = request.user
+    return render(request, 'chat/room.html', {'room_name': room_name, 'user': user})

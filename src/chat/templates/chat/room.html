@@ -1,5 +1,8 @@
+<!-- chat/room.html -->
 {% extends 'base.html' %}
+{% load static %}
 {% block title %} Chat Room {% endblock title %}
+{% block extra_css %} <link rel="stylesheet" href="{% static 'css/chat-room.css' %}"> {% endblock extra_css %}
 {% block content %}
 <div>
     <div id="chat-log" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
@@ -15,6 +18,13 @@
 {% endblock content %}
 {% block script %}
 <script>
+    function createElement(tag, className, content) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (content) element.textContent = content;
+        return element;
+    }
+
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${roomName}/`);
     
@@ -24,9 +34,23 @@
             chatInvite();
         }
         else {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = data.message
-            document.querySelector('#chat-log').appendChild(messageElement);
+            const elementMessageRow = createElement('div', 'row message-row');
+            const elementMessageCol = createElement('div', 'col-12 p-0');
+            const elementMessageFlex = createElement('div', 'd-flex align-items-start');
+            const elementMessageProfileLink = document.createElement('a');
+            const elementMessagePicture = createElement('img', 'pp-message');
+            const elementMessageText = createElement('div', 'message-content', `${data.username}: ${data.message}`);
+
+            elementMessagePicture.src = data.profile_picture;
+            elementMessageProfileLink.href = `/users/profile/${data.username}`
+
+            elementMessageProfileLink.append(elementMessagePicture);
+            elementMessageFlex.appendChild(elementMessageProfileLink);
+            elementMessageFlex.appendChild(elementMessageText);
+            elementMessageCol.appendChild(elementMessageFlex);
+            elementMessageRow.appendChild(elementMessageCol);
+
+            document.querySelector('#chat-log').appendChild(elementMessageRow);
         }
         const chatLog = document.querySelector('#chat-log');
         chatLog.scrollTop = chatLog.scrollHeight;
