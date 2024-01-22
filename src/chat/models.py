@@ -9,7 +9,7 @@ class ChatRoom(models.Model):
 class Message(models.Model):
     room = models.ForeignKey(ChatRoom, related_name="chatRoom", on_delete=models.CASCADE)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="sender", on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField() #TODO maybe add a size limit?
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

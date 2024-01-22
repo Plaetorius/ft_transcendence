@@ -1,3 +1,4 @@
+# chat/urls.py
 from django.urls import path
 from .views import (
     chat_view,
@@ -6,5 +7,5 @@ from .views import (
 
 urlpatterns = [
     path('', chat_view, name='chat'),
-    path('<str:room_name>/', room_view, name="room")
+    path('<int:room_id>/', room_view, name="room")
 ]
