@@ -17,6 +17,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
+        if not message.strip():
+            return 
         user = self.scope["user"]
         if user.is_authenticated:
             await self.channel_layer.group_send(
@@ -29,7 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
         else:
-            # Shouldn't happend lol the view is @login_required
+            # Shouldn't happen lol the view is @login_required
             pass
         # The special "type" key turns the . in _, thus "chat.message"
         # corresponds to chat_message() (function above)
