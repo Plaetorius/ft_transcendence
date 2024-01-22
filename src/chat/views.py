@@ -18,18 +18,9 @@ def chat_view(request):
 @login_required
 def room_view(request, room_id):
     user = request.user
-    # room_id = int(room_id)
-    # try:
     room = ChatRoom.objects.get(id=room_id)
     if not room.members.filter(id=user.id).exists():
         return HttpResponseForbidden("Not a member")
-    #     print(f"Room exists {room_id}")
-    # except ChatRoom.DoesNotExist:
-    #     print(f"Room doesn't exist {room_id}")
-    #     room = ChatRoom.objects.create()
-    #     print(f"Created room {room.id}")
-    #     return render(request, 'chat/room.html', {'room_id': room.id, 'user': user})
-    # print(request.path)
     return render(request, 'chat/room.html', {'room': room, 'room_id': room_id, 'user': user})
 
 # Tool function
@@ -53,6 +44,4 @@ def message_user(request, user_id):
         print("User.DoesNotExist in message_user")
         return # TODO use messages 
     room = get_direct_message(user1, user2)
-    return redirect('room', room_id=room.id)
-    # return render(request, "chat/room.html", {"room": room, "user1": user1, "user2": user2, "room_id": room.id})
-    
+    return redirect('room', room_id=room.id)    

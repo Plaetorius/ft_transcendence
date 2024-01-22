@@ -2,6 +2,12 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
+from users.models import BlockedUser
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -37,7 +43,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # corresponds to chat_message() (function above)
 
     async def chat_message(self, event):
-        message = event["message"]
+        user = self.scope["user"]
+        if await self.is_user_blocked(user.username, event["username"]):
+            return
         username = event["username"]
+        message = event["message"]
         profile_picture = event["profile_picture"]
         await self.send(text_data = json.dumps({"message": message, "username": username, "profile_picture": profile_picture}))
+
+    @database_sync_to_async
+    def is_user_blocked(self, scope_username, event_username):
+        try:
+            scope_user = User.objects.get(username=scope_username)
+        except User.DoesNotExist:
+            return True
+        try:
+            event_user = User.objects.get(username=event_username)
+        except User.DoesNotExist:
+            return True
+        return BlockedUser.objects.filter(blocked=event_user, blocker=scope_user).exists()

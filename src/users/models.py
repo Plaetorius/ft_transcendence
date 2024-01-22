@@ -64,7 +64,7 @@ class BlockedUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"Blocked: {self.blocker} -> {self.blocked}"
+        return f"Blocker: {self.blocker} -> Blocked: {self.blocked}"
 
 # Achievement Class
 class Achievement(models.Model):

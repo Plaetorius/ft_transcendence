@@ -168,6 +168,7 @@ def block_user(request, user_id):
         messages.error(request, "You can't block yourself!")
         return redirect('friendships')
     BlockedUser.objects.create(blocker=user, blocked=to_block)
+    #TODO maybe remove friendship
     return redirect('friendships')
 
 @login_required 
