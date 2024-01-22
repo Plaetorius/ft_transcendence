@@ -69,7 +69,8 @@
     
     document.querySelector('#chat-message-submit').onclick = (e) => {
         const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
+        const message = messageInputDom.value.trim();
+        if (message === '') return ;
         chatSocket.send(JSON.stringify({ message }));
         messageInputDom.value = '';  
     };
