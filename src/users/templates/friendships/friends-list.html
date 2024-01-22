@@ -8,10 +8,12 @@
             <p>{{ friendship.user }}</p>
             <a href="{% url 'user_profile' friendship.user.username %}">Profile</a>
         {% endif %}
+
         <form action="{% url 'friendship_remove' friendship.id %}" method="POST">
             {% csrf_token %}
             <button type="submit">Remove</button>
         </form>
+
         {% if friendship.user == user %}
             <form action="{% url 'block_user' friendship.friend.id %}" method="POST">
                 {% csrf_token %}
@@ -22,6 +24,18 @@
                 {% csrf_token %}
                 <button type="submit">Block</button>
             </form>
+        {% endif %}
+
+        {% if friendship.user == user %}
+        <form action="{% url 'message_user' friendship.friend.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Message</button>
+        </form>
+        {% else %}
+        <form action="{% url 'message_user' friendship.user.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Message</button>
+        </form>
         {% endif %}
     </li>
     {% empty %}

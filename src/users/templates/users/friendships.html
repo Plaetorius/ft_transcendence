@@ -27,7 +27,7 @@
 {% endif %}
 {% endblock content %}
 {% block script %}
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     const username = "{{ user.username }}";
     const webSocket = new WebSocket(`ws://${window.location.host}/ws/friend-requests/${username}/`); // TODO Use WSS
 
@@ -47,5 +47,5 @@
     webSocket.onclose = function(event) {
         // Handle WebSocket closing here
     };
-</script>
+</script> -->
 {% endblock script %}
