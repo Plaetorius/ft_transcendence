@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %} <link rel="stylesheet" type="text/css" href="{% static 'css/users/pipboy.css' %}"> {% endblock extra_css %}
+{% block content %}
+<section class="pipboy">
+	<div class="container">
+		<div class="row justify-content-center pipboy-header">
+			<div class="col-2 tab-title bg-blue" id="active">
+				HOME
+			</div>
+			<div class="col-2 tab-title bg-blue">
+				DATA
+			</div>
+			<div class="col-2 tab-title bg-blue">
+				ACHV
+			</div>
+			<div class="col-2 tab-title bg-blue">
+				HIST
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="header-line"></div>
+	</div>
+</section>
+{% endblock content %}

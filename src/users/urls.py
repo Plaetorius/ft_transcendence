@@ -14,6 +14,7 @@ from .views import (
     friendship_remove,
     block_user,
     unblock_user,
+	pipboy_view,
 )
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('friendship_remove/<int:friendship_id>/', friendship_remove, name='friendship_remove'),
     path('block/<int:user_id>/', block_user, name='block_user'),
     path('unblock/<int:user_id>/', unblock_user, name='unblock_user'),
+	path('pipboy/<int:profile_id>/', pipboy_view, name='pipboy'),
 ]

@@ -1,0 +1,35 @@
+body {
+	background: rgb(22, 22, 22);
+}
+
+.pipboy-header {
+	/* border-bottom: 1px black solid; */
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+
+.tab-title {
+	/* margin-bottom: -10px; */
+	text-align: center;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size: x-large;
+	font-weight: bolder;
+	color: green;
+}
+
+.header-line {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	border-top: 0.4vh green solid;
+}
+
+.bg-blue {
+	/* background-color: blue; */
+}
+
+#active {
+	border-left: 0.4vh green solid;
+	border-right: 0.4vh green solid;
+}

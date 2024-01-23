@@ -189,3 +189,13 @@ def unblock_user(request, user_id):
         return redirect('friendships')
     block_elem.delete()
     return redirect('friendships')
+
+@login_required
+def pipboy_view(request, profile_id):
+	try:
+		profile_user = User.objects.get(id=profile_id)
+	except User.DoesNotExist:
+		messages.error(request, "User doesn't exist!")
+		return redirect("friendships")
+	return render(request, 'users/pipboy.html', {})
+	
