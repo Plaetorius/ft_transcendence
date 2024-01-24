@@ -1,4 +1,6 @@
-<!-- base.htmlwwww -->
+<!-- base.html -->
+<!-- TODO rename to index.html -->
+<!-- TODO you can make includes but start them with a hidden tag -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,27 +9,34 @@
     <title>{% block title %} Base Title {% endblock title%}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/general.css' %}">
-    <!-- <link rel="stylesheet" href="{% static 'css/navbar.css' %}"> -->
-    <!-- <link rel="stylesheet" href="{% static 'css/header.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     {% block extra_css %}{% endblock extra_css %}
 </head>
 <body>
     {% block navbar %}{% endblock navbar %}
     {% block header %}{% endblock header %}
-    <!-- {% include 'navbar.html' %} -->
-    <!-- {% include 'header.html' %} -->
+    {% include 'header.html' %}
     <main>
         <!-- <button class="animated-box">Hi</button> -->
         <!-- <div class="animated-box"></div> -->
+
+        <!-- TODO remove block content later, kept for retro compatibility -->
         {% block content %}
-        <h1> This is a default H1 </h1>
-        <p>This is a default paragraph</p>
+        <section class="page-section home-section" style="height: 90vh;" id="active">
+            <h1>Home section</h1>
+        </section>
+        <section class="page-section friendships-section" style="height: 90vh;">
+            <h1>Friendships section</h1>
+        </section>
+        <button id="toggle-button">Toggle Button</button>
         {% endblock content %}
     </main>
     {% block script %}
     {% endblock script %}
-    <!-- <script src="{% static 'js/navbar.js' %}"></script> -->
+    <script src="{% static 'js/header.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

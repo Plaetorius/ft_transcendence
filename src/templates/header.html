@@ -1,15 +1,27 @@
-{% load static %}
-
-<header class="header">
-    <section class="left-section">
-        <img src="{% static '/svgs/hamburger-menu.svg' %}" class="header-hamburger-menu" id="hamburgerMenu">
-        <img src="{% static '/icons/pong-logo.png' %}" class="header-logo">
-    </section>
-    <section class="middle-section">
-        <a href="pong.html"><img src="{% static '/icons/pong.png' %}" class="header-game"></a>
-        <a href="minesweeper.html"><img src="{% static '/icons/minesweeper.png' %}" class="header-game"></a>
-    </section>
-    <section class="right-section">
-        <a href="profiles/tgernez.html"><img src="{% static '/icons/default-profile-picture.png' %}" class="header-profile-picture"></a>
-    </section>
+<header class="container pipboy-nav justify-content-center align-items-center">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-1 d-flex justify-content-center align-items-center">
+            <img src="https://picsum.photos/50">
+        </div>
+        <div class="col-2">
+            <button class="pipboy-header-btn" id="home-pipboy-btn" alt="Home page button">HOME</button>
+        </div>
+        <div class="col-2">
+            <button class="pipboy-header-btn" id="home-pipboy-btn" alt="Game page button">GAME</button>
+        </div>
+        <div class="col-2">
+            <button class="pipboy-header-btn" id="home-pipboy-btn" alt="Friends page button">FRIENDS</button>
+        </div>
+        <div class="col-2">
+            <button class="pipboy-header-btn" id="home-pipboy-btn" alt="Profile page button">PROFILE</button>
+        </div>
+        <div class="col-2">
+            <button class="pipboy-header-btn" id="home-pipboy-btn" alt="Statistics page button">STATS</button>
+        </div>
+        <div class="col-1 d-flex justify-content-center align-items-center">
+            <img src="https://picsum.photos/50">
+        </div>
+    </div>
+    <!-- Hide image columns if screen is too small -->
+    
 </header>

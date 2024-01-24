@@ -5,3 +5,6 @@ def home_view(request):
 
 def leaderboard_view(request):
     return render(request, "leaderboard.html")
+
+def base_view(request):
+    return render(request, "base.html")

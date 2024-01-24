@@ -12,9 +12,9 @@ html, body {
 	touch-action: manipulation;
 }
 
-body {
-	background-color: lightblue;
-	/* margin-bottom: 1000px; */
+main {
+	background-color: blue;
+	margin-bottom: 100vh;
 }
 /* 
 main {

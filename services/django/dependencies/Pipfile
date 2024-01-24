@@ -10,6 +10,7 @@ Pillow = "*"
 channels = "*"
 channels_redis = "*"
 daphne = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
