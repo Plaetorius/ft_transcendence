@@ -6,6 +6,17 @@ from .models import User, Friendship, FriendRequest, BlockedUser
 from .forms import UserRegistrationForm, UserSettingsForm
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework import generics, status
+from rest_framework.response import Response
+
+from .serializers import UserSerializer, UserRegistrationSerializer
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserRegistrationAPIView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
 
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found

@@ -12,7 +12,7 @@ class User(AbstractUser):
     elo = models.IntegerField(default=1000)
 
     def __str__(self):
-        return f"User: {self.username}"
+        return f"User: {self.username} Id: {self.id}"
 
 # Match history Class
 class MatchHistory(models.Model):

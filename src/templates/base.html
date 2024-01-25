@@ -1,42 +1,46 @@
 <!-- base.html -->
-<!-- TODO rename to index.html -->
-<!-- TODO you can make includes but start them with a hidden tag -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} Base Title {% endblock title%}</title>
+    <title>Base Title</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    {% block extra_css %}{% endblock extra_css %}
+    <link rel="stylesheet" href="{% static 'css/users/view-profile.css' %}">
 </head>
 <body>
-    {% block navbar %}{% endblock navbar %}
-    {% block header %}{% endblock header %}
-    {% include 'header.html' %}
     <main>
-        <!-- <button class="animated-box">Hi</button> -->
-        <!-- <div class="animated-box"></div> -->
+        <section class="page-section dashboard"  id="active">
+            <section id="register-section" class="container">
+                <form id="registrationForm">
+                    <input type="text" id="registerUsername" placeholder="Username" required>
+                    <input type="text" id="registerEmail" placeholder="Email" required>
+                    <input type="text" id="registerPassword1" placeholder="Password" required>
+                    <input type="text" id="registerPassword2" placeholder="Confirm Password" required>
+                    <button type="submit">Register</button>
+                </form>
+                <div id="registrationErrors"></div>
+            </section>
 
-        <!-- TODO remove block content later, kept for retro compatibility -->
-        {% block content %}
-        <section class="page-section home-section" style="height: 90vh;" id="active">
-            <h1>Home section</h1>
+            <!-- <section class="home-section" style="height: 90vh;" >
+                <h1>Home section</h1>
+            </section> -->
+            <!-- <section class="friendships-section" style="height: 90vh;">
+                <h1>Friendships section</h1>
+            </section> -->
         </section>
-        <section class="page-section friendships-section" style="height: 90vh;">
-            <h1>Friendships section</h1>
+        <section class="page-section pipboy">
+            <p style="color: black;">Section Pipboy</p>
+            <section id="userProfile" class="container view-profile">
+            </section>
         </section>
         <button id="toggle-button">Toggle Button</button>
-        {% endblock content %}
     </main>
-    {% block script %}
-    {% endblock script %}
-    <script src="{% static 'js/header.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/users/view-profile.js' %}"></script>
+    <script src="{% static 'js/users/auth.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
