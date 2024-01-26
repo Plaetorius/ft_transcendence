@@ -6,9 +6,23 @@ from django.conf import settings
 
 # User class, implementing AbstractUser for greater flex
 class User(AbstractUser):
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        error_messages={
+            'unique': "A user with that username already exists"
+        },
+    )
     bio = models.TextField(max_length=500, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default="profile_pictures/default.jpg")
-    email = models.EmailField(unique=True, blank=False, null=False)
+    email = models.EmailField(
+        unique=True,
+        blank=False,
+        null=False,
+        error_messages={
+            'unique': "A user with that email already exists."
+        },
+    )
     elo = models.IntegerField(default=1000)
 
     def __str__(self):

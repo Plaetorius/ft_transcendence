@@ -8,7 +8,6 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
     };
     
     const csrftoken = getCookie('csrftoken');
-    console.log(userData);  
     fetch('/users/register/', {
         method: 'POST',
         headers: {
@@ -17,22 +16,32 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
         },
         body: JSON.stringify(userData),
     })
-    .then(response => {
+    .then(async response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const err = await response.json();
+            throw err;
         }
         return response.json();
     })
     .then(data => {
         if (data.id) {
+            userRegistered();
             console.log('Registered');
             // Handle successful registration
         } else {
             // Handle validation errors or other issues
-            document.getElementById('registationErrors').innerHTML = JSON.stringify(data);
         }
     })
-    .catch(error => console.log(`Error: ${error}`));    
+    .catch(error => {
+        // console.log(`${JSON.stringify(error)}`);
+        let errorMessageHTML = '';
+        for (const key in error) {
+            if (error.hasOwnProperty(key)) {
+                errorMessageHTML += `<p>${key}: ${error[key].join(', ')}</p>`;
+            }
+        }
+        document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
+    });    
 });
 
 function getCookie(name) {
@@ -48,4 +57,8 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function userRegistered() {
+
 }
