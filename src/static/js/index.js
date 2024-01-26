@@ -15,20 +15,33 @@ document.addEventListener("keydown", (e) => {
 });
 
 let activeSectionFields = document.querySelectorAll("#active .current .section-field");
-console.log(activeSectionFields);
-console.log(activeSectionFields.length);
 let fieldNb = 0; // TODO reset when changing current
 document.addEventListener("keydown", (e) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        document.getElementById("selected-field").removeAttribute('id');
+        document.getElementsByClassName("selected-field")[0].classList.remove('selected-field');
         if (e.key === 'ArrowUp') {
             fieldNb = ++fieldNb >= activeSectionFields.length ? 0 : fieldNb;
         } else if (e.key === 'ArrowDown') {
             fieldNb = --fieldNb < 0 ? activeSectionFields.length - 1 : fieldNb;
         }
-        activeSectionFields[fieldNb].id = "selected-field";
+        activeSectionFields[fieldNb].classList.add("selected-field");
     }
 });
+
+document.addEventListener('keydown', (e) => {
+    // TODO Add check to be sure that user is in the terminal not playing a game / seding a message
+    if (e.key === 'Enter') {
+        console.log('Test')
+        const selectedFieldElem = document.getElementsByClassName("selected-field")[0];
+        switch (selectedFieldElem.id) {
+            case "register-field":
+                //TODO add history stack elements
+                document.getElementsByClassName("current")[0].classList.remove("current");
+                let current = document.getElementById('register-section').classList.add("current");
+                break;
+        }
+    }
+})
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'f' || e.key === 'F') {

@@ -3,7 +3,9 @@
     height: 100vh;
 }
 
-#active {
+#active,
+#register-section.current,
+#home-section.current {
     display: block;
 }
 
@@ -11,6 +13,7 @@
     font-family: 'VT323', monospace;
     color: rgb(1, 150, 1);
     background-color: black;
+    display: none;
 }
 
 #home-section p {
@@ -22,7 +25,11 @@
     font-size: large;
 }
 
-#selected-field {
+#register-section {
+    display: none;
+}
+
+.selected-field {
     background-color: rgb(1, 150, 1);
     color: black;
 }
