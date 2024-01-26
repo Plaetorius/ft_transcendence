@@ -18,22 +18,23 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
     })
     .then(async response => {
         if (!response.ok) {
-            const err = await response.json();
-            throw err;
+            const errorData = await response.json();
+            handleRegistrationErrors(errorData);
+            throw new Error('Registration failed');
         }
         return response.json();
     })
     .then(data => {
-        if (data.id) {
+        if (data.access) {
+            localStorage.setItem('accessToken', data.access);
+            localStorage.setItem('refreshToken', data.refresh);
+            console.log('Registered and logged')
             userRegistered();
-            console.log('Registered');
-            // Handle successful registration
         } else {
-            // Handle validation errors or other issues
+            throw Error ('No data access');
         }
     })
     .catch(error => {
-        // console.log(`${JSON.stringify(error)}`);
         let errorMessageHTML = '';
         for (const key in error) {
             if (error.hasOwnProperty(key)) {
@@ -59,6 +60,15 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function userRegistered() {
+function handleRegistrationErrors(errorData) {
+    let errorMessageHTML = '';
+    Object.keys(errorData).forEach(key => {
+        errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
+    });
+    document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
+}
 
+function userRegistered() {
+    document.getElementById('register-section').classList.add('d-none');
+    document.getElementById('home-section').classList.remove('d-none')
 }

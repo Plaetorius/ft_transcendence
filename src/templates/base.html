@@ -12,11 +12,17 @@
 </head>
 <body>
     <main>
-        <section class="page-section dashboard"  id="active">
-            <section id="home-section">
-                Home section
+        <section id="active" class="page-section dashboard">
+            <section id="home-section" class="d-block h-100 current">         
+                <p>Welcome to Transcendence Industries (TI) TermLink </p>
+                <p>VAULT-TEC RECREATION TERMINAL</p>
+                <br>
+                <p><span id="selected-field" class="section-field">[Register]</span></p>
+                <p><span class="section-field">[Login]</span></p>
+
+                &#9610;
             </section>
-            <section id="register-section" class="container">
+            <section id="register-section"  class="container d-none">
                 <form id="registrationForm">
                     <input type="text" id="registerUsername" placeholder="Username" value="dumb" required>
                     <input type="text" id="registerEmail" placeholder="Email" value="tom.gernez@gmail.com" required>
@@ -38,7 +44,6 @@
             <section id="userProfile" class="container view-profile">
             </section>
         </section>
-        <button id="toggle-button">Toggle Button</button>
     </main>
     <script src="{% static 'js/index.js' %}"></script>
     <script src="{% static 'js/users/view-profile.js' %}"></script>

@@ -1,8 +1,28 @@
 .page-section {
     display: none;
+    height: 100vh;
 }
 
 #active {
     display: block;
 }
 
+#home-section {
+    font-family: 'VT323', monospace;
+    color: rgb(1, 150, 1);
+    background-color: black;
+}
+
+#home-section p {
+    padding: 0;
+    margin-left: 0.5vw;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 0;
+    font-size: large;
+}
+
+#selected-field {
+    background-color: rgb(1, 150, 1);
+    color: black;
+}

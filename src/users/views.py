@@ -8,8 +8,11 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from rest_framework import generics, status
 from rest_framework.response import Response
-
-from .serializers import UserSerializer, UserRegistrationSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import (
+    UserSerializer,
+    UserRegistrationSerializer,
+)
 
 class UserProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
@@ -17,6 +20,18 @@ class UserProfileView(generics.RetrieveAPIView):
 
 class UserRegistrationAPIView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            res_data = {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+            return Response(res_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found
