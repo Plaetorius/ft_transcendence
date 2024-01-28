@@ -12,43 +12,57 @@
 </head>
 <body>
     <main>
-        <section id="active" class="page-section dashboard">
-            <section id="home-section" class="h-100 current">         
-                <p>Welcome to Transcendence Industries (TI) TermLink </p>
-                <p>VAULT-TEC RECREATION TERMINAL</p>
-                <br>
-                <p><span id="register-field" class="section-field selected-field">[Register]</span></p>
-                <p><span id="login-field" class="section-field">[Login]</span></p>
-                &#9610;
-            </section>
+        <section id="active" class="page-section terminal container">
+            <section class="row">
 
-            <section id="register-section"  class="container">
-                <form id="registrationForm">
-                    <input type="text" id="registerUsername" placeholder="Username"required>
-                    <input type="text" id="registerEmail" placeholder="Email" required>
-                    <input type="password" id="registerPassword1" placeholder="Password" required>
-                    <input type="password" id="registerPassword2" placeholder="Confirm Password" required>
-                    <button type="submit">Register</button>
-                </form>
-                <div id="registrationErrors"></div>
-                <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
             </section>
-
-            <section id="login-section"  class="container">
-                <form id="loginForm">
-                    <input type="text" id="loginUsername" placeholder="Username" required>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
-                <div id="loginErrors"></div>
-                <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
+            <section class="row screen">
+                <section id="home-section" class="h-100 current">         
+                    <p>Welcome to Transcendence Industries (TI) TermLink </p>
+                    <p>VAULT-TEC RECREATION TERMINAL</p>
+                    <br>
+                    <!-- TODO Only display these field if user not connected -->
+                    <p><span id="register-field" class="section-field selected-field">[Register]</span></p>
+                    <p><span id="login-field" class="section-field">[Login]</span></p>
+                    <!-- END -->
+                    <p><span id="games-field" class="section-field">[Games]</span></p>
+                    <p><span id="tournaments-field" class="section-field">[Tournaments]</span></p>
+                    <p><span id="profile-field" class="section-field">[Profile]</span></p>
+                    <p><span id="friends-field" class="section-field">[Friends]</span></p>
+                    <p><span id="chats-field" class="section-field">[Chats]</span></p>
+                    &#9610;
+                </section>
+                
+                <section id="register-section"  class="container">
+                    <form id="registrationForm">
+                        <input type="text" id="registerUsername" placeholder="Username"required>
+                        <input type="text" id="registerEmail" placeholder="Email" required>
+                        <input type="password" id="registerPassword1" placeholder="Password" required>
+                        <input type="password" id="registerPassword2" placeholder="Confirm Password" required>
+                        <button type="submit">Register</button>
+                    </form>
+                    <div id="registrationErrors"></div>
+                    <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
+                </section>
+                
+                <section id="login-section"  class="container">
+                    <form id="loginForm">
+                        <input type="text" id="loginUsername" placeholder="Username" required>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                    <div id="loginErrors"></div>
+                    <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
+                </section>
+                
+                
+                <!-- <section class="home-section" style="height: 90vh;" >
+                    <h1>Home section</h1>
+                </section> -->
+                <!-- <section class="friendships-section" style="height: 90vh;">
+                    <h1>Friendships section</h1>
+                </section> -->
             </section>
-            <!-- <section class="home-section" style="height: 90vh;" >
-                <h1>Home section</h1>
-            </section> -->
-            <!-- <section class="friendships-section" style="height: 90vh;">
-                <h1>Friendships section</h1>
-            </section> -->
         </section>
         <section class="page-section pipboy">
             <p style="color: black;">Section Pipboy</p>

@@ -6,7 +6,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key === 'p') {
         document.getElementById('active').removeAttribute('id');
         if (view) {
-            document.querySelector(".dashboard").id = "active";
+            document.querySelector(".terminal").id = "active";
         } else {
             document.querySelector(".pipboy").id = "active";
         }

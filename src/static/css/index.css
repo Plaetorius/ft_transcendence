@@ -1,6 +1,11 @@
 .page-section {
     display: none;
     height: 100vh;
+    width: 100vw;
+}
+
+.terminal {
+    height: 80vh;
 }
 
 #active,
@@ -10,11 +15,16 @@
     display: block;
 }
 
+#home-section,
+#register-section,
+#login-section {
+    display: none;
+}
+
 #home-section {
     font-family: 'VT323', monospace;
     color: rgb(1, 150, 1);
     background-color: black;
-    display: none;
 }
 
 #home-section p {
@@ -26,15 +36,7 @@
     font-size: large;
 }
 
-#register-section {
-    display: none;
-}
-
 .selected-field {
     background-color: rgb(1, 150, 1);
     color: black;
-}
-
-#login-section {
-    display: none;
 }
