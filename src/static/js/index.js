@@ -55,11 +55,14 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         let selectedFieldElem = document.querySelector(".selected-field");
         switch (selectedFieldElem.id) {
+            case "home-field":
+                changeSection(selectedFieldElem, "home");
+                break;
             case "register-field":
                 changeSection(selectedFieldElem, "register");
                 break;
-            case "home-field":
-                changeSection(selectedFieldElem, "home");
+            case "login-field":
+                changeSection(selectedFieldElem, "login");
                 break;
             default:
                 break;
@@ -67,7 +70,15 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Fullscreen toggle code...
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) {
+        openFullscreen(document.documentElement); // Enter full screen
+      } else {
+        closeFullscreen(); // Exit full screen
+      }
+    }
+  });
 
 window.addEventListener('popstate', (event) => {
     if (event.state && event.state.section) {

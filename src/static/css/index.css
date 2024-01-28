@@ -4,8 +4,9 @@
 }
 
 #active,
+#home-section.current,
 #register-section.current,
-#home-section.current {
+#login-section.current {
     display: block;
 }
 
@@ -32,4 +33,8 @@
 .selected-field {
     background-color: rgb(1, 150, 1);
     color: black;
+}
+
+#login-section {
+    display: none;
 }
