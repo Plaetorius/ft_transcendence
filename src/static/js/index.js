@@ -1,18 +1,6 @@
 let view = false;
 document.addEventListener("keydown", (e) => {
-  // TODO add history management 
-  // BUG crashes everything has section-fields aren't updated
-  // DO NOT USE NOW
-    if (e.key === 'p') {
-        document.getElementById('active').removeAttribute('id');
-        if (view) {
-            document.querySelector(".terminal").id = "active";
-        } else {
-            document.querySelector(".pipboy").id = "active";
-        }
-        view = !view;
-        updateFieldSelection();
-    }
+
 });
 
 function updateFieldSelection() {
@@ -31,16 +19,6 @@ function updateFieldSelection() {
     });
 }
 
-function changeSection(selectedFieldElem, destinationSection) {
-    document.querySelector(".current").classList.remove("current");
-    let current = document.getElementById(`${destinationSection}-section`);
-    current.classList.add("current");
-    current.querySelector('.section-field').classList.add("selected-field");
-    selectedFieldElem.classList.remove("selected-field");
-
-    history.pushState({ section: destinationSection }, '', `#${destinationSection}`);
-    updateFieldSelection();
-}
 
 function openFullscreen(elem) {
     if (elem.requestFullscreen) {
@@ -71,38 +49,77 @@ function setDefaultSection() {
     let section = hash ? hash.substring(1) : 'home'; // Default to 'home' if no hash
     let selectedFieldElem = document.querySelector(`#${section}-field`);
     if (selectedFieldElem) {
-        changeSection(selectedFieldElem, section);
+        changeSectionSwitch(selectedFieldElem, section);
     }
 }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        let selectedFieldElem = document.querySelector(".selected-field");
-        switch (selectedFieldElem.id) {
-            case "home-field":
-                changeSection(selectedFieldElem, "home");
-                break;
-            case "register-field":
-                changeSection(selectedFieldElem, "register");
-                break;
-            case "login-field":
-                changeSection(selectedFieldElem, "login");
-                break;
-            default:
-                break;
-        }
-    }
-});
+function changeSectionSwitch(selectedFieldElem, destinationSection) {
+    document.querySelector(".current").classList.remove("current");
+    let current = document.getElementById(`${destinationSection}-section`);
+    current.classList.add("current");
+    current.querySelector('.section-field').classList.add("selected-field");
+    selectedFieldElem.classList.remove("selected-field");
+
+    history.pushState({ section: destinationSection }, '', `#${destinationSection}`);
+    updateFieldSelection();
+}
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'f' || e.key === 'F') {
-      if (!document.fullscreenElement) {
-        openFullscreen(document.documentElement); // Enter full screen
-      } else {
-        closeFullscreen(); // Exit full screen
-      }
+	// TODO check if user isn't in an input
+	const activeElement = document.activeElement;
+	if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT') {
+        return;
     }
-  });
+	// Field listener
+	if (e.key === 'Enter') {
+		changeSection()
+    }
+
+	// Fullscreen listener
+	if (e.key === 'f' || e.key === 'F') {
+		if (!document.fullscreenElement) {
+		  openFullscreen(document.documentElement); // Enter full screen
+		} else {
+		  closeFullscreen(); // Exit full screen
+		}
+	  }
+
+	// TODO add history management 
+	// BUG crashes everything has section-fields aren't updated
+	// DO NOT USE NOW
+	if (e.key === 'p') {
+		document.getElementById('active').removeAttribute('id');
+		if (view) {
+			document.querySelector(".terminal").id = "active";
+		} else {
+			document.querySelector(".pipboy").id = "active";
+		}
+		view = !view;
+		updateFieldSelection();
+	}
+});
+
+function changeSection() {
+	// TODO maybe make it so if a section name is passed as param, go there instead
+	// of looking for the selected field
+	let selectedFieldElem = document.querySelector(".selected-field");
+	switch (selectedFieldElem.id) {
+		case "home-field":
+			changeSectionSwitch(selectedFieldElem, "home");
+			break;
+		case "register-field":
+			changeSectionSwitch(selectedFieldElem, "register");
+			break;
+		case "login-field":
+			changeSectionSwitch(selectedFieldElem, "login");
+			break;
+		case "friends-field":
+			changeSectionSwitch(selectedFieldElem, "friends");
+			break;
+		default:
+			break;
+	}
+}
 
 window.addEventListener('popstate', (event) => {
     if (event.state && event.state.section) {

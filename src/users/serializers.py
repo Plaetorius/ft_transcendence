@@ -3,8 +3,9 @@ from rest_framework import serializers
 from .models import User
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate
 
-User = get_user_model()
+user = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
@@ -47,4 +48,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             password = validated_data['password1'],
         )
         return user
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(username=data.get('username'), password=data.get('password'))
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials")
 

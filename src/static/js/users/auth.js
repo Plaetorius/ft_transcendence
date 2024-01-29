@@ -1,3 +1,5 @@
+// Registration Part
+
 document.getElementById('registrationForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const userData = {
@@ -28,7 +30,7 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-            console.log('Registered and logged')
+            console.log('Registered and logged');
             userRegistered();
         } else {
             throw Error ('No data access');
@@ -45,6 +47,78 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
     });    
 });
 
+function handleRegistrationErrors(errorData) {
+	let errorMessageHTML = '';
+	Object.keys(errorData).forEach(key => {
+		errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
+	});
+	document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
+}
+
+function userRegistered() {
+	//BUG badly interacts with the back and forth history and section setting
+	changeSection();
+}
+
+// Login Part
+
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+	e.preventDefault();
+	const loginData = {
+		username: document.getElementById('loginUsername').value,
+		password: document.getElementById('loginPassword').value,
+	};
+
+	fetch('/users/login/', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': getCookie('csrftoken'),
+		},
+		body: JSON.stringify(loginData),
+	})
+	.then(async response => {
+		if (!response.ok) {
+			const errorData = await response.json();
+			handleLoginErrors(errorData);
+			throw new Error('Login Failed');
+		}
+		return response.json();
+	})
+	.then(data => {
+		if (data.access) {
+			localStorage.setItem('accessToken', data.access);
+			localStorage.setItem('refreshToken', data.refresh);
+			console.log('Logged in successfully');
+			console.log(`Data: ${data.user}`);
+			alert(`Hello ${data.user.username}!`);
+			userLoggedIn();
+		} else {
+			throw Error ('No data access');
+		}
+	})
+	.catch(error => {
+		console.log(error);
+		document.getElementById('loginErrors').textContent = 'Login failed!';
+	});
+});
+
+function handleLoginErrors(errorData) {
+	let errorMessageHTML = '';
+	Object.keys(errorData).forEach(key => {
+		errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
+	});
+	document.getElementById('loginErrors').innerHTML = errorMessageHTML;
+}
+
+function userLoggedIn() {
+	//BUG badly interacts with the back and forth history and section setting
+	changeSection();
+}
+
+
+// Utils Part
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -60,15 +134,3 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function handleRegistrationErrors(errorData) {
-    let errorMessageHTML = '';
-    Object.keys(errorData).forEach(key => {
-        errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
-    });
-    document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
-}
-
-function userRegistered() {
-    document.getElementById('register-section').classList.add('d-none');
-    document.getElementById('home-section').classList.remove('d-none')
-}

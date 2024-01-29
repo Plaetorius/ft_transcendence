@@ -11,13 +11,15 @@
 #active,
 #home-section.current,
 #register-section.current,
-#login-section.current {
+#login-section.current,
+#friends-section.current {
     display: block;
 }
 
 #home-section,
 #register-section,
-#login-section {
+#login-section,
+#friends-section {
     display: none;
 }
 
