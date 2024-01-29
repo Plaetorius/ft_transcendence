@@ -9,7 +9,7 @@ from asgiref.sync import async_to_sync
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
@@ -53,6 +53,7 @@ class UserLoginAPIView(generics.GenericAPIView):
 
 class UserSearchAPIView(generics.RetrieveAPIView):
 	serializer_class = UserSerializer
+	permission_classes = [IsAuthenticated]
 
 	def get(self, request, username, *args, **kwargs):
 		user = get_object_or_404(User, username=username) # TODO error message instead of 404
