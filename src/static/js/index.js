@@ -111,16 +111,18 @@ function changeSection(sectionName) {
   } else if (selectedFieldElem) {
     fieldName = selectedFieldElem.id.replace('-field', '');
   }
-
   const fieldElements = document.querySelectorAll('[id$="-field"]');
   const fieldExists = Array.from(fieldElements).some(element => element.id.replace('-field', '') === fieldName);
-  const sectionExists = Array.from(document.querySelectorAll('[id$="-section"]')).some(element => element.id.replace('-section', '') === fieldName);
-
-  if (fieldExists && sectionExists) {
-    changeSectionSwitch(selectedFieldElem, fieldName);
-  } else {
-    console.log("Bad field name or destination section doesn't exist in changeSection()");
+  if (!fieldExists) {
+    console.log("Field doesn't exist!");
+    return ;
   }
+  const sectionExists = Array.from(document.querySelectorAll('[id$="-section"]')).some(element => element.id.replace('-section', '') === fieldName);
+  if (!sectionExists) {
+    console.log("Section doesn't exist!");
+    return ;
+  }
+  changeSectionSwitch(selectedFieldElem, fieldName);
 }
 
 window.addEventListener('popstate', (event) => {
