@@ -36,30 +36,38 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginAPIView(generics.GenericAPIView):
-	serializer_class = UserLoginSerializer
-	permission_classes = [AllowAny]
+    serializer_class = UserLoginSerializer
+    permission_classes = [AllowAny]
 
-	def post(self, request, *args, **kwargs):
-		serializer = self.get_serializer(data=request.data)
-		serializer.is_valid(raise_exception=True)
-		user = serializer.validated_data
-		refresh = RefreshToken.for_user(user)
-		user_data = UserSerializer(user).data
-		return Response({
-			'refresh': str(refresh),
-			'access': str(refresh.access_token),
-			'user': user_data,
-		}, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        refresh = RefreshToken.for_user(user)
+        user_data = UserSerializer(user).data
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': user_data,
+        }, status=status.HTTP_200_OK)
 
 class UserSearchAPIView(generics.RetrieveAPIView):
-	serializer_class = UserSerializer
-	permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
-	def get(self, request, username, *args, **kwargs):
-		user = get_object_or_404(User, username=username) # TODO error message instead of 404
-		serializer = self.get_serializer(user)
-		return Response(serializer.data)
+    def get(self, request, username, *args, **kwargs):
+        user = get_object_or_404(User, username=username)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
 
+class UserProfileAPIView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, id=request.user.id)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
 
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found

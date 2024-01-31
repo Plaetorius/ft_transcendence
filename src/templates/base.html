@@ -55,7 +55,15 @@
                     <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
                 </section>
                
-				<section id="friends-section" class="container">
+                <section id="profile-section" class="container">
+                    <div id="displayProfile">
+
+                    </div>
+                    <div id="profileErrors"></div>
+                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
+                </section>
+				
+                <section id="friends-section" class="container">
 					<form id="userSearchForm">
 						<input type="text" id="searchUsername" placeholder="Search a user...">
 						<button type="submit">Search</button>
@@ -84,6 +92,7 @@
     <script src="{% static 'js/users/view-profile.js' %}"></script>
     <script src="{% static 'js/users/auth.js' %}"></script>
 	<script src="{% static 'js/users/search.js' %}"></script>
+	<script src="{% static 'js/users/profile.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

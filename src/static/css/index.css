@@ -12,6 +12,7 @@
 #home-section.current,
 #register-section.current,
 #login-section.current,
+#profile-section.current,
 #friends-section.current {
     display: block;
 }
@@ -19,6 +20,7 @@
 #home-section,
 #register-section,
 #login-section,
+#profile-section,
 #friends-section {
     display: none;
 }
@@ -41,4 +43,12 @@
 .selected-field {
     background-color: rgb(1, 150, 1);
     color: black;
+}
+
+#profile-section img {
+    width: 50px;
+    height: 50px;
+    overflow-x: hidden;
+    object-fit: cover;
+    object-position: center;
 }
