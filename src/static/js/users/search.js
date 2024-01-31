@@ -20,7 +20,7 @@ document.getElementById('userSearchForm').addEventListener('submit', (e) => {
 		displayUserProfile(userData);
 	})
 	.catch(error => {
-		document.getElementById('searchedProfile').innerHTML = error.message;
+		document.getElementById('friendsError').innerHTML = error.message;
 	});
 });
 
@@ -28,5 +28,8 @@ function displayUserProfile(userData) {
 	const searchedProfileDiv = document.getElementById('searchedProfile');
 	searchedProfileDiv.innerHTML = `
 		<h4>${userData.username}</h4>
+		<p>Bio: ${userData.bio}</p>
+		<img src="${userData.profile_picture}">
+		<p>Elo: ${userData.elo}</p>
 	`;
 }

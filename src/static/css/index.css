@@ -45,9 +45,11 @@
     color: black;
 }
 
-#profile-section img {
-    width: 50px;
-    height: 50px;
+
+#profile-section img,
+#friends-section img {
+    width: 150px;
+    height: 150px;
     overflow-x: hidden;
     object-fit: cover;
     object-position: center;

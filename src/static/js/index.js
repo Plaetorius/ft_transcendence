@@ -1,4 +1,4 @@
-// FIXME on a page, reloading the page and hitting return shows the register section
+// FIXME on a page, reloading the page and hitting return shows the register
 
 let view = false;
 document.addEventListener("keydown", (e) => {
