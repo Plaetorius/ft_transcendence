@@ -53,17 +53,6 @@ function setDefaultSection() {
     }
 }
 
-function changeSectionSwitch(selectedFieldElem, destinationSection) {
-    document.querySelector(".current").classList.remove("current");
-    let current = document.getElementById(`${destinationSection}-section`);
-    current.classList.add("current");
-    current.querySelector('.section-field').classList.add("selected-field");
-    selectedFieldElem.classList.remove("selected-field");
-
-    history.pushState({ section: destinationSection }, '', `#${destinationSection}`);
-    updateFieldSelection();
-}
-
 document.addEventListener('keydown', (e) => {
 	// TODO check if user isn't in an input
 	const activeElement = document.activeElement;
@@ -99,26 +88,39 @@ document.addEventListener('keydown', (e) => {
 	}
 });
 
-function changeSection() {
-	// TODO maybe make it so if a section name is passed as param, go there instead
-	// of looking for the selected field
-	let selectedFieldElem = document.querySelector(".selected-field");
-	switch (selectedFieldElem.id) {
-		case "home-field":
-			changeSectionSwitch(selectedFieldElem, "home");
-			break;
-		case "register-field":
-			changeSectionSwitch(selectedFieldElem, "register");
-			break;
-		case "login-field":
-			changeSectionSwitch(selectedFieldElem, "login");
-			break;
-		case "friends-field":
-			changeSectionSwitch(selectedFieldElem, "friends");
-			break;
-		default:
-			break;
-	}
+function changeSectionSwitch(selectedFieldElem, destinationSection) {
+  document.querySelector(".current").classList.remove("current");
+  let current = document.getElementById(`${destinationSection}-section`);
+  if (current) {
+    current.classList.add("current");
+    current.querySelector('.section-field').classList.add("selected-field");
+  }
+  if (selectedFieldElem) {
+    selectedFieldElem.classList.remove("selected-field");
+  }
+
+  history.pushState({ section: destinationSection }, '', `#${destinationSection}`);
+  updateFieldSelection();
+}
+
+function changeSection(sectionName) {
+  let selectedFieldElem = document.querySelector(".selected-field");
+  let fieldName;
+  if (sectionName) {
+    fieldName = sectionName;
+  } else if (selectedFieldElem) {
+    fieldName = selectedFieldElem.id.replace('-field', '');
+  }
+
+  const fieldElements = document.querySelectorAll('[id$="-field"]');
+  const fieldExists = Array.from(fieldElements).some(element => element.id.replace('-field', '') === fieldName);
+  const sectionExists = Array.from(document.querySelectorAll('[id$="-section"]')).some(element => element.id.replace('-section', '') === fieldName);
+
+  if (fieldExists && sectionExists) {
+    changeSectionSwitch(selectedFieldElem, fieldName);
+  } else {
+    console.log("Bad field name or destination section doesn't exist in changeSection()");
+  }
 }
 
 window.addEventListener('popstate', (event) => {
