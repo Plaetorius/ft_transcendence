@@ -11,6 +11,7 @@ function showProfile() {
         if (!response.ok) {
             throw new Error('User not found');
         }
+        // TODO hide error in the console
         return response.json();
     })
     .then(userData => {

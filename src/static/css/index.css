@@ -13,7 +13,8 @@
 #register-section.current,
 #login-section.current,
 #profile-section.current,
-#friends-section.current {
+#friends-section.current,
+#welcome-section.current {
     display: block;
 }
 
@@ -21,7 +22,8 @@
 #register-section,
 #login-section,
 #profile-section,
-#friends-section {
+#friends-section,
+#welcome-section {
     display: none;
 }
 

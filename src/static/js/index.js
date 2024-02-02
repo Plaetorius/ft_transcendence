@@ -58,13 +58,13 @@ function setDefaultSection() {
 document.addEventListener('keydown', (e) => {
 	// TODO check if user isn't in an input
 	const activeElement = document.activeElement;
-	if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT') {
-        return;
-    }
+	if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.tagName === 'BUTTON') {
+      return;
+  }
 	// Field listener
 	if (e.key === 'Enter') {
 		changeSection()
-    }
+  }
 
 	// Fullscreen listener
 	if (e.key === 'f' || e.key === 'F') {
@@ -73,7 +73,7 @@ document.addEventListener('keydown', (e) => {
 		} else {
 		  closeFullscreen(); // Exit full screen
 		}
-	  }
+	}
 
 	// TODO add history management 
 	// BUG crashes everything has section-fields aren't updated

@@ -22,7 +22,8 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
         if (!response.ok) {
             const errorData = await response.json();
             handleRegistrationErrors(errorData);
-            throw new Error('Registration failed');
+            return ;
+            // throw new Error('Registration failed');
         }
         return response.json();
     })
@@ -32,18 +33,25 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
             userRegistered();
+            showProfile();
+            changeSection("welcome");
         } else {
+            console.log("No data access");
             throw Error ('No data access');
         }
     })
     .catch(error => {
-        let errorMessageHTML = '';
-        for (const key in error) {
-            if (error.hasOwnProperty(key)) {
-                errorMessageHTML += `<p>${key}: ${error[key].join(', ')}</p>`;
-            }
-        }
-        document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
+        // let errorMessageHTML = '';
+        // for (const key in error) {
+            // if (error.hasOwnProperty(key)) {
+                // errorMessageHTML += `<p>${key}: ${error[key].join(', ')}</p>`;
+            // }
+        // }
+        // handleRegistrationErrors(error);
+
+        // console.log(`Catch block ${errorMessageHTML} end`);
+        // console.log(`Registration Errors InnerHTML ${document.getElementById('registrationErrors').innerHTML}`);
+        // document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
     });    
 });
 
@@ -57,7 +65,7 @@ function handleRegistrationErrors(errorData) {
 
 function userRegistered() {
 	//BUG badly interacts with the back and forth history and section setting
-	changeSection();
+    changeSection("welcome");
 }
 
 // Login Part
@@ -93,6 +101,8 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 			console.log(`Data: ${data.user}`);
 			alert(`Hello ${data.user.username}!`);
 			userLoggedIn();
+            showProfile();
+            changeSection("home");
 		} else {
 			throw Error ('No data access');
 		}
@@ -113,7 +123,7 @@ function handleLoginErrors(errorData) {
 
 function userLoggedIn() {
 	//BUG badly interacts with the back and forth history and section setting
-	changeSection();
+
 }
 
 
