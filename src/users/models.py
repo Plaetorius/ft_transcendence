@@ -47,13 +47,12 @@ class PrivateMessage(models.Model):
         return f"Private Message: {self.sender} -> {self.receiver}: {self.image}"
 
 # Friendship Class
-# TODO reformat to user1 and user2?
 class Friendship(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friendships', on_delete=models.CASCADE)
-    friend = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friends', on_delete=models.CASCADE)
+    friend1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friend1', on_delete=models.CASCADE)
+    friend2 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='friend2', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
-        unique_together = ('user', 'friend')
+        unique_together = ('friend1', 'friend2')
     
     def __str__(self):
         return f"Friendship: {self.user} -> {self.friend}"

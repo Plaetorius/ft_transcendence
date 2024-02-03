@@ -1,9 +1,14 @@
 document.getElementById('userSearchForm').addEventListener('submit', (e) => {
-	console.log(`Token: ${localStorage.getItem('accessToken')}`);
 	e.preventDefault();
 	const username = document.getElementById('searchUsername').value;
-	console.log(`Username: ${username}`);
-	fetch(`/users/search/${encodeURIComponent(username)}/`, {
+	getUser(username)
+	.catch(error => {
+		document.getElementById('friendsError').innerHTML = error.message;
+	});
+});
+
+function getUser(username) {
+	return fetch(`/users/search/${encodeURIComponent(username)}/`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -17,14 +22,11 @@ document.getElementById('userSearchForm').addEventListener('submit', (e) => {
 		return response.json();
 	})
 	.then(userData => {
-		displayUserProfile(userData);
-	})
-	.catch(error => {
-		document.getElementById('friendsError').innerHTML = error.message;
-	});
-});
+		showUserProfile(userData);
+	});	
+}
 
-function displayUserProfile(userData) {
+function showUserProfile(userData) {
 	const searchedProfileDiv = document.getElementById('searchedProfile');
 	searchedProfileDiv.innerHTML = `
 		<h4>${userData.username}</h4>

@@ -69,6 +69,15 @@ class UserProfileAPIView(generics.RetrieveAPIView):
         serializer = self.get_serializer(user)
         return Response(serializer.data)
 
+class UserFriendsAPIView(generics.RetrieveAPIView):
+	serializer_class = UserSerializer
+	permission_classes = [IsAuthenticated]
+
+	def get(self, request, *args, **kwargs):
+		user = get_object_or_404(User, id=request.user.id)
+		serializer = self.get_serializer(user)
+		return Response(serializer.data)
+
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found
     user = get_object_or_404(User, username=username)

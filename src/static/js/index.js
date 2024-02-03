@@ -1,4 +1,5 @@
-// FIXME on a page, reloading the page and hitting return shows the register
+// FIXME on a page, reloading the page and hitting return shows the register, has to do with
+// previsously selected-field
 
 let view = false;
 document.addEventListener("keydown", (e) => {
@@ -48,7 +49,7 @@ function openFullscreen(elem) {
 
 function setDefaultSection() {
     let hash = window.location.hash;
-    let section = hash ? hash.substring(1) : 'home'; // Default to 'home' if no hash
+    let section = hash ? hash.substring(1) : 'home'; // Replace blank url by url/#home
     let selectedFieldElem = document.querySelector(`#${section}-field`);
     if (selectedFieldElem) {
         changeSectionSwitch(selectedFieldElem, section);
@@ -56,7 +57,6 @@ function setDefaultSection() {
 }
 
 document.addEventListener('keydown', (e) => {
-	// TODO check if user isn't in an input
 	const activeElement = document.activeElement;
 	if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.tagName === 'BUTTON') {
       return;

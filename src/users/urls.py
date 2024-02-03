@@ -7,6 +7,7 @@ from .views import (
 	UserLoginAPIView,
 	UserSearchAPIView,
     UserProfileAPIView,
+	UserFriendsAPIView,
 )
 
 urlpatterns = [
@@ -15,5 +16,5 @@ urlpatterns = [
 	path('login/', UserLoginAPIView.as_view(), name="login-api"),
 	path('search/<str:username>/', UserSearchAPIView.as_view(), name="search-api"),
     path('profile/', UserProfileAPIView.as_view(), name="profile-api"),
-    # path('friends/', UserFriendsAPIView.as_view(), name="friends-api"),
+    path('friends/<str:username>/', UserFriendsAPIView.as_view(), name="friends-api"),
 ]
