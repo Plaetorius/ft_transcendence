@@ -55,9 +55,9 @@ class Friendship(models.Model):
         unique_together = ('friend1', 'friend2')
     
     def __str__(self):
-        return f"Friendship: {self.user} -> {self.friend}"
+        return f"Friendship: {self.friend1} -> {self.friend2}"
 
-
+# TODO remove
 # Friend Request Class
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_sent", on_delete=models.CASCADE)
