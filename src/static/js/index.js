@@ -113,29 +113,36 @@ function changeSection(sectionName) {
   } else if (selectedFieldElem) {
     fieldName = selectedFieldElem.id.replace('-field', '');
   }
-  const fieldElements = document.querySelectorAll('[id$="-field"]');
-  const fieldExists = Array.from(fieldElements).some(element => element.id.replace('-field', '') === fieldName);
-  if (!fieldExists) {
-    console.log("Field doesn't exist!");
-    return ;
-  }
-  const sectionExists = Array.from(document.querySelectorAll('[id$="-section"]')).some(element => element.id.replace('-section', '') === fieldName);
-  if (!sectionExists) {
-    console.log("Section doesn't exist!");
-    return ;
-  }
+  // const fieldElements = document.querySelectorAll('[id$="-field"]');
+  // console.log(`Field elements: ${fieldElements.length}`);
+  // let todiplay = '';
+  // for (let i = 0; i < fieldElements.length; i++) {
+  //   todiplay += fieldElements[i].innerHTML;
+	// }
+  // console.log(`${todiplay}`);
+  // Probably useless
+  // const fieldExists = Array.from(fieldElements).some(element => element.id.replace('-field', '') === fieldName);
+  // if (!fieldExists) {
+  //   console.log(`Field ${fieldName} doesn't exist!`);
+  //   return ;
+  // }
+  // const sectionExists = Array.from(document.querySelectorAll('[id$="-section"]')).some(element => element.id.replace('-section', '') === fieldName);
+  // if (!sectionExists) {
+  //   console.log(`Section ${fieldName} doesn't exist!`);
+  //   return ;
+  // }
   changeSectionSwitch(selectedFieldElem, fieldName);
 }
 
 window.addEventListener('popstate', (event) => {
-    if (event.state && event.state.section) {
-        let section = event.state.section;
-        document.querySelector(".current").classList.remove("current");
-        let newCurrent = document.getElementById(`${section}-section`);
-        newCurrent.classList.add("current");
-        newCurrent.querySelector('.section-field').classList.add("selected-field");
-        updateFieldSelection();
-    }
+  if (event.state && event.state.section) {
+    let section = event.state.section;
+    document.querySelector(".current").classList.remove("current");
+    let newCurrent = document.getElementById(`${section}-section`);
+    newCurrent.classList.add("current");
+    newCurrent.querySelector('.section-field').classList.add("selected-field");
+    updateFieldSelection();
+  }
 });
 
 // Call setDefaultSection initially to set the initial section

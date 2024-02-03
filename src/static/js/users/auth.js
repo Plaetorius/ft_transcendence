@@ -32,7 +32,7 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
-            userRegistered();
+            // userRegistered();
             showProfile();
             changeSection("welcome");
         } else {
@@ -144,3 +144,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+
+// Test
+document.getElementById('testButton').addEventListener('click', (e) => {
+	changeSection('welcome');
+});
