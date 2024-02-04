@@ -1,6 +1,6 @@
 # users/serializers.py
 from rest_framework import serializers
-from .models import User
+from .models import User, Friendship
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
@@ -58,3 +58,35 @@ class UserLoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect Credentials")
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    friend1_id = serializers.IntegerField(write_only=True)
+    friend2_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Friendship
+        fields = ['friend1_id', 'friend2_id']
+
+    def validate_friend1_id(self, value):
+        try:
+            User.objects.get(pk=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with id {0} doesn't exist".format(value))
+        return value
+
+    def validate_friend2_id(self, value):
+        try:
+            User.objects.get(pk=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with id {0} doesn't exist".format(value))
+        return value
+
+    def validate(self, data):
+        if data['friend1_id'] == data['friend2_id']:
+            raise serializers.ValidationError("You can't be friend with yourself")
+        return data
+
+    def create(self, validated_data):
+        friend1 = User.objects.get(pk=validated_data['friend1_id'])
+        friend2 = User.objects.get(pk=validated_data['friend2_id'])
+        return Friendship.objects.create(friend1=friend1, friend2=friend2)

@@ -8,12 +8,14 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
 	UserLoginSerializer,
+    FriendshipSerializer,
 )
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -77,6 +79,57 @@ class UserFriendsAPIView(generics.RetrieveAPIView):
 		user = get_object_or_404(User, id=request.user.id)
 		serializer = self.get_serializer(user)
 		return Response(serializer.data)
+
+class UserAddFriendAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, username):
+        # Get request user
+        user = get_object_or_404(User, id=request.user.id)
+        # Get username user
+        try:
+            friend = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND,
+                )
+        # Check if user adding himself as friend
+        if user == friend:
+            return Response(
+                {'error': "You can't add yourself as a friend!"},
+                status=status.HTTP_400_BAD_REQUEST, 
+            )
+        # Check if not already friends
+        if Friendship.objects.filter(friend1=user, friend2=friend).exists() or Friendship.objects.filter(friend1=friend, friend2=user).exists():
+            return Response(
+                {'error': "You're already friends!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )   
+        # Validate data with serializer
+        serializer = FriendshipSerializer(
+            data={
+                'friend1_id': user.id,
+                'friend2_id': friend.id
+                }
+            )
+        # Create Friendship
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {'success': "Friend added."},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(
+            # {'error': 'Serializer error'},
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class UserRemoveFriendAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
 
 def user_profile_view(request, username):
     # TODO can be upgraded to have better support if a user isn't found
@@ -162,7 +215,6 @@ def send_friend_request(request):
         except User.DoesNotExist:
             messages.error(request, "The user doesn't exist")
     return redirect('friendships')
-
 
 @login_required
 def friendship_remove(request, friendship_id):
