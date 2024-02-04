@@ -36,7 +36,8 @@ function showUserProfile(userData) {
 		<img src="${userData.profile_picture}">
 		<p>Elo: ${userData.elo}</p>
 		<button id="searchAddFriendButton" data-username="${userData.username}"> Add Friend </button>
-	`;
+		<button id="searchRemoveFriendButton" data-username="${userData.username}"> Remove Friend </button>
+		`;
 }
 
 document.getElementById('searchedProfile').addEventListener('click', (e) => {
@@ -44,10 +45,13 @@ document.getElementById('searchedProfile').addEventListener('click', (e) => {
 		const username = e.target.getAttribute('data-username');
 		addFriend(username);
 	}
+	if (e.target && e.target.id === 'searchRemoveFriendButton') {
+		const username = e.target.getAttribute('data-username');
+		removeFriend(username);
+	}
 })
 
 function addFriend(username) {
-	console.log('Add friend triggered');
 	fetch(`/users/add-friend/${username}`, {
 		method: 'POST',
 		headers: {
@@ -57,7 +61,7 @@ function addFriend(username) {
 	})
 	.then(response => {
 		if (!response.ok) {
-			throw new Error("Could not add friend");
+            return response.json().then(err => Promise.reject(err));
 		}
 		return response.json();
 	})
@@ -67,6 +71,31 @@ function addFriend(username) {
 	})
 	.catch(error => {
 		// TODO handle error
-		console.log(`Error: ${error.error}`);
+		console.log(`Error: ${error.error ? error.error : error}`);
+	});
+}
+
+function removeFriend(username) {
+	fetch(`/users/remove-friend/${username}`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+		}
+	})
+	.then(response => {
+		if (!response.ok) {
+			// Parse the JSON error message and throw it as an error
+            return response.json().then(err => Promise.reject(err));
+		}
+		return response.json();
+	})
+	.then(data => {
+		// TODO handle success
+		console.log(`Success: ${data.success}`);
+	})
+	.catch(error => {
+		// TODO handle error
+		console.log(`Error: ${error.error ? error.error : error}`);
 	});
 }

@@ -86,9 +86,10 @@ class UserAddFriendAPIView(APIView):
     def post(self, request, username):
         # Get request user
         user = get_object_or_404(User, id=request.user.id)
-        # Get username user
+        # Try get username user
         try:
             friend = User.objects.get(username=username)
+        # Exception if doesn't exist
         except User.DoesNotExist:
             return Response(
                 {'error': 'User not found'},
@@ -129,6 +130,39 @@ class UserAddFriendAPIView(APIView):
 
 class UserRemoveFriendAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
+    def delete(self, request, username):
+        # Get request user
+        user = request.user
+        # Try get username user
+        try:
+            friend = User.objects.get(username=username)
+        # Exception if doesn't exist
+        except User.DoesNotExist:
+            return Response(
+                {'error': "User doesn't exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        # Check if trying to remove himself (useless but cleaner)
+        if user == friend:
+            return Response(
+                {'error': "You can't unfriend yourself, have some self love <3"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        # Check if friends
+        friendship = Friendship.objects.filter(friend1=user, friend2=friend) | Friendship.objects.filter(friend1=friend, friend2=user)
+        # If friends, remove Friendship, return success
+        if friendship.exists():
+            friendship.delete()
+            return Response(
+                {'success': "Friend removed."},
+                status=status.HTTP_200_OK,
+            )
+        # Else, return error
+        return Response(
+            {'error': "You're not friend with that person"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 def user_profile_view(request, username):
