@@ -96,14 +96,14 @@ body {
 }
 
 
-#active {
+.active {
 	position: relative;
 	border-bottom: 0.4vh black solid;
 	/* height: 200px; Your element's height */
 	/* Other styles for your element */
 }
   
-#active:before {
+.active:before {
 	content: '';
 	position: absolute;
 	left: 0;

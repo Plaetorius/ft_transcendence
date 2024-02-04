@@ -8,13 +8,14 @@
     height: 80vh;
 }
 
-#active,
+.active,
 #home-section.current,
 #register-section.current,
 #login-section.current,
 #profile-section.current,
 #friends-section.current,
-#welcome-section.current {
+#welcome-section.current, 
+#dev-section.current {
     display: block;
 }
 
@@ -23,7 +24,8 @@
 #login-section,
 #profile-section,
 #friends-section,
-#welcome-section {
+#welcome-section,
+#dev-section {
     display: none;
 }
 

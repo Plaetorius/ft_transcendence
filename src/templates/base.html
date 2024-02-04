@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/users/view-profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
 </head>
 <body>
     <main>
-        <section id="active" class="page-section terminal container">
+        <section class="page-section terminal container active">
             <section class="row">
 
             </section>
@@ -93,6 +94,14 @@
             <p style="color: black;">Section Pipboy</p>
             <section id="userProfile" class="container view-profile">
             </section>
+        </section>
+        <section id="dev-section" class="container w-100 p-5">
+            <div class="row d-flex justify-content-center align-items-center w-100">
+                <div class="col d-flex justify-content-center align-items-center">
+                    <img src="{% static 'cards/perk-card-booster.png' %}" class="perk-card-booster" draggable="false">
+                </div>
+            </div>
+
         </section>
     </main>
     <script src="{% static 'js/index.js' %}"></script>

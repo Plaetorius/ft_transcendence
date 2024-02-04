@@ -7,7 +7,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 function updateFieldSelection() {
-    let activeSectionFields = document.querySelectorAll("#active .current .section-field");
+    let activeSectionFields = document.querySelectorAll(".active .current .section-field");
     let fieldNb = 0;
     document.addEventListener("keydown", (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -78,16 +78,16 @@ document.addEventListener('keydown', (e) => {
 	// TODO add history management 
 	// BUG crashes everything has section-fields aren't updated
 	// DO NOT USE NOW
-	if (e.key === 'p') {
-		document.getElementById('active').removeAttribute('id');
-		if (view) {
-			document.querySelector(".terminal").id = "active";
-		} else {
-			document.querySelector(".pipboy").id = "active";
-		}
-		view = !view;
-		updateFieldSelection();
-	}
+	// if (e.key === 'p') {
+	// 	document.querySelector('.active').classList.remove('active');
+	// 	if (view) {
+	// 		document.querySelector(".terminal").classList.add("active");
+	// 	} else {
+	// 		document.querySelector(".pipboy").classList.add("active");
+	// 	}
+	// 	view = !view;
+	// 	updateFieldSelection();
+	// }
 });
 
 function changeSectionSwitch(selectedFieldElem, destinationSection) {
