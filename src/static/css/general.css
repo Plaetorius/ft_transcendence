@@ -4,12 +4,16 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	background-color: black;
 }
 
 html, body {
     max-width: 100%;
     overflow-x: hidden;
 	touch-action: manipulation;
+	width: 100vw;
+	height: 100vh;
+	background-color: black;
 }
 
 main {

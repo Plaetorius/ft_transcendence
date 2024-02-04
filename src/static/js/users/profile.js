@@ -1,5 +1,7 @@
 function showProfile() {
-    let profileElement = document.getElementById('displayProfile');
+
+    document.getElementById('profileErrors').innerHTML = '';
+	let profileElement = document.getElementById('displayProfile');
     fetch('/users/profile/', {
         method: 'GET',
         headers: {
