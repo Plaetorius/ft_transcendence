@@ -1,6 +1,6 @@
 # users/serializers.py
 from rest_framework import serializers
-from .models import User, Friendship
+from .models import User, Friendship, BlockedUser
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
@@ -71,14 +71,14 @@ class FriendshipSerializer(serializers.ModelSerializer):
         try:
             User.objects.get(pk=value)
         except User.DoesNotExist:
-            raise serializers.ValidationError("User with id {0} doesn't exist".format(value))
+            raise serializers.ValidationError(f"User with id {value} doesn't exist")
         return value
 
     def validate_friend2_id(self, value):
         try:
             User.objects.get(pk=value)
         except User.DoesNotExist:
-            raise serializers.ValidationError("User with id {0} doesn't exist".format(value))
+            raise serializers.ValidationError(f"User with id {value} doesn't exist")
         return value
 
     def validate(self, data):
@@ -90,3 +90,35 @@ class FriendshipSerializer(serializers.ModelSerializer):
         friend1 = User.objects.get(pk=validated_data['friend1_id'])
         friend2 = User.objects.get(pk=validated_data['friend2_id'])
         return Friendship.objects.create(friend1=friend1, friend2=friend2)
+
+class BlockedUserSerializer(serializers.ModelSerializer):
+    blocker_id = serializers.IntegerField(write_only=True)
+    blocked_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = BlockedUser
+        fields = ['blocker_id', 'blocked_id']
+
+    def validate_blocker_id(self, value):
+        try:
+            User.objects.get(pk=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(f"User with id {value} doesn't exist")
+        return value
+
+    def validate_blocked_id(self, value):
+        try:
+            User.objects.get(pk=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(f"User with id {value} doesn't exist")
+        return value
+    
+    def validate(self, data):
+        if data['blocker_id'] == data['blocked_id']:
+            raise serializers.ValidationError("You can't block yourself")
+        return data
+    
+    def create(self, validated_data):
+        blocker = User.objects.get(pk=validated_data['blocker_id'])
+        blocked = User.objects.get(pk=validated_data['blocked_id'])
+        return BlockedUser.objects.create(blocker=blocker, blocked=blocked)

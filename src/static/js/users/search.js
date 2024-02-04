@@ -1,3 +1,6 @@
+// TODO create functions for better error handling for friend add, friend remove,
+// block user, unblock user
+
 document.getElementById('userSearchForm').addEventListener('submit', (e) => {
 	e.preventDefault();
 	const username = document.getElementById('searchUsername').value;
@@ -37,6 +40,8 @@ function showUserProfile(userData) {
 		<p>Elo: ${userData.elo}</p>
 		<button id="searchAddFriendButton" data-username="${userData.username}"> Add Friend </button>
 		<button id="searchRemoveFriendButton" data-username="${userData.username}"> Remove Friend </button>
+		<button id="searchBlockUserButton" data-username="${userData.username}"> Block user </button>
+		<button id="searchUnblockUserButton" data-username="${userData.username}"> Unblock user </button>
 		`;
 }
 
@@ -48,6 +53,14 @@ document.getElementById('searchedProfile').addEventListener('click', (e) => {
 	if (e.target && e.target.id === 'searchRemoveFriendButton') {
 		const username = e.target.getAttribute('data-username');
 		removeFriend(username);
+	}
+	if (e.target && e.target.id === 'searchBlockUserButton') {
+		const username = e.target.getAttribute('data-username');
+		blockUser(username);
+	}
+	if (e.target && e.target.id === 'searchUnblockUserButton') {
+		const username = e.target.getAttribute('data-username');
+		unblockUser(username);
 	}
 })
 
@@ -85,7 +98,54 @@ function removeFriend(username) {
 	})
 	.then(response => {
 		if (!response.ok) {
-			// Parse the JSON error message and throw it as an error
+            return response.json().then(err => Promise.reject(err));
+		}
+		return response.json();
+	})
+	.then(data => {
+		// TODO handle success
+		console.log(`Success: ${data.success}`);
+	})
+	.catch(error => {
+		// TODO handle error
+		console.log(`Error: ${error.error ? error.error : error}`);
+	});
+}
+
+function blockUser(username) {
+	fetch(`/users/block/${username}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+		}
+	})
+	.then(response => {
+		if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+		}
+		return response.json();
+	})
+	.then(data => {
+		// TODO handle success
+		console.log(`Success: ${data.success}`);
+	})
+	.catch(error => {
+		// TODO handle error
+		console.log(`Error: ${error.error ? error.error : error}`);
+	});
+}
+
+function unblockUser(username) {
+	fetch(`/users/unblock/${username}`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+		}
+	})
+	.then(response => {
+		if (!response.ok) {
             return response.json().then(err => Promise.reject(err));
 		}
 		return response.json();
