@@ -77,18 +77,28 @@
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
 				</section>
                 
+                <section id="chats-section" class="container">
+                    <div id="chats">
+                        <button class="chatRoomButton" data-username="stoupid">Chat Stoupid</button>
+                    </div>
+                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>    
+                </section>
+
+
+                <!-- Temporary -->
                 <section id="welcome-section" class="container">
                     <p>Welcome !</p>
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
 				</section>
-				</section>
+
+
+			</section>
                 <!-- <section class="home-section" style="height: 90vh;" >
                     <h1>Home section</h1>
                 </section> -->
                 <!-- <section class="friendships-section" style="height: 90vh;">
                     <h1>Friendships section</h1>
                 </section> -->
-            </section>
         </section>
         <section class="page-section pipboy">
             <p style="color: black;">Section Pipboy</p>
@@ -101,11 +111,9 @@
                     <img src="{% static 'cards/perk-card-booster.png' %}" class="perk-card-booster" draggable="false">
                 </div>
             </div>
-
         </section>
     </main>
     <script src="{% static 'js/index.js' %}"></script>
-    <script src="{% static 'js/users/view-profile.js' %}"></script>
     <script src="{% static 'js/users/auth.js' %}"></script>
 	<script src="{% static 'js/users/search.js' %}"></script>
 	<script src="{% static 'js/users/profile.js' %}"></script>
