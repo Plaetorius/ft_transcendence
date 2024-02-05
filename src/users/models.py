@@ -36,15 +36,6 @@ class MatchHistory(models.Model):
     # TODO Change to the real Game class
     date_played = models.DateTimeField(auto_now_add=True)
 
-# Private Message Class
-class PrivateMessage(models.Model):
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent_messages', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_messages', on_delete=models.CASCADE)
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Private Message: {self.sender} -> {self.receiver}: {self.image}"
 
 # Friendship Class
 class Friendship(models.Model):
@@ -56,18 +47,6 @@ class Friendship(models.Model):
     
     def __str__(self):
         return f"Friendship: {self.friend1} -> {self.friend2}"
-
-# TODO remove
-# Friend Request Class
-class FriendRequest(models.Model):
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_sent", on_delete=models.CASCADE)
-    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="friend_request_received", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        unique_together = ('from_user', 'to_user')
-
-    def __str__(self):
-        return f"FriendshipRequest: {self.from_user} -> {self.to_user}"
 
 
 # Blocked User Class
