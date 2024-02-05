@@ -80,7 +80,9 @@ class UserFriendsAPIView(generics.RetrieveAPIView):
 		serializer = self.get_serializer(user)
 		return Response(serializer.data)
 
-class UserAddFriendAPIView(APIView):
+
+# TODO cleaner code, reduce boilerplate code
+class UserFriendAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, username):
@@ -126,10 +128,6 @@ class UserAddFriendAPIView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
-class UserRemoveFriendAPIView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def delete(self, request, username):
         # Get request user
@@ -209,9 +207,6 @@ class UserBlockAPIView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-class UserUnblockAPIView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def delete(self, request, username):
         # Get request user

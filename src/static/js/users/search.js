@@ -65,7 +65,7 @@ document.getElementById('searchedProfile').addEventListener('click', (e) => {
 })
 
 function addFriend(username) {
-	fetch(`/users/add-friend/${username}`, {
+	fetch(`/users/friend/${username}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ function addFriend(username) {
 }
 
 function removeFriend(username) {
-	fetch(`/users/remove-friend/${username}`, {
+	fetch(`/users/friend/${username}`, {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ function blockUser(username) {
 }
 
 function unblockUser(username) {
-	fetch(`/users/unblock/${username}`, {
+	fetch(`/users/block/${username}`, {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json',
