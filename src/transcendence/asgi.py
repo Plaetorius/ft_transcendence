@@ -23,12 +23,3 @@ application = ProtocolTypeRouter(
         ),
     }
 )
-
-# application = ProtocolTypeRouter({
-#     "http": get_asgi_application(),
-#     "websocket": AuthMiddlewareStack(
-#         URLRouter([
-#             re_path(r'^ws/friend-requests/(?P<username>\w+)/$', FriendRequestConsumer.as_asgi()),
-#         ])
-#     ),
-# })
