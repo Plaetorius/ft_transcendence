@@ -15,7 +15,8 @@
 #profile-section.current,
 #friends-section.current,
 #welcome-section.current,
-#chats-section.current, 
+#chats-section.current,
+#chat-section.current,
 #dev-section.current {
     display: block;
 }
@@ -26,7 +27,8 @@
 #profile-section,
 #friends-section,
 #welcome-section,
-#chats-section, 
+#chats-section,
+#chat-section,
 #dev-section {
     display: none;
 }
