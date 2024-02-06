@@ -1,7 +1,5 @@
 # users/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync

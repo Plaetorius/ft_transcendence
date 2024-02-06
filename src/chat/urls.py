@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from channels.routing import ProtocolTypeRouter, URLRouter
 from .consumers import ChatConsumer
 from .views import (
-    roomView,
+    getId,
 )
 
 
@@ -16,6 +16,5 @@ application =  ProtocolTypeRouter({
 
 
 urlpatterns = [
-    # path('', include(router.urls)),
-    # path('<str:username>/', roomView, name="room-view"),
+    path('get-id/<str:username>/', getId.as_view(), name="getId"),
 ]

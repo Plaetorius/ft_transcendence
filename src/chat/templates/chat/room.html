@@ -1,5 +1,5 @@
 <!-- chat/room.html -->
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 {% load static %}
 {% block title %} Chat Room {% endblock title %}
 {% block extra_css %} <link rel="stylesheet" href="{% static 'css/chat-room.css' %}"> {% endblock extra_css %}
@@ -16,8 +16,8 @@
 </div>
 {{ room_id|json_script:"room-id" }}
 {% endblock content %}
-{% block script %}
-<script>
+{% block script %} -->
+<!-- <script>
     function createElement(tag, className, content) {
         const element = document.createElement(tag);
         if (className) element.className = className;
@@ -86,5 +86,5 @@
         inviteElement.textContent = "You received a pong invitation!";
         document.querySelector("#chat-log").appendChild(inviteElement);
     }
-</script>
+</script> -->
 {% endblock script %}
