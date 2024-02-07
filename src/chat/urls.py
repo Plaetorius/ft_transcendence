@@ -5,6 +5,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from .consumers import ChatConsumer
 from .views import (
     getId,
+    getMessages,
 )
 
 
@@ -17,4 +18,5 @@ application =  ProtocolTypeRouter({
 
 urlpatterns = [
     path('get-id/<str:username>/', getId.as_view(), name="getId"),
+    path('get-messages/<int:room_id>/', getMessages.as_view(), name="getMessages"),
 ]

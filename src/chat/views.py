@@ -10,7 +10,9 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
+from .serializers import (
+    MessageSerializer,
+)
 from .models import (
     ChatRoom,
     Message,
@@ -59,3 +61,27 @@ class getId(APIView):
                 },
                 status=status.HTTP_201_CREATED,
             )
+
+class getMessages(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self, request, room_id):
+        print(f"Request user {request.user}")
+        try:
+            room = ChatRoom.objects.get(id=room_id)
+        except ChatRoom.DoesNotExist:
+            return Response(
+                {
+                    'error': f"Room {room_id} doesn't exist",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        messages = Message.objects.filter(room=room, sender=request.user)
+        serializer = MessageSerializer(messages, many=True)
+        return Response(
+            {
+                'success': f"Messages retrieved",
+                'messages': serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
