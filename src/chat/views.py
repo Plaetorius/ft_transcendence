@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .serializers import (
     MessageSerializer,
+    MembersSerializer,
 )
 from .models import (
     ChatRoom,
@@ -20,13 +21,12 @@ from .models import (
 
 User = get_user_model()
 
-class getId(APIView):
+class RoomId(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
         # Get request user
         sender = request.user
-        print(f'Sender: {sender}, Username: {username}')
         # Try get username user
         try:
             receiver = User.objects.get(username=username)
@@ -62,13 +62,18 @@ class getId(APIView):
                 status=status.HTTP_201_CREATED,
             )
 
-class getMessages(APIView):
+class RoomMessages(APIView):
     permissions_classes = [IsAuthenticated]
 
     def get(self, request, room_id):
-        print(f"Request user {request.user}")
+        """
+            GET on Messages 
+        """
+        # TODO check if messages are from a bocked user
+        # Try to get the room from room_id
         try:
             room = ChatRoom.objects.get(id=room_id)
+        # If room doesn't exist, return error
         except ChatRoom.DoesNotExist:
             return Response(
                 {
@@ -76,12 +81,52 @@ class getMessages(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        messages = Message.objects.filter(room=room, sender=request.user)
+        user = request.user
+        messages = Message.objects.filter(room=room, sender=user)
         serializer = MessageSerializer(messages, many=True)
         return Response(
             {
                 'success': f"Messages retrieved",
                 'messages': serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+class RoomMembers(APIView):
+    permisssions_classes = [IsAuthenticated]
+
+    def get(self, request, room_id):
+        """
+            GET method on RoomMembers, retrieves the members of a ChatRoom and returns them
+            
+            Parameters:
+            self: a class instance of API View
+            request: the calling request
+            room_id: the ID of the ChatRoom in the Database
+            
+            Returns:
+            Error:
+                User.DoesNotExist:
+                    Response object, error message and HTTP error 404
+            Success:
+                Response object, success message, members serialized, HTTP success 200 
+
+        """
+        try:
+            room = ChatRoom.objects.get(id=room_id, is_direct_message=True)
+        except ChatRoom.DoesNotExist:
+            return Response(
+                {
+                    'error': f"Room {room_id} doesn't exist",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        members = room.members
+        serializer = MembersSerializer(members, many=True)
+        return Response(
+            {
+                'success': f"Members retrieved",
+                'members': serializer.data,
             },
             status=status.HTTP_200_OK,
         )

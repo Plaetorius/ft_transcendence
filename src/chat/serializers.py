@@ -18,3 +18,13 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = '__all__'
+
+class MembersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'profile_picture_url')
+    
+    def get_profile_picture_url(self, obj):
+        if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
+            return obj.profile_picture.url
+        return None

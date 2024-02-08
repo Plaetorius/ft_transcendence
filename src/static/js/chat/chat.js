@@ -3,7 +3,7 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
     element.addEventListener('click', (e) => {
         const username = element.getAttribute('data-username');
         const cookie = getCookie('csrftoken');
-        fetch(`chat/get-id/${username}`, {
+        fetch(`chat/room-id/${username}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,8 +30,8 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
 let socket = null;
 
 function fetch_room_messages(room_id) {
-    // On va tester tu sais quoi
-    fetch(`/chat/get-messages/${room_id}`, {
+    // Fetch URL with room_id to retrieve messages
+    fetch(`/chat/room-messages/${room_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -45,14 +45,16 @@ function fetch_room_messages(room_id) {
         return response.json();
     })
     .then(data => {
-        messages = data.messages
-        messages.forEach(message => {
-            console.log(`Message ${message.id}: ${message.content}`);
-        });
+        // Return fetched messages
+        return data.messages;
     })
     .catch(error => {
         console.log(error);
     });
+}
+
+function create_dom_message(message, sender) {
+    return ;
 }
 
 function enter_room(room_id) {
