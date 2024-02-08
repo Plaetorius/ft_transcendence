@@ -58,6 +58,7 @@ function create_dom_message(message, sender) {
 }
 
 function enter_room(room_id) {
+	console.log(user);
     // TODO retrieve every message
     fetch_room_messages(room_id);
     const address = `ws://${window.location.host}/ws/dm/${room_id}/`
