@@ -31,6 +31,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        print(f"Self Scope 'user': {self.scope['user']}")
+        print(f"Self Scope: {self.scope}")
+
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -44,6 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         sender_id = event['sender_id']
+        print(event)
         # if not sender_id:
         #     sender_id = self.scope['user'].id
         print(f"Sender id from event: {sender_id}")

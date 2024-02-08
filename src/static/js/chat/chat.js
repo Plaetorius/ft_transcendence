@@ -35,7 +35,7 @@ function fetch_room_messages(room_id) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`, 
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
     })
     .then(response => {
@@ -61,7 +61,8 @@ function enter_room(room_id) {
 	console.log(user);
     // TODO retrieve every message
     fetch_room_messages(room_id);
-    const address = `ws://${window.location.host}/ws/dm/${room_id}/`
+    const token = localStorage.getItem('accessToken');
+    const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`
     socket = new WebSocket(address);
     
     socket.onopen = (e) => {
