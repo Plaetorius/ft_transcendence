@@ -17,7 +17,6 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
             return response.json();
         })
         .then(data => {
-            console.log(`Room ID: ${data.room_id}`);
             enter_room(data.room_id)
         })
         .catch(error => {
@@ -54,15 +53,27 @@ function fetch_room_messages(room_id) {
 }
 
 function create_dom_message(message, sender) {
-    return ;
+    // TODO optimize later to fetch user less times
+    console.log(`Sender: ${sender}`);
+    let divElem = document.createElement('div');
+    let imgElem = document.createElement('img');
+    let pElem = document.createElement('p');
+    divElem.classList.add('chat-message');
+    divElem.appendChild(imgElem);
+    divElem.appendChild(pElem);
+    const url = `/media/profile_pictures/${sender}.jpg`;
+    console.log(url);
+    imgElem.src = url;
+    pElem.innerHTML = message;
+    document.getElementById('messages').appendChild(divElem);
 }
 
 function enter_room(room_id) {
-	console.log(user);
+	// console.log(user);
     // TODO retrieve every message
     fetch_room_messages(room_id);
     const token = localStorage.getItem('accessToken');
-    const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`
+    const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
     socket = new WebSocket(address);
     
     socket.onopen = (e) => {
@@ -81,7 +92,11 @@ function enter_room(room_id) {
 
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.log(`Message rereceived: ${data.message}`);
+        const message = data.message;
+        const sender = data.sender;
+        create_dom_message(message, sender);
+        // console.log(`data: ${data}`);
+        // console.log(`Message rereceived: ${message}`);
     };
 
     document.getElementById("send-message-btn").addEventListener('click', (e) => {
@@ -99,7 +114,7 @@ function enter_room(room_id) {
         } else {
             console.error(`WebSocket is not open. State: ${socket.readyState}`);
         }
-    })
+    });
 }
 
 

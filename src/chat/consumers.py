@@ -1,6 +1,7 @@
 # chat/comsummers.py
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.utils.html import escape
 from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
@@ -26,7 +27,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             await self.accept()
 
-
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -36,12 +36,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
+        safe_message = escape(message)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message,
+                'message': safe_message,
                 'sender_id': self.scope['user'].id,
             }
         )
@@ -49,11 +49,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         sender_id = event['sender_id']
-        print(event)
-        # if not sender_id:
-        #     sender_id = self.scope['user'].id
-        print(f"Sender id from event: {sender_id}")
-
         await self.save_message(sender_id, self.room_id, message)
 
         # Check if message is from blocked user
@@ -64,16 +59,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not username:
             return
         await self.send(text_data=json.dumps({
-            'message': message,
+            'message': message, 
             'sender': username,
         }))
 
     @database_sync_to_async
     def save_message(self, sender_id, room_id, message):
-        print(f"Sender ID={sender_id}")
+        safe_message = escape(message)
         sender = User.objects.get(id=sender_id)
         room = ChatRoom.objects.get(id=room_id)
-        return Message.objects.create(room=room, sender=sender, content=message)
+        return Message.objects.create(room=room, sender=sender, content=safe_message)
 
     @database_sync_to_async
     def get_username(self, user_id):
