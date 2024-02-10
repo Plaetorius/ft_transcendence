@@ -55,10 +55,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         safe_message = escape(message)
         sender_id = event['sender_id']
-        
-        # Check if message is from blocked user
-        if await self.is_sender_blocked(sender_id=sender_id):
-            return
 
         username, profile_picture = await self.get_info(sender_id)
         if not username:
@@ -86,18 +82,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return username, profile_picture
         except User.DoesNotExist:
             return None
-    
-    @database_sync_to_async
-    def is_sender_blocked(self, sender_id):
-        try:
-            room = ChatRoom.objects.get(id=self.room_id, is_direct_message=True)
-            members = room.members.all()
-            # FIXME doesn't work for room with 2+ ppl
-            for member in members:
-                if BlockedUser.objects.filter(blocker=member, blocked__id=sender_id).exists():
-                    return True
-            return False
-        # Really unlikely
-        except ChatRoom.DoesNotExist:
-            print(f"Chatroom {self.room_id} doesn't exist")
-            return True

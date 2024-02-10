@@ -35,6 +35,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class MembersSerializer(serializers.ModelSerializer):
+    profile_picture_url = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ('username', 'profile_picture_url')

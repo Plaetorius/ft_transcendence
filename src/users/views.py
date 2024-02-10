@@ -238,3 +238,23 @@ class UserBlockAPIView(APIView):
             {'success': "You haven't blocked that person"},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+class UserListBlockedAPIView(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+            Returns the list of users blocked by the request user
+        """
+        blocker = request.user
+        blocked_list = []
+        blocked_queryset = BlockedUser.objects.filter(blocker=blocker)
+        for blocked in blocked_queryset:
+            blocked_list.append(blocked.blocked.username)
+        return Response(
+            {
+                'success': "Blocked user list found",
+                'list': blocked_list,
+            },
+            status=status.HTTP_200_OK,
+        )

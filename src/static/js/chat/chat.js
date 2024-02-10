@@ -27,6 +27,7 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
 });
 
 let socket = null;
+let blocked_list;
 
 async function fetch_room_messages(room_id) {
     // Fetch URL with room_id to retrieve messages
@@ -35,7 +36,7 @@ async function fetch_room_messages(room_id) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             }
         });
         if (!response.ok) {
@@ -50,6 +51,25 @@ async function fetch_room_messages(room_id) {
     }
 }
 
+async function fetch_blocked_users(room_id) {
+    try {
+        const response = await fetch(`/users/list-blocked/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            }
+        });
+        if (!response.ok) {
+            throw new Error("Blocked list fetching failed");
+        }
+        const data = await response.json();
+        return data.list;
+    } catch (error) {
+        return undefined;
+    }
+}
+
 function create_dom_message(message, sender) {
     // TODO optimize later to fetch user less times (not mandatory)
     let divElem = document.createElement('div');
@@ -60,12 +80,16 @@ function create_dom_message(message, sender) {
     divElem.appendChild(pElem);
     imgElem.src = `${sender.profile_picture}`;
     pElem.innerHTML = message;
+    if (blocked_list.includes(sender.username)) {
+        divElem.classList.add("d-none");        
+    }
     document.getElementById('messages').appendChild(divElem);
 }
 
 async function enter_room(room_id) {
 	// console.log(user);
     // TODO retrieve every message
+    blocked_list = await fetch_blocked_users(room_id);
     const previous_messages = await fetch_room_messages(room_id);
     if (previous_messages) {
         previous_messages.forEach(message => {

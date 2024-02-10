@@ -10,6 +10,7 @@ from .views import (
 	UserFriendsAPIView,
     UserFriendAPIView,
     UserBlockAPIView,
+    UserListBlockedAPIView,
 )
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path('friends/<str:username>/', UserFriendsAPIView.as_view(), name="friends-api"),
     path('friend/<str:username>', UserFriendAPIView.as_view(), name="friend-api"),
     path('block/<str:username>', UserBlockAPIView.as_view(), name="block-api"),
+    path('list-blocked/', UserListBlockedAPIView.as_view(), name="list-blocked-api"),
 ]
