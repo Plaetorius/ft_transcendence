@@ -1,3 +1,4 @@
+# chat/middleware.py
 from urllib.parse import parse_qs
 from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
