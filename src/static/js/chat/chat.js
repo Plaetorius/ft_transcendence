@@ -28,50 +28,54 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
 
 let socket = null;
 
-function fetch_room_messages(room_id) {
+async function fetch_room_messages(room_id) {
     // Fetch URL with room_id to retrieve messages
-    fetch(`/chat/room-messages/${room_id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
-    })
-    .then(response => {
+    try {
+        const response = await fetch(`/chat/room-messages/${room_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        });
         if (!response.ok) {
             throw new Error('Message fetching failed');
         }
-        return response.json();
-    })
-    .then(data => {
+        const data = await response.json();
         // Return fetched messages
         return data.messages;
-    })
-    .catch(error => {
+    } catch (error) {
         console.log(error);
-    });
+        return undefined;
+    }
 }
 
 function create_dom_message(message, sender) {
-    // TODO optimize later to fetch user less times
-    console.log(`Sender: ${sender}`);
+    // TODO optimize later to fetch user less times (not mandatory)
     let divElem = document.createElement('div');
     let imgElem = document.createElement('img');
     let pElem = document.createElement('p');
     divElem.classList.add('chat-message');
     divElem.appendChild(imgElem);
     divElem.appendChild(pElem);
-    const url = `/media/profile_pictures/${sender}.jpg`;
-    console.log(url);
-    imgElem.src = url;
+    imgElem.src = `${sender.profile_picture}`;
     pElem.innerHTML = message;
     document.getElementById('messages').appendChild(divElem);
 }
 
-function enter_room(room_id) {
+async function enter_room(room_id) {
 	// console.log(user);
     // TODO retrieve every message
-    fetch_room_messages(room_id);
+    const previous_messages = await fetch_room_messages(room_id);
+    if (previous_messages) {
+        previous_messages.forEach(message => {
+            create_dom_message(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
+        });
+    }
+    else {
+        // TODO remove
+        console.log("No previous messages");
+    }
     const token = localStorage.getItem('accessToken');
     const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
     socket = new WebSocket(address);

@@ -81,9 +81,8 @@ class RoomMessages(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        user = request.user
-        messages = Message.objects.filter(room=room, sender=user)
-        serializer = MessageSerializer(messages, many=True)
+        messages = Message.objects.filter(room=room)
+        serializer = MessageSerializer(messages, many=True, context={'request': request})
         return Response(
             {
                 'success': f"Messages retrieved",
