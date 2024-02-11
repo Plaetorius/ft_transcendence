@@ -14,6 +14,7 @@ from .serializers import (
 	UserLoginSerializer,
     FriendshipSerializer,
     BlockedUserSerializer,
+    UserAllSerializer,
 )
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -255,6 +256,22 @@ class UserListBlockedAPIView(APIView):
             {
                 'success': "Blocked user list found",
                 'list': blocked_list,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+class UserEditAPIView(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+            Returns all the data (even sensitive) from the user emitting the request
+        """
+        serializer = UserAllSerializer(request.user)
+        return Response(
+            {
+                "success": "Retrieved all user data",
+                "data": serializer.data,
             },
             status=status.HTTP_200_OK,
         )

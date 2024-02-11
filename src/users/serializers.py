@@ -19,6 +19,18 @@ class UserSerializer(serializers.ModelSerializer):
             return obj.profile_picture.url
         return None
 
+class UserAllSerializer(serializers.ModelSerializer):
+    profile_picture_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture', 'profile_picture_url', 'elo')
+
+    def get_profile_picture_url(self, obj):
+        if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
+            return obj.profile_picture.url
+        return None
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
