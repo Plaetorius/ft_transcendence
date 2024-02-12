@@ -4,6 +4,7 @@ from .models import User, Friendship, BlockedUser
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 user = get_user_model()
 
@@ -30,6 +31,24 @@ class UserAllSerializer(serializers.ModelSerializer):
         if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
             return obj.profile_picture.url
         return None
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture')
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.bio = validated_data.get('bio', instance.bio)
+        if 'profile_picture' in validated_data:
+            instance.profile_picture = validated_data['profile_picture']
+        instance.save()
+        return instance
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)

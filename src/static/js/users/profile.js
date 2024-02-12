@@ -3,7 +3,7 @@ let user = undefined;
 function showProfile() {
 
     document.getElementById('profileErrors').innerHTML = '';
-	let profileElement = document.getElementById('displayProfile');
+    let profileElement = document.getElementById('displayProfile');
     fetch('/users/profile/', {
         method: 'GET',
         headers: {
@@ -19,16 +19,16 @@ function showProfile() {
         return response.json();
     })
     .then(userData => {
-		user = userData;
-		profileElement.innerHTML = `
+        user = userData;
+        profileElement.innerHTML = `
             <h4>${userData.username}</h4>
             <p>Bio: ${userData.bio}</p>
             <img src="${userData.profile_picture}">
             <p>Elo: ${userData.elo}</p>
-       `;
+    `;
 
-	   //TODO remove
-	   document.getElementById('connected-username').innerHTML = user.username;
+    //TODO remove
+    document.getElementById('connected-username').innerHTML = user.username;
     })
     .catch(error => {
         document.getElementById('profileErrors').innerHTML = error.message;
@@ -61,22 +61,60 @@ async function getAllInfo() {
 
 async function changeProfile() {
     let fullUser = await getAllInfo();
-    console.log(`FullUser: ${fullUser.profile_picture} ${fullUser.profile_picture_url}`);
     // TODO check if the user is changing his username AND/OR email to an already existing one
     // TODO password change
     let profileElem = document.getElementById('editProfile');
     profileElem.innerHTML = `
         <form id="editProfileForm">
-            <input type="text" id="editProfileUsername" placeholder="Username" required value="${fullUser.username}">
-            <input type="text" id="editProfileEmail" placeholder="Email" required value="${fullUser.email}">
-            <input type="text" id="editProfileFirstName" placeholder="First name" value="${fullUser.first_name}">
-            <input type="text" id="editProfileLastName" placeholder="Last name" value="${fullUser.last_name}">
-            <textarea id="editProfileBio" placeholder="Bio">${fullUser.bio}</textarea>
-            <input type="file" id="editProfilePicture" value="${fullUser.profile_picture}">
-            <label for=editProfilePicture" 
-            <button type="submit">Save...</button>
+            <input type="text" id="formProfileUsername" placeholder="Username" required value="${fullUser.username}">
+            <input type="text" id="formProfileEmail" placeholder="Email" required value="${fullUser.email}">
+            <input type="text" id="formProfileFirstName" placeholder="First name" value="${fullUser.first_name}">
+            <input type="text" id="formProfileLastName" placeholder="Last name" value="${fullUser.last_name}">
+            <textarea id="formProfileBio" placeholder="Bio">${fullUser.bio}</textarea>
+            <input type="file" id="formProfilePicture" value="${fullUser.profile_picture}">
         </form>
+        <button id="formProfileButton" type="submit">Save...</button>
     `;
+    submitListener();
+}
+
+function submitListener() {
+    document.getElementById('formProfileButton').addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        let formData = new FormData();
+
+        formData.append('username', document.getElementById('formProfileUsername').value);
+        formData.append('email', document.getElementById('formProfileEmail').value);
+        formData.append('first_name', document.getElementById('formProfileFirstName').value);
+        formData.append('last_name', document.getElementById('formProfileLastName').value);
+        formData.append('bio', document.getElementById('formProfileBio').value);
+
+        let profilePictureInput = document.getElementById('formProfilePicture');
+        if (profilePictureInput.files[0]) {
+            formData.append('profile_picture', profilePictureInput.files[0]);
+        }
+
+        try {
+            const response = await fetch("/users/edit-user/", {
+                method: 'PUT',
+                headers: {
+                    // NO CONTENT-TYPE FOR FORMDATA
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Couldn't submit form");
+            }
+
+            const result = await response.json();
+            showProfile();
+        } catch (error) {
+            console.log(`${error}`);
+        }
+    });
 }
 
 showProfile();

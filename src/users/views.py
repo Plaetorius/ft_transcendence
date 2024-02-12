@@ -15,6 +15,7 @@ from .serializers import (
     FriendshipSerializer,
     BlockedUserSerializer,
     UserAllSerializer,
+    UserUpdateSerializer,
 )
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -272,6 +273,28 @@ class UserEditAPIView(APIView):
             {
                 "success": "Retrieved all user data",
                 "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
+    def put(self, request):
+        """
+            Updates the user's information
+        """
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True, context={'request': request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "success": "Profile updated",
+                },
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {
+                "error": "Couldn't update profile",
             },
             status=status.HTTP_200_OK,
         )

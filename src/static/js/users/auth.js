@@ -102,6 +102,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 			alert(`Hello ${data.user.username}!`);
 			userLoggedIn();
             showProfile();
+            // TODO change the edit profile view
             changeSection("home");
 		} else {
 			throw Error ('No data access');
