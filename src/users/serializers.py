@@ -8,6 +8,16 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 user = get_user_model()
 
+def validate_image(file):
+    valid_extensions = ['jpg', 'jpeg', 'png']
+    extension = file.name.rsplit('.', 1)[1].lower()
+    if extension not in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+    
+    max_size = 4 * 1024 * 1024 # Max size 4MB
+    if file.size > max_size:
+        raise ValidationError('Image file too large ( > 4MB)')
+
 class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
 
@@ -32,8 +42,10 @@ class UserAllSerializer(serializers.ModelSerializer):
             return obj.profile_picture.url
         return None
 
+
+
 class UserUpdateSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.ImageField(required=False)
+    profile_picture = serializers.ImageField(required=False, validators=[validate_image])
 
     class Meta:
         model = User

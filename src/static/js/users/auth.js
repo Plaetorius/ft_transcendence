@@ -64,8 +64,8 @@ function handleRegistrationErrors(errorData) {
 }
 
 function userRegistered() {
-	//BUG badly interacts with the back and forth history and section setting
     changeSection("welcome");
+    setOnline();
 }
 
 // Login Part
@@ -123,8 +123,7 @@ function handleLoginErrors(errorData) {
 }
 
 function userLoggedIn() {
-	//BUG badly interacts with the back and forth history and section setting
-
+    setOnline();
 }
 
 

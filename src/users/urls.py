@@ -1,6 +1,6 @@
 # users/urls.py
 from django.urls import path
-from django.contrib.auth.views import LoginView
+from channels.routing import ProtocolTypeRouter, URLRouter
 from .views import (
     UserProfileView,
     UserRegistrationAPIView,
@@ -12,6 +12,10 @@ from .views import (
     UserBlockAPIView,
     UserListBlockedAPIView,
     UserEditAPIView,
+)
+
+from .consumers import (
+    UserStatus,
 )
 
 urlpatterns = [

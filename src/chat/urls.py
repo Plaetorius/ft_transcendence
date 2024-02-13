@@ -9,7 +9,7 @@ from .views import (
     RoomMembers,
 )
 
-
+# Move in an ASGI file
 application =  ProtocolTypeRouter({
     'websocket': URLRouter([
         path('ws/chat/<str:username>/', ChatConsumer.as_asgi()),

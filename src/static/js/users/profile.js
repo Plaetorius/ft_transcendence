@@ -78,17 +78,42 @@ async function changeProfile() {
     submitListener();
 }
 
+const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
+function sanitizeSettingsForm(form) {
+    // Sanitize username
+    let username = form.get('username');
+    let email = form.get('email');
+    let errors = [];
+    // Length checks may be useless as already done in the HTML
+    if (username.length < 4) {
+        errors.append("Username too short (must be more than 4 characters)!");
+    }
+    if (username.length > 20) {
+        errors.append("Username too long (must be less than 20 characters)!");
+    }
+    // Sanitize email
+    if (!email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        errors.append("Uncorrect email.");
+    }
+    return errors;
+}
+
 function submitListener() {
     document.getElementById('formProfileButton').addEventListener('click', async (e) => {
         e.preventDefault();
 
         let formData = new FormData();
 
-        formData.append('username', document.getElementById('formProfileUsername').value);
-        formData.append('email', document.getElementById('formProfileEmail').value);
-        formData.append('first_name', document.getElementById('formProfileFirstName').value);
-        formData.append('last_name', document.getElementById('formProfileLastName').value);
-        formData.append('bio', document.getElementById('formProfileBio').value);
+        formData.append('username', document.getElementById('formProfileUsername').value.trim());
+        formData.append('email', document.getElementById('formProfileEmail').value.trim());
+        formData.append('first_name', document.getElementById('formProfileFirstName').value.trim());
+        formData.append('last_name', document.getElementById('formProfileLastName').value.trim());
+        formData.append('bio', document.getElementById('formProfileBio').value.trim());
 
         let profilePictureInput = document.getElementById('formProfilePicture');
         if (profilePictureInput.files[0]) {
@@ -117,4 +142,19 @@ function submitListener() {
     });
 }
 
+function setOnline() {
+    // TODO change to wss
+    console.log("Set Online called");
+    const token = localStorage.getItem('accessToken');
+    const statusSocket = `ws://${window.location.host}/ws/user-status/?token=${token}`;
+    statusSocket.onopen = (e) => {
+        console.log(`You are online`);
+    };
+
+    statusSocket.onclose = (e) => {
+        console.log(`You turned offline`);
+    };
+}
+
+setOnline();
 showProfile();
