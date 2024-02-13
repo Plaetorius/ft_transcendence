@@ -12,12 +12,11 @@ User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # TODO check if authenticated
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
 
         if isinstance(self.scope['user'], AnonymousUser):
-            # Refuse the connection if user not atuthenticated
+            # Refuse the connection if user not authenticated
             await self.close()
         else:
             # Join room group if user is authenticated

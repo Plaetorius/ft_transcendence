@@ -26,7 +26,7 @@ document.querySelectorAll(".chatRoomButton").forEach(element => {
     });
 });
 
-let socket = null;
+let chatSocket = null;
 let blocked_list;
 
 async function fetch_room_messages(room_id) {
@@ -87,8 +87,6 @@ function create_dom_message(message, sender) {
 }
 
 async function enter_room(room_id) {
-	// console.log(user);
-    // TODO retrieve every message
     blocked_list = await fetch_blocked_users(room_id);
     const previous_messages = await fetch_room_messages(room_id);
     if (previous_messages) {
@@ -96,15 +94,11 @@ async function enter_room(room_id) {
             create_dom_message(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
         });
     }
-    else {
-        // TODO remove
-        console.log("No previous messages");
-    }
     const token = localStorage.getItem('accessToken');
     const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
-    socket = new WebSocket(address);
+    chatSocket = new WebSocket(address);
     
-    socket.onopen = (e) => {
+    chatSocket.onopen = (e) => {
         history.pushState({ room: room_id}, "", `/chat/dm/${room_id}`);
         console.log(`Web socket opened`);
         document.getElementById('chats-section').classList.remove("d-block");
@@ -113,34 +107,39 @@ async function enter_room(room_id) {
         document.getElementById('chat-section').classList.add("d-block");
     };
 
-    socket.onerror = (e) => {
+    chatSocket.onerror = (e) => {
+        // TODO display propperly
         console.log("Not allowed to enter that room");
-        socket.close();
+        chatSocket.close();
     }
 
-    socket.onmessage = (e) => {
+    chatSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         const message = data.message;
         const sender = data.sender;
         create_dom_message(message, sender);
-        // console.log(`data: ${data}`);
-        // console.log(`Message rereceived: ${message}`);
     };
 
     document.getElementById("send-message-btn").addEventListener('click', (e) => {
         e.preventDefault();
         let messageElem = document.getElementById('message-input');
-        const message = messageElem.value;
-        messageElem.value = '';
-        // console.log(`Message: ${message}`);
+        const message = messageElem.value.trim();
+        if (message.length == 0) {
+            console.log("Message can't be empty");
+        } 
+        else if (message.length > 1024)
+            console.log('Message too long');
+        else {
+            messageElem.value = '';
 
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({
-                message: message,
-            }));
-            console.log(`Message sent: ${message}`);
-        } else {
-            console.error(`WebSocket is not open. State: ${socket.readyState}`);
+            
+            if (chatSocket.readyState === WebSocket.OPEN) {
+                chatSocket.send(JSON.stringify({
+                    message: message,
+                }));
+            } else {
+                console.error(`WebSocket is not open. State: ${chatSocket.readyState}`);
+            }
         }
     });
 }

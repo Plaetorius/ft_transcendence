@@ -69,7 +69,6 @@ class RoomMessages(APIView):
         """
             GET on Messages 
         """
-        # TODO check if messages are from a bocked user
         # Try to get the room from room_id
         try:
             room = ChatRoom.objects.get(id=room_id)
