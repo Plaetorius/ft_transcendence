@@ -23,6 +23,8 @@ class User(AbstractUser):
             'unique': "A user with that email already exists."
         },
     )
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True)

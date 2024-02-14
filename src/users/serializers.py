@@ -5,8 +5,26 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import RegexValidator
+import re
+
 
 user = get_user_model()
+
+username_validator = RegexValidator(
+    regex=r'^[a-zA-Z][a-zA-Z0-9_-]*$',
+    message="Username must start with a letter and can only contain letters, numbers, underscores and hyphens.",
+)
+
+first_name_validator = RegexValidator(
+    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$',
+    message="Last name must only contain letters, spaces, hyphens, or apostrophes.",
+)
+
+last_name_validator = RegexValidator(
+    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$',
+    message="Last name must only contain letters, spaces, hyphens, or apostrophes.",
+)
 
 def validate_image(file):
     valid_extensions = ['jpg', 'jpeg', 'png']
@@ -20,6 +38,7 @@ def validate_image(file):
 
 class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
+    username = serializers.CharField(validators=[username_validator])
 
     class Meta:
         model = User
@@ -32,6 +51,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserAllSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
+    username = serializers.CharField(validators=[username_validator])
+    first_name = serializers.CharField(validators=[first_name_validator])
+    last_name = serializers.CharField(validators=[last_name_validator])
 
     class Meta:
         model = User
@@ -46,10 +68,23 @@ class UserAllSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, validators=[validate_image])
+    username = serializers.CharField(validators=[username_validator])
+    first_name = serializers.CharField(required=False, validators=[first_name_validator])
+    last_name = serializers.CharField(required=False, validators=[last_name_validator])
 
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture')
+
+    def validate_username(self, value):
+        if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
+            raise serializers.ValidationError("A user with that username already exists.")
+        return value
+
+    def validate_email(self, value):
+        if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+        return value
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)
@@ -65,6 +100,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
+    username = serializers.CharField(validators=[username_validator])
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')

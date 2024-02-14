@@ -131,7 +131,33 @@ function submitListener() {
             });
 
             if (!response.ok) {
-                throw new Error("Couldn't submit form");
+                let error_message = '';
+                const parsed = await response.json();
+                // Horrendous but necessary (Django has a weird way of sending error messages)
+                // Django sends a map :
+                //      [keys: str; field name where error happened, 
+                //      values: array; contain strings of error messages, 1 per error]
+                if (parsed.error && typeof parsed.error === 'object') {
+                    // Iterate through the map
+                    Object.entries(parsed.error).forEach(([key, value]) => {
+                        // Iterate through the array of errors related to the field
+                        if (Array.isArray(value)) {
+                            value.forEach(error => {
+                                error_message += `${key}: ${error}\n`;
+                            });
+                        }
+                        // Shouldn't happen (not an array)
+                        else {
+                            error_message += `${key}: ${value}\n`;
+                        }
+                    });
+                }
+                // Shouldn't happen (not a map)
+                else {
+                    error_message += `Error: ${parsed.error} || 'An error occurred'`;
+                }
+            
+                throw new Error(error_message);
             }
 
             const result = await response.json();

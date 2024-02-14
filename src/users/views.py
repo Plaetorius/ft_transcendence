@@ -18,6 +18,8 @@ from .serializers import (
     UserUpdateSerializer,
 )
 
+# Don't forget to escape bio before rendering it
+
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
     """
         send_user_notification()
@@ -145,7 +147,6 @@ class UserFriendAPIView(APIView):
                 status=status.HTTP_201_CREATED,
             )
         return Response(
-            # {'error': 'Serializer error'},
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST,
         )
@@ -258,7 +259,7 @@ class UserBlockAPIView(APIView):
             )
         # If not, return error
         return Response(
-            {'success': "You haven't blocked that person"},
+            {'error': "You haven't blocked that person"},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -298,6 +299,7 @@ class UserEditAPIView(APIView):
             status=status.HTTP_200_OK,
         )
     
+    # TODO add sanitization
     def put(self, request):
         """
             Updates the user's information
@@ -315,7 +317,7 @@ class UserEditAPIView(APIView):
             )
         return Response(
             {
-                "error": "Couldn't update profile",
+                "error": serializer.errors,
             },
-            status=status.HTTP_200_OK,
+            status=status.HTTP_400_BAD_REQUEST,
         )
