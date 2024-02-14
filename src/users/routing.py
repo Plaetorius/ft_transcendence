@@ -1,7 +1,9 @@
 # users/routing.py
-from django.urls import path
-from .consumers import UserStatus
+from django.urls import re_path
+from .consumers import (
+    UserStatus,
+)
 
 websocket_urlpatterns = [
-    path('ws/user-status/', UserStatus.as_asgi()),
+    re_path(r"ws/user-status/$", UserStatus.as_asgi()),
 ]

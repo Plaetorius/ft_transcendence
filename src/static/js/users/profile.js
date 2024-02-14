@@ -146,7 +146,8 @@ function setOnline() {
     // TODO change to wss
     console.log("Set Online called");
     const token = localStorage.getItem('accessToken');
-    const statusSocket = `ws://${window.location.host}/ws/user-status/?token=${token}`;
+    const statusSocket = new WebSocket(`ws://${window.location.host}/ws/user-status/?token=${token}`);
+
     statusSocket.onopen = (e) => {
         console.log(`You are online`);
     };
