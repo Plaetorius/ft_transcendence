@@ -32,7 +32,7 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
-            // userRegistered();
+            userRegistered();
             showProfile();
             changeSection("welcome");
         } else {
@@ -101,7 +101,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 			console.log(`Data: ${data.user}`);
 			alert(`Hello ${data.user.username}!`);
 			userLoggedIn();
-            showProfile();
             // TODO change the edit profile view
             changeSection("home");
 		} else {
@@ -124,6 +123,7 @@ function handleLoginErrors(errorData) {
 
 function userLoggedIn() {
     setOnline();
+    showProfile();
 }
 
 
@@ -146,7 +146,7 @@ function getCookie(name) {
 
 
 
-// Test
+// TODO remove
 document.getElementById('testButton').addEventListener('click', (e) => {
 	changeSection('welcome');
 });

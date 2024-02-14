@@ -15,7 +15,7 @@ from .views import (
 )
 
 from .consumers import (
-    UserStatus,
+    UserNotification,
 )
 
 urlpatterns = [

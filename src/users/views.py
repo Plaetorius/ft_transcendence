@@ -18,6 +18,27 @@ from .serializers import (
     UserUpdateSerializer,
 )
 
+def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
+    """
+        send_user_notification()
+        Input:
+            - user_id: int; the id of the user that will receive the notification
+            - text_message: str; message to display in notification
+            - path_to_icon: str; url to the icon to display in notification
+            - context: dict; additional useful information (button, link for it, HTML...)
+    """
+    channel_layer = get_channel_layer()
+    group_name = f'user_notification_{user_id}'
+    async_to_sync(channel_layer.group_send)(
+        group_name,
+        {
+            'type': 'user.notification',
+            'text_message': text_message,
+            'path_to_icon': path_to_icon,
+            'context': context,
+        }
+    )
+
 class UserProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

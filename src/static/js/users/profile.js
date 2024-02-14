@@ -142,17 +142,26 @@ function submitListener() {
     });
 }
 
+// Socket serves both at checking if user is online
+// AND send notifications to the user
+let notificationSocket = undefined;
+
 function setOnline() {
     // TODO change to wss
     console.log("Set Online called");
     const token = localStorage.getItem('accessToken');
-    const statusSocket = new WebSocket(`ws://${window.location.host}/ws/user-status/?token=${token}`);
+    notificationSocket = new WebSocket(`ws://${window.location.host}/ws/user-status/?token=${token}`);
 
-    statusSocket.onopen = (e) => {
+    notificationSocket.onopen = (e) => {
         console.log(`You are online`);
     };
 
-    statusSocket.onclose = (e) => {
+    notificationSocket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        notification(data);
+    };
+
+    notificationSocket.onclose = (e) => {
         console.log(`You turned offline`);
     };
 }
