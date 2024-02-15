@@ -61,7 +61,6 @@ async function getAllInfo() {
 
 async function changeProfile() {
     let fullUser = await getAllInfo();
-    // TODO check if the user is changing his username AND/OR email to an already existing one
     // TODO password change
     let profileElem = document.getElementById('editProfile');
     profileElem.innerHTML = `
@@ -98,7 +97,7 @@ function sanitizeSettingsForm(form) {
     }
     // Sanitize email
     if (!email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-        errors.append("Uncorrect email.");
+        errors.append("Incorrect email.");
     }
     return errors;
 }
@@ -174,7 +173,6 @@ let notificationSocket = undefined;
 
 function setOnline() {
     // TODO change to wss
-    console.log("Set Online called");
     const token = localStorage.getItem('accessToken');
     notificationSocket = new WebSocket(`ws://${window.location.host}/ws/user-status/?token=${token}`);
 
