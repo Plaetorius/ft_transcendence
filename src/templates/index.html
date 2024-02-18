@@ -1,4 +1,4 @@
-<!-- base.html -->
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +8,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/general/forms.css' %}">
     <link rel="stylesheet" href="{% static 'css/users/view-profile.css' %}">
     <link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
     <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
@@ -36,11 +37,31 @@
                 </section>
                 
                 <section id="register-section"  class="container">
-                    <form id="registrationForm">
-                        <input type="text" id="registerUsername" placeholder="Username" required value="stoupid">
-                        <input type="text" id="registerEmail" placeholder="Email" required value="stoupid@gmail.com">
-                        <input type="password" id="registerPassword1" placeholder="Password" required value="IamDumb0">
-                        <input type="password" id="registerPassword2" placeholder="Confirm Password" required value="IamDumb0">
+                    <form id="registrationForm" class="container">
+                        <div class="row w-100">
+                            <div class="col">
+                                <label for="registerUsername">USERNAME</label>
+                                <input type="text" id="registerUsername" placeholder="................." required>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col">
+                                <label for="registerEmail">EMAIL</label>
+                                <input type="text" id="registerEmail" placeholder="................." required>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col">
+                                <label for="registerPassword1">PASSWORD</label>
+                                <input type="password" id="registerPassword1" placeholder="................." required>
+                            </div>
+                        </div>
+                        <div class="row w-100">
+                            <div class="col">
+                                <label for="registerPassword2">CONFIRM</label>
+                                <input type="password" id="registerPassword2" placeholder="................." required>
+                            </div>                        
+                        </div>
                         <button type="submit">Register</button>
                     </form>
                     <div id="registrationErrors"></div>
@@ -95,6 +116,7 @@
                 <!-- Temporary -->
                 <section id="welcome-section" class="container">
                     <p>Welcome !</p>
+                    <img src="{% static 'gifs/vaultboy-sunglasses.gif' %}">
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
 				</section>
                 <!-- Temporary -->
