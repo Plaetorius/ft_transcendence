@@ -174,7 +174,7 @@ let notificationSocket = undefined;
 function setOnline() {
     // TODO change to wss
     const token = localStorage.getItem('accessToken');
-    notificationSocket = new WebSocket(`ws://${window.location.host}/ws/user-status/?token=${token}`);
+    notificationSocket = new WebSocket(`wss://${window.location.host}/ws/user-status/?token=${token}`);
 
     notificationSocket.onopen = (e) => {
         console.log(`You are online`);
