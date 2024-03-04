@@ -1,6 +1,6 @@
 # users/urls.py
 from django.urls import path
-from django.contrib.auth.views import LoginView
+from channels.routing import ProtocolTypeRouter, URLRouter
 from .views import (
     UserProfileView,
     UserRegistrationAPIView,
@@ -10,6 +10,12 @@ from .views import (
 	UserFriendsAPIView,
     UserFriendAPIView,
     UserBlockAPIView,
+    UserListBlockedAPIView,
+    UserEditAPIView,
+)
+
+from .consumers import (
+    UserNotification,
 )
 
 urlpatterns = [
@@ -21,4 +27,6 @@ urlpatterns = [
     path('friends/<str:username>/', UserFriendsAPIView.as_view(), name="friends-api"),
     path('friend/<str:username>', UserFriendAPIView.as_view(), name="friend-api"),
     path('block/<str:username>', UserBlockAPIView.as_view(), name="block-api"),
+    path('list-blocked/', UserListBlockedAPIView.as_view(), name="list-blocked-api"),
+    path('edit-user/', UserEditAPIView.as_view(), name="edit-user-api"),
 ]

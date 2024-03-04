@@ -32,7 +32,7 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
-            // userRegistered();
+            userRegistered();
             showProfile();
             changeSection("welcome");
         } else {
@@ -64,8 +64,8 @@ function handleRegistrationErrors(errorData) {
 }
 
 function userRegistered() {
-	//BUG badly interacts with the back and forth history and section setting
     changeSection("welcome");
+    setOnline();
 }
 
 // Login Part
@@ -101,7 +101,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 			console.log(`Data: ${data.user}`);
 			alert(`Hello ${data.user.username}!`);
 			userLoggedIn();
-            showProfile();
+            // TODO change the edit profile view
             changeSection("home");
 		} else {
 			throw Error ('No data access');
@@ -122,8 +122,8 @@ function handleLoginErrors(errorData) {
 }
 
 function userLoggedIn() {
-	//BUG badly interacts with the back and forth history and section setting
-
+    setOnline();
+    showProfile();
 }
 
 
@@ -146,7 +146,7 @@ function getCookie(name) {
 
 
 
-// Test
+// TODO remove
 document.getElementById('testButton').addEventListener('click', (e) => {
 	changeSection('welcome');
 });

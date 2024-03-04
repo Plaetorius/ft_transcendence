@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/users/view-profile.css' %}">
     <link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
 </head>
 <body>
     <main>
@@ -61,6 +62,10 @@
                     <div id="displayProfile">
 
                     </div>
+                    <button id="editProfileButton">Edit profile</button>
+                    <div id="editProfile" class="d-none">
+
+                    </div>
                     <div id="profileErrors"></div>
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
                 </section>
@@ -78,9 +83,11 @@
 				</section>
                 
                 <section id="chats-section" class="container">
+					<p id="connected-username"></p>
                     <div id="chats">
                         <button class="chatRoomButton" data-username="stoupid">Chat Stoupid</button>
-                    </div>
+						<button class="chatRoomButton" data-username="tgernez">Chat Tgernez</button>               
+					</div>
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>    
                 </section>
 
@@ -95,7 +102,7 @@
                     <p>Chat Section</p>
                     <div id="messages"></div>
                     <form id="chat-form">
-                        <input id="message-input" type="text" maxlength="500" placeholder="Type a message...">
+                        <input id="message-input" type="text" minlength="1" maxlength="1024" placeholder="Type a message...">
                         <button id="send-message-btn" type="submit">Send</button>
                     </form>
                     <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
@@ -126,6 +133,7 @@
 	<script src="{% static 'js/users/search.js' %}"></script>
 	<script src="{% static 'js/users/profile.js' %}"></script>
 	<script src="{% static 'js/chat/chat.js' %}"></script>
+	<script src="{% static 'js/chat/notification.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

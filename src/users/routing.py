@@ -1,0 +1,9 @@
+# users/routing.py
+from django.urls import re_path
+from .consumers import (
+    UserNotification,
+)
+
+websocket_urlpatterns = [
+    re_path(r"ws/user-status/$", UserNotification.as_asgi()),
+]

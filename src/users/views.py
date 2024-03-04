@@ -14,7 +14,32 @@ from .serializers import (
 	UserLoginSerializer,
     FriendshipSerializer,
     BlockedUserSerializer,
+    UserAllSerializer,
+    UserUpdateSerializer,
 )
+
+# Don't forget to escape bio before rendering it
+
+def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
+    """
+        send_user_notification()
+        Input:
+            - user_id: int; the id of the user that will receive the notification
+            - text_message: str; message to display in notification
+            - path_to_icon: str; url to the icon to display in notification
+            - context: dict; additional useful information (button, link for it, HTML...)
+    """
+    channel_layer = get_channel_layer()
+    group_name = f'user_notification_{user_id}'
+    async_to_sync(channel_layer.group_send)(
+        group_name,
+        {
+            'type': 'user.notification',
+            'text_message': text_message,
+            'path_to_icon': path_to_icon,
+            'context': context,
+        }
+    )
 
 class UserProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
@@ -122,7 +147,6 @@ class UserFriendAPIView(APIView):
                 status=status.HTTP_201_CREATED,
             )
         return Response(
-            # {'error': 'Serializer error'},
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST,
         )
@@ -235,6 +259,65 @@ class UserBlockAPIView(APIView):
             )
         # If not, return error
         return Response(
-            {'success': "You haven't blocked that person"},
+            {'error': "You haven't blocked that person"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+class UserListBlockedAPIView(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+            Returns the list of users blocked by the request user
+        """
+        blocker = request.user
+        blocked_list = []
+        blocked_queryset = BlockedUser.objects.filter(blocker=blocker)
+        for blocked in blocked_queryset:
+            blocked_list.append(blocked.blocked.username)
+        return Response(
+            {
+                'success': "Blocked user list found",
+                'list': blocked_list,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+class UserEditAPIView(APIView):
+    permissions_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+            Returns all the data (even sensitive) from the user emitting the request
+        """
+        serializer = UserAllSerializer(request.user)
+        return Response(
+            {
+                "success": "Retrieved all user data",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+    
+    # TODO add sanitization
+    def put(self, request):
+        """
+            Updates the user's information
+        """
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True, context={'request': request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "success": "Profile updated",
+                },
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {
+                "error": serializer.errors,
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
