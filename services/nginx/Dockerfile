@@ -19,6 +19,6 @@ RUN openssl req -x509 -nodes \
 	-keyout /etc/nginx/ssl/localhost.key \
 	-subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=localhost/UID=tgernez@student.42.fr"
 
-EXPOSE 80 443
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
