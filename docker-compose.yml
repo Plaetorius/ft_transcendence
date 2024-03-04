@@ -28,10 +28,10 @@ services:
       - "8080:8080"
     depends_on:
       - db
-  # portainer:
-  #   image: portainer/portainer-ce  
-  #   ports:
-  #     - "9000:9000"
+  portainer:
+    image: portainer/portainer-ce  
+    ports:
+      - "9000:9000"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "portainer_data:/data"
