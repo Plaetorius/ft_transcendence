@@ -1,5 +1,7 @@
 # users/views.py
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.views import View
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -17,6 +19,8 @@ from .serializers import (
     UserAllSerializer,
     UserUpdateSerializer,
 )
+import requests
+import os
 
 # Don't forget to escape bio before rendering it
 
@@ -321,3 +325,38 @@ class UserEditAPIView(APIView):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+class OAuthCallbackView(View):
+	def get(self, request, *args, **kwargs):
+		code = request.GET.get('code', '')
+		if not code:
+			return JsonResponse(
+				{
+					'error': 'Missing code'
+				}, 
+				status=status.HTTP_400_BAD_REQUEST,
+			)
+		CLIENT_ID = os.environ.get('42_CLIENT_ID')
+		CLIENT_SECRET = os.environ.get('42_CLIENT_SECRET')
+		REDIRECT_URI = 'https://localhost/oauth42/callback'
+
+		response = requests.post(
+			'https://api.intra.42.fr/oauth/token',
+			data={
+				'grant_type': 'authorization_code',
+				'client_id': CLIENT_ID,
+				'client_secret': CLIENT_SECRET,
+				'code': code,
+				'redirect_uri': REDIRECT_URI,
+			},
+		)
+
+		if response.status_code != 200:
+			return JsonResponse(
+				{
+					'error': 'Failed to retrieve access token',
+				},
+				status=response.status_code,
+			)
+		access_token_data = response.json()
+		return JsonResponse(access_token_data)

@@ -143,10 +143,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-
-
-// TODO remove
-document.getElementById('testButton').addEventListener('click', (e) => {
-	changeSection('welcome');
-});
