@@ -28,6 +28,8 @@ class User(AbstractUser):
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True)
+    oauth = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"User: {self.username} Id: {self.id}"

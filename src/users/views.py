@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.core.files.base import ContentFile
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
@@ -22,7 +23,7 @@ from .serializers import (
 import requests
 import os
 
-# Don't forget to escape bio before rendering it
+# TODO Don't forget to escape bio before rendering it
 
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
     """
@@ -327,39 +328,63 @@ class UserEditAPIView(APIView):
         )
 
 class OAuthCallbackView(View):
-	def get(self, request, *args, **kwargs):
-		code = request.GET.get('code', '')
-		if not code:
-			return JsonResponse(
-				{
-					'error': 'Missing code'
-				}, 
-				status=status.HTTP_400_BAD_REQUEST,
-			)
-		CLIENT_ID = os.environ.get('42_CLIENT_ID')
-		CLIENT_SECRET = os.environ.get('42_CLIENT_SECRET')
-		REDIRECT_URI = 'https://localhost/users/oauth2/callback'
+    def get(self, request, *args, **kwargs):
+        code = request.GET.get('code', '')
+        if not code:
+            return JsonResponse({'error': 'Missing code'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        CLIENT_ID = os.environ.get('42_CLIENT_ID')
+        CLIENT_SECRET = os.environ.get('42_CLIENT_SECRET')
+        REDIRECT_URI = 'https://localhost/users/oauth2/callback'
+        
+        # Exchange code for access token
+        response = requests.post(
+            'https://api.intra.42.fr/oauth/token',
+            data={
+                'grant_type': 'authorization_code',
+                'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+                'code': code,
+                'redirect_uri': REDIRECT_URI,
+            },
+        )
+        
+        if response.status_code != 200:
+            return JsonResponse({'error': 'Failed to retrieve access token'}, status=response.status_code)
+        
+        access_token_data = response.json()
+        access_token = access_token_data['access_token']
+        
+        # Fetch user data from 42's API using the access token
+        user_response = requests.get('https://api.intra.42.fr/v2/me', headers={'Authorization': f'Bearer {access_token}'})
+        
+        if user_response.status_code != 200:
+            return JsonResponse({'error': 'Failed to retrieve user data'}, status=user_response.status_code)
+        
+        user_data = user_response.json()
+        print(user_data)
 
-		print(f"CLIENT ID {CLIENT_ID}")
-		print(f"CLIENT SECRET {CLIENT_SECRET}")
-
-		response = requests.post(
-			'https://api.intra.42.fr/oauth/token',
-			data={
-				'grant_type': 'authorization_code',
-				'client_id': CLIENT_ID,
-				'client_secret': CLIENT_SECRET,
-				'code': code,
-				'redirect_uri': REDIRECT_URI,
-			},
-		)
-
-		if response.status_code != 200:
-			return JsonResponse(
-				{
-					'error': 'Failed to retrieve access token',
-				},
-				status=response.status_code,
-			)
-		access_token_data = response.json()
-		return JsonResponse(access_token_data)
+        username = user_data['login']
+        email = user_data['email']
+        first_name = user_data['first_name']
+        last_name = user_data['last_name']
+        profile_picture_url = user_data['image']['link']
+        
+        # Download the profile picture
+        profile_picture_response = requests.get(profile_picture_url)
+        if profile_picture_response.status_code == 200:
+            # Convert the downloaded image to a Django File
+            profile_picture_file = ContentFile(profile_picture_response.content)
+            
+            # Check if user exists, create or update accordingly
+            user, created = User.objects.get_or_create(username=username)
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.oauth = True
+            
+            # Set the profile picture
+            user.profile_picture.save(f"{username}_profile.jpg", profile_picture_file, save=True)
+            user.save()
+        
+        return JsonResponse({'success': 'User authenticated', 'username': username}, status=status.HTTP_200_OK)
