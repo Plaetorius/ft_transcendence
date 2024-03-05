@@ -172,7 +172,6 @@ function submitListener() {
 let notificationSocket = undefined;
 
 function setOnline() {
-    // TODO change to wss
     const token = localStorage.getItem('accessToken');
     notificationSocket = new WebSocket(`wss://${window.location.host}/ws/user-status/?token=${token}`);
 

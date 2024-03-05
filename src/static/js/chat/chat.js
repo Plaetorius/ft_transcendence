@@ -1,4 +1,3 @@
-// TODO Use WSS
 // TODO Add PONG invites system
 document.querySelectorAll(".chatRoomButton").forEach(element => {
     element.addEventListener('click', (e) => {
