@@ -338,7 +338,10 @@ class OAuthCallbackView(View):
 			)
 		CLIENT_ID = os.environ.get('42_CLIENT_ID')
 		CLIENT_SECRET = os.environ.get('42_CLIENT_SECRET')
-		REDIRECT_URI = 'https://localhost/oauth42/callback'
+		REDIRECT_URI = 'https://localhost/users/oauth2/callback'
+
+		print(f"CLIENT ID {CLIENT_ID}")
+		print(f"CLIENT SECRET {CLIENT_SECRET}")
 
 		response = requests.post(
 			'https://api.intra.42.fr/oauth/token',

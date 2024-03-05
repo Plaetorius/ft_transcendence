@@ -1,5 +1,69 @@
-// Registration Part
+// Utils
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
+function handleErrors(errorData, errorElementId) {
+    let errorMessageHTML = '';
+    Object.keys(errorData).forEach(key => {
+        errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
+    });
+    document.getElementById(errorElementId).innerHTML = errorMessageHTML;
+}
+
+// OAuth Handling
+function initiateOAuth() {
+	// TODO fetch from back
+	const clientId = "u-s4t2ud-4cf77c385e4067e3dc3de603d034c7e441b48ba5f16b3d4e77063066fb464532";
+    const redirectUri = encodeURIComponent("https://localhost/users/oauth2/callback");
+    const oauthUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+    
+    window.open(oauthUrl, "");
+}
+
+function handleOAuthCallback() {
+    const currentUrl = new URL(window.location.href);
+    const code = currentUrl.searchParams.get('code');
+    if (code) {
+        exchangeAuthorizationCodeForToken(code);
+    }
+}
+
+function exchangeAuthorizationCodeForToken(code) {
+    fetch('/users/oauth/callback/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ code }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.access) {
+            localStorage.setItem('accessToken', data.access);
+            localStorage.setItem('refreshToken', data.refresh);
+            console.log('OAuth login successful');
+            userLoggedIn();
+        } else {
+            console.error('Failed to obtain access token');
+        }
+    })
+    .catch(error => console.error('Error in OAuth login:', error));
+}
+
+// Registration
 document.getElementById('registrationForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const userData = {
@@ -8,138 +72,63 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
         password1: document.getElementById('registerPassword1').value,
         password2: document.getElementById('registerPassword2').value,
     };
-    
-    const csrftoken = getCookie('csrftoken');
+
     fetch('/users/register/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
+            'X-CSRFToken': getCookie('csrftoken'),
         },
         body: JSON.stringify(userData),
     })
-    .then(async response => {
-        if (!response.ok) {
-            const errorData = await response.json();
-            handleRegistrationErrors(errorData);
-            return ;
-            // throw new Error('Registration failed');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
             userRegistered();
-            showProfile();
-            changeSection("welcome");
         } else {
             console.log("No data access");
-            throw Error ('No data access');
+            throw Error('No data access');
         }
     })
-    .catch(error => {
-        // let errorMessageHTML = '';
-        // for (const key in error) {
-            // if (error.hasOwnProperty(key)) {
-                // errorMessageHTML += `<p>${key}: ${error[key].join(', ')}</p>`;
-            // }
-        // }
-        // handleRegistrationErrors(error);
-
-        // console.log(`Catch block ${errorMessageHTML} end`);
-        // console.log(`Registration Errors InnerHTML ${document.getElementById('registrationErrors').innerHTML}`);
-        // document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
-    });    
+    .catch(error => handleErrors(error, 'registrationErrors'));
 });
 
-function handleRegistrationErrors(errorData) {
-	let errorMessageHTML = '';
-	Object.keys(errorData).forEach(key => {
-		errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
-	});
-	document.getElementById('registrationErrors').innerHTML = errorMessageHTML;
-}
-
-function userRegistered() {
-    changeSection("welcome");
-    setOnline();
-}
-
-// Login Part
-
+// Login
 document.getElementById('loginForm').addEventListener('submit', (e) => {
-	e.preventDefault();
-	const loginData = {
-		username: document.getElementById('loginUsername').value,
-		password: document.getElementById('loginPassword').value,
-	};
+    e.preventDefault();
+    const loginData = {
+        username: document.getElementById('loginUsername').value,
+        password: document.getElementById('loginPassword').value,
+    };
 
-	fetch('/users/login/', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': getCookie('csrftoken'),
-		},
-		body: JSON.stringify(loginData),
-	})
-	.then(async response => {
-		if (!response.ok) {
-			const errorData = await response.json();
-			handleLoginErrors(errorData);
-			throw new Error('Login Failed');
-		}
-		return response.json();
-	})
-	.then(data => {
-		if (data.access) {
-			localStorage.setItem('accessToken', data.access);
-			localStorage.setItem('refreshToken', data.refresh);
-			console.log('Logged in successfully');
-			console.log(`Data: ${data.user}`);
-			alert(`Hello ${data.user.username}!`);
-			userLoggedIn();
-            // TODO change the edit profile view
-            changeSection("home");
-		} else {
-			throw Error ('No data access');
-		}
-	})
-	.catch(error => {
-		console.log(error);
-		document.getElementById('loginErrors').textContent = 'Login failed!';
-	});
+    fetch('/users/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(loginData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.access) {
+            localStorage.setItem('accessToken', data.access);
+            localStorage.setItem('refreshToken', data.refresh);
+            console.log('Logged in successfully');
+            userLoggedIn();
+        } else {
+            throw Error('No data access');
+        }
+    })
+    .catch(error => handleErrors(error, 'loginErrors'));
 });
 
-function handleLoginErrors(errorData) {
-	let errorMessageHTML = '';
-	Object.keys(errorData).forEach(key => {
-		errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
-	});
-	document.getElementById('loginErrors').innerHTML = errorMessageHTML;
-}
+// Check if we're returning from an OAuth flow
+handleOAuthCallback();
 
-function userLoggedIn() {
-    setOnline();
-    showProfile();
-}
-
-
-// Utils Part
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === name + '=') {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+document.getElementById('oauthLoginButton').addEventListener('click', (e) => {
+	initiateOAuth();
+});
