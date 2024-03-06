@@ -22,47 +22,6 @@ function handleErrors(errorData, errorElementId) {
     document.getElementById(errorElementId).innerHTML = errorMessageHTML;
 }
 
-// OAuth Handling
-function initiateOAuth() {
-	// TODO fetch from back
-	const clientId = "u-s4t2ud-4cf77c385e4067e3dc3de603d034c7e441b48ba5f16b3d4e77063066fb464532";
-    const redirectUri = encodeURIComponent("https://localhost/users/oauth2/callback");
-    const oauthUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
-    
-    window.open(oauthUrl, "");
-}
-
-function handleOAuthCallback() {
-    const currentUrl = new URL(window.location.href);
-    const code = currentUrl.searchParams.get('code');
-    if (code) {
-        exchangeAuthorizationCodeForToken(code);
-    }
-}
-
-function exchangeAuthorizationCodeForToken(code) {
-    fetch('/users/oauth/callback/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({ code }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.access) {
-            localStorage.setItem('accessToken', data.access);
-            localStorage.setItem('refreshToken', data.refresh);
-            console.log('OAuth login successful');
-            userLoggedIn();
-        } else {
-            console.error('Failed to obtain access token');
-        }
-    })
-    .catch(error => console.error('Error in OAuth login:', error));
-}
-
 // Registration
 document.getElementById('registrationForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -124,11 +83,4 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         }
     })
     .catch(error => handleErrors(error, 'loginErrors'));
-});
-
-// Check if we're returning from an OAuth flow
-handleOAuthCallback();
-
-document.getElementById('oauthLoginButton').addEventListener('click', (e) => {
-	initiateOAuth();
 });
