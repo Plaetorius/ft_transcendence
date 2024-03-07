@@ -12,6 +12,7 @@ channels_redis = "*"
 daphne = "*"
 djangorestframework = "*"
 djangorestframework_simplejwt = "*"
+requests = "*"
 
 [dev-packages]
 

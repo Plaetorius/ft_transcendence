@@ -1,4 +1,3 @@
-// TODO Use WSS
 // TODO Add PONG invites system
 document.querySelectorAll(".chatRoomButton").forEach(element => {
     element.addEventListener('click', (e) => {
@@ -96,7 +95,7 @@ async function enter_room(room_id) {
         });
     }
     const token = localStorage.getItem('accessToken');
-    const address = `ws://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
+    const address = `wss://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
     chatSocket = new WebSocket(address);
     
     chatSocket.onopen = (e) => {

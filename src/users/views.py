@@ -1,5 +1,7 @@
 # users/views.py
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.views import View
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -8,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.core.files.base import ContentFile
+from django.utils.crypto import get_random_string
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
@@ -17,8 +21,10 @@ from .serializers import (
     UserAllSerializer,
     UserUpdateSerializer,
 )
+import requests
+import os
 
-# Don't forget to escape bio before rendering it
+# TODO Don't forget to escape bio before rendering it
 
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
     """
@@ -300,6 +306,8 @@ class UserEditAPIView(APIView):
         )
     
     # TODO add sanitization
+    # TODO if OAuth, user can't modify email
+    # TODO add password reset
     def put(self, request):
         """
             Updates the user's information
@@ -321,3 +329,4 @@ class UserEditAPIView(APIView):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
+
