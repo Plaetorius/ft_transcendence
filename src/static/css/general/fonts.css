@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Canterbury';
+    src: url('../../fonts/Canterbury.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Belgrano-Regular';
+    src: url('../../fonts/Belgrano-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Streetwear';
+    src: url('../../fonts/Streetwear.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mouse-Memoirs';
+    src: url('../../fonts/mouse-memoirs.ttf');
+    font-weight: normal;
+    font-style: normal;
+}

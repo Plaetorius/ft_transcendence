@@ -1,0 +1,30 @@
+main {
+    margin-top: 22vh;
+    height: 1000vh;
+}
+
+section {
+	display: none;
+}
+
+section.active {
+	display: block;
+}
+
+.blurry {
+	filter: blur(0.2rem);
+	transition: filter 0.5s ease;
+}
+
+body {
+    background-image: url('../../backgrounds/old-paper-background.jpg');
+    background-repeat: repeat-y;
+    background-size: contain;
+    background-blend-mode: screen;  
+    background-color: rgba(222, 184, 135);
+}
+
+a {
+	text-decoration: none;
+	cursor: pointer;
+}

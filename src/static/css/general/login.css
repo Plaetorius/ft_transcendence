@@ -1,0 +1,34 @@
+section#login {
+    margin-top: -20vh;
+}
+
+#login h1 {
+    font-family: 'Belgrano-Regular';
+}
+
+#login form input {
+	background: none;
+	border: none;
+	border-bottom: 0.15rem rgb(97, 69, 18) solid;
+}
+
+#login form button {
+    margin: 1rem;
+    padding: 0.5rem 3rem;
+    background: rgb(97, 69, 18);
+    font-family: 'Mouse-Memoirs';
+    color: whitesmoke;
+    font-size: 1.5rem;
+    border: none;
+}
+
+#login form button:hover {
+    transition: background-color 0.3s ease;
+    transition: letter-spacing 0.3s ease;
+	background: rgb(139, 100, 26);
+    letter-spacing: 0.1rem;
+}
+
+#login input::placeholder {
+	color: rgb(97, 69, 18);
+}

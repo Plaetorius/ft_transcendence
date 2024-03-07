@@ -1,0 +1,187 @@
+#chats {
+	padding-left: 20vw;
+	padding-right: 20vw;
+}
+
+#chats h1 {
+	text-align: center;
+	font-size: 3.5rem;
+	font-family: 'Belgrano-Regular';
+}
+
+#chats .chats-profile {
+	height: 8vh;
+	width: 8vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 15%;
+	cursor: pointer;
+	margin-left: 0.5rem;
+	font-size: 2rem;
+	font-family: 'Mouse-Memoirs';
+}
+
+#chats span.chats-profile {
+	margin-left: 1rem;
+	height: auto;
+	width: auto;
+}
+
+#chats img.chats-profile:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#chats span.chats-profile {
+	margin-left: 1rem;
+	height: auto;
+	width: auto;
+}
+
+#chats span.chats-profile:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#chats .profile-action-button {
+	width: 6vh;
+	height: 6vh;
+	background: none;
+	border: none;
+}
+
+#chats .profile-action-button img {
+	width: 4vh;
+	height: 4vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+}
+
+#chats .profile-action-button:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#chats .all-chats .row {
+	border-bottom: 0.1rem black solid;
+	padding-bottom: 1rem;
+	padding-top: 1rem;
+}
+
+#chat-popup {
+	position: fixed;
+	top: 10vh;
+	left: 30vw;
+	width: 40vw;
+	height: 81vh;
+	z-index: 100;
+	background-color: white;
+	border: 5px black solid;
+	background-image: url("../../backgrounds/old-paper-background.jpg");
+	background-position: center;
+	color: black;
+	font-size: large;
+	font-weight: medium;
+}
+
+#chat-popup h5 {
+	font-size: 5rem;
+	font-family: 'Mouse-Memoirs', sans-serif;
+	text-align: center;
+}
+
+#chat-popup .row.title {
+	background-image: url("../../backgrounds/fallout-boy-banner.png");
+	background-repeat: no-repeat;
+	background-position: 90%;
+	margin-bottom: 2vh;
+}
+
+#chat-popup h5 span.online-status {
+	height: 3vh;
+	width: 3vh;
+	margin-bottom: 0.6rem;
+}
+
+#chat-popup .chat-messages {
+    overflow-y: auto;
+    height: 60vh;
+    margin: 1rem 0;
+}
+
+#chat-popup .chat-input {
+    display: flex;
+    align-items: center;
+}
+
+#chat-popup input[type="text"] {
+    flex-grow: 1;
+}
+
+#chat-popup .message img {
+	width: 5vh;
+	height: 5vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 50%;
+}
+
+#chat-popup div.message-content {
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+	width: 60%;
+	padding: 0.8rem 1rem 0rem 1rem;
+	border-radius: 1rem;
+	border: 2px black solid;
+	background-color: rgb(243, 211, 163);
+}
+
+#chat-popup div.message p {
+	margin: 0;
+	padding: 0;
+}
+
+#chat-popup div.message-content span {
+	text-align: end;
+	font-size: small;
+	color: rgb(43, 43, 43);
+}
+
+#chat-popup div.message {
+	margin-top: 0.2rem;
+	margin-bottom: 0.2rem;
+}
+
+#chat-popup input {
+	background: none;
+	border: none;
+	border-bottom: 0.15rem rgb(97, 69, 18) solid;
+}
+
+#chat-popup button {
+	padding: 0.6rem 0.8rem;
+	background: rgb(97, 69, 18);
+    font-family: 'Mouse-Memoirs';
+    color: whitesmoke;
+    border: none;
+}
+
+#chat-popup button img {
+	filter: invert();
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+#chat-popup button:hover {
+    transition: background-color 0.3s ease;
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+	background: rgb(197, 145, 48);
+}
+
+#chat-popup input::placeholder {
+	color: rgb(44, 43, 42);
+}

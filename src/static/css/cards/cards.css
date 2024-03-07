@@ -1,48 +1,51 @@
-.perk-card-booster {
-    width: 150px;
-    overflow: hidden;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s ease;
-    transform-origin: center;
-    position: relative;
-    display: inline-block; /* or block depending on your layout */
+#card-popup {
+	position: fixed;
+	top: 10vh;
+	left: 30vw;
+	width: 40vw;
+	height: 75vh;
+	z-index: 100;
+	background-color: white;
+	border: 5px black solid;
+	background-image: url("../../backgrounds/old-paper-background.jpg");
+	background-position: center;
+	color: black;
+	font-size: large;
+	font-weight: medium;	
 }
 
-.perk-card-booster::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -75%; /* Start from the left */
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
-    transform: skewX(-20deg);
-    opacity: 0;
-    transition: opacity 0.5s ease;
+#card-popup .card-visual {
+	width: 100%;
+	height: auto;
 }
 
-.perk-card-booster:hover::after {
-    opacity: 1;
-    left: 125%; /* Move across the element */
-    transition: left 0.7s ease, opacity 0.5s ease;
+#card-popup .rank {
+	font-family: 'Mouse-Memoirs', sans-serif;
+	font-size: xx-large;
 }
 
-.perk-card-booster:hover {
-    transform: scale(1.11);
-    animation: shake 0.5s ease infinite;
+#card-popup h4 {
+	font-size: 5rem;
+	font-family: 'Mouse-Memoirs', sans-serif;
+	text-align: center;
 }
 
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg) scale(1.11); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg) scale(1.11); }
-    20% { transform: translate(-3px, 0px) rotate(1deg) scale(1.11); }
-    30% { transform: translate(3px, 2px) rotate(0deg) scale(1.11); }
-    40% { transform: translate(1px, -1px) rotate(1deg) scale(1.11); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg) scale(1.11); }
-    60% { transform: translate(-3px, 1px) rotate(0deg) scale(1.11); }
-    70% { transform: translate(3px, 1px) rotate(-1deg) scale(1.11); }
-    80% { transform: translate(-1px, -1px) rotate(1deg) scale(1.11); }
-    90% { transform: translate(1px, 2px) rotate(0deg) scale(1.11); }
-    100% { transform: translate(1px, -2px) rotate(-1deg) scale(1.11); }
+#card-popup .row.title {
+	background-image: url("../../backgrounds/fallout-boy-banner.png");
+	background-repeat: no-repeat;
+	background-position: 90%;
+	margin-bottom: 7vh;
+}
+
+#card-popup .quote {
+	background-color: rgb(243, 211, 163);
+	background-image: url("../../backgrounds/old-paper-background.jpg");
+	background-blend-mode: screen;
+	border-radius: 1rem;
+	border: 5px black double;
+	padding: 1rem;
+	text-align: center;
+	font-family: 'Mouse-Memoirs', sans-serif;
+	font-size: xx-large;
+	font-weight: lighter;
 }

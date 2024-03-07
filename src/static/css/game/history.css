@@ -1,0 +1,94 @@
+.history-profile-picture {
+	height: 9vh;
+	width: 9vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 5%;
+	cursor: pointer;
+}
+
+.history-profile-picture:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.1);
+}
+
+.history-game-result {
+	font-size: large;
+	font-weight: bold;
+}
+
+.history-win .history-game-result {
+	color: rgb(66, 118, 214);
+}
+
+.history-loss .history-game-result {
+	color: rgb(225, 53, 53);
+}
+
+.history-game-type {
+	margin-top: 0.3rem;
+}
+
+.history-time-since {
+	margin-top: -0.3rem;
+	font-size: 0.7rem;
+}
+
+.history-row {
+	color: whitesmoke;
+	border-radius: 0.3rem;
+}
+
+.history-perk-card {
+	height: 2.5rem;
+	overflow: hidden;
+	object-fit: cover;
+	object-position: center;
+	cursor: pointer;
+}
+
+.history-perk-card:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.5);
+}
+
+.history-row.history-win {
+	background-color: rgb(34, 75, 153);
+}
+
+.history-row.history-loss {
+	background-color: rgb(145, 22, 22);
+}
+
+.history-game-score {
+	font-size: larger;
+	font-weight: bold;
+}
+
+.history-game-time {
+	margin-top: -0.3rem;
+	font-size: small;
+}
+
+.history-game-elo {
+	font-size: medium;
+	margin-top: -0.2rem;
+	margin-left: -0.3rem;
+}
+
+#my-profile button {
+	border: none;
+	background: none;
+}
+
+#my-profile button img {
+	height: 4vh;
+	width: 4vh;
+	margin: 1vh;
+}
+
+#my-profile button img:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.3);
+}

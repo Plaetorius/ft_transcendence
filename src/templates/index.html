@@ -4,159 +4,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base Title</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/forms.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/view-profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
+    <title>Transcendence</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/general/header.css">
+    <link rel="stylesheet" href="../static/css/general/fonts.css">
+    <link rel="stylesheet" href="../static/css/general/general.css">
+    <link rel="stylesheet" href="../static/css/general/my-profile.css">
+	<link rel="stylesheet" href="../static/css/general/register.css">
+    <link rel="stylesheet" href="../static/css/general/login.css">
+    <link rel="stylesheet" href="../static/css/game/history.css">
+    <link rel="stylesheet" href="../static/css/game/podium.css">
+	<link rel="stylesheet" href="../static/css/cards/cards.css">
+	<link rel="stylesheet" href="../static/css/users/profile.css">
+	<link rel="stylesheet" href="../static/css/users/friends.css">
+    <link rel="stylesheet" href="../static/css/chat/chats.css">
+    <link rel="stylesheet" href="../static/css/chat/notifications.css">
+
 </head>
 <body>
+    <header class="container-fluid px-5 active">
+        <div id="main-header" class="row align-items-center justify-content-between">
+            <div class="col-2 header-left-section">
+                <a id="header-chats" class="d-flex flex-column align-items-center justify-content-center">
+					<img src="../static/icons/web.png" draggable="false">
+					<p>NEWS</p>
+				</a>
+            </div>
+            <div class="col-8 header-middle-section">
+                <h1 id="newspaperTitle">Transcendence</h1>
+            </div>
+            <div class="col-2 header-right-section">
+				<a id="header-profile" class="d-flex flex-column align-items-center justify-content-center">
+					<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+					<p>PROFILE</p>
+				</a>
+            </div>
+        </div>
+        <div id="sub-header" class="row align-items-center justify-content-between">
+            <div class="col-3 d-flex align-items-center justify-content-center">
+                <a id="header-home">HOME</a>
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+                <a id="header-games">GAMES</a>
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+                <a id="header-friends">FRIENDS</a>
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+                <a id="header-podium">PODIUM</a>
+            </div>
+        </div>
+    </header>
+    <nav>
+    </nav>
     <main>
-        <section class="page-section terminal container active">
-            <section class="row">
-
-            </section>
-            <section class="row screen">
-                <section id="home-section" class="h-100 current">         
-                    <p>Welcome to Transcendence Industries (TI) TermLink </p>
-                    <p>VAULT-TEC RECREATION TERMINAL</p>
-                    <br>
-                    <!-- TODO Only display these field if user not connected -->
-                    <p><span id="register-field" class="section-field selected-field">[Register]</span></p>
-                    <p><span id="login-field" class="section-field">[Login]</span></p>
-                    <!-- END -->
-                    <p><span id="games-field" class="section-field">[Games]</span></p>
-                    <p><span id="tournaments-field" class="section-field">[Tournaments]</span></p>
-                    <p><span id="profile-field" class="section-field">[Profile]</span></p>
-                    <p><span id="friends-field" class="section-field">[Friends]</span></p>
-                    <p><span id="chats-field" class="section-field">[Chats]</span></p>
-                    &#9610;
-                </section>
-                
-                <section id="register-section"  class="container">
-                    <form id="registrationForm" class="container">
-                        <div class="row w-100">
-                            <div class="col">
-                                <label for="registerUsername">USERNAME</label>
-                                <input type="text" id="registerUsername" placeholder="................." required>
-                            </div>
-                        </div>
-                        <div class="row w-100">
-                            <div class="col">
-                                <label for="registerEmail">EMAIL</label>
-                                <input type="text" id="registerEmail" placeholder="................." required>
-                            </div>
-                        </div>
-                        <div class="row w-100">
-                            <div class="col">
-                                <label for="registerPassword1">PASSWORD</label>
-                                <input type="password" id="registerPassword1" placeholder="................." required>
-                            </div>
-                        </div>
-                        <div class="row w-100">
-                            <div class="col">
-                                <label for="registerPassword2">CONFIRM</label>
-                                <input type="password" id="registerPassword2" placeholder="................." required>
-                            </div>                        
-                        </div>
-                        <button type="submit">Register</button>
-                    </form>
-                    <div id="registrationErrors"></div>
-					<button id="oauthLoginButton">Login with 42</button>
-					<button id="testButton">Test Welcome</button>
-					<p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
-                </section>
-                
-                <section id="login-section"  class="container">
-                    <form id="loginForm">
-                        <input type="text" id="loginUsername" placeholder="Username" required>
-                        <input type="password" id="loginPassword" placeholder="Password" required>
-                        <button type="submit">Login</button>
-                    </form>
-                    <div id="loginErrors"></div>
-                    <p><span id="home-field" class="section-field selected-field">[Cancel]</span></p>
-                </section>
-               
-                <section id="profile-section" class="container">
-                    <div id="displayProfile">
-
-                    </div>
-                    <button id="editProfileButton">Edit profile</button>
-                    <div id="editProfile" class="d-none">
-
-                    </div>
-                    <div id="profileErrors"></div>
-                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
-                </section>
-				
-                <section id="friends-section" class="container">
-					<form id="userSearchForm">
-						<input type="text" id="searchUsername" placeholder="Search a user...">
-						<button type="submit">Search</button>
-					</form>
-					<div id="searchedProfile">
-
+		<section id="home" class="">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-4 bg-red">
+						<h4>TITLE 1</h4>
 					</div>
-                    <div id="friendsError"></div>
-                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
-				</section>
-                
-                <section id="chats-section" class="container">
-					<p id="connected-username"></p>
-                    <div id="chats">
-                        <button class="chatRoomButton" data-username="stoupid">Chat Stoupid</button>
-						<button class="chatRoomButton" data-username="tgernez">Chat Tgernez</button>               
+					<div class="col-4 bg-blue">
+						<h4>TITLE 2</h4>
 					</div>
-                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>    
-                </section>
+					<div class="col-4 bg-green">
+						<h4>TITLE 3</h4>
+					</div>
+				</div>
+			</div>
+		</section>
 
+		<section id="games" class="">
+			<div class="container-fluid">
+				<div id="games-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Games</h1>
+					</div>
+				</div>
+			</div>
+		</section>
 
-                <!-- Temporary -->
-                <section id="welcome-section" class="container">
-                    <p>Welcome !</p>
-                    <img src="{% static 'gifs/vaultboy-sunglasses.gif' %}">
-                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
-				</section>
-                <!-- Temporary -->
-                <section id="chat-section" class="container">
-                    <p>Chat Section</p>
-                    <div id="messages"></div>
-                    <form id="chat-form">
-                        <input id="message-input" type="text" minlength="1" maxlength="1024" placeholder="Type a message...">
-                        <button id="send-message-btn" type="submit">Send</button>
-                    </form>
-                    <p><span id="home-field" class="section-field selected-field">[Home]</span></p>
-                </section>
-			</section>
-                <!-- <section class="home-section" style="height: 90vh;" >
-                    <h1>Home section</h1>
-                </section> -->
-                <!-- <section class="friendships-section" style="height: 90vh;">
-                    <h1>Friendships section</h1>
-                </section> -->
-        </section>
-        <section class="page-section pipboy">
-            <p style="color: black;">Section Pipboy</p>
-            <section id="userProfile" class="container view-profile">
-            </section>
-        </section>
-        <section id="dev-section" class="container w-100 p-5">
-            <div class="row d-flex justify-content-center align-items-center w-100">
-                <div class="col d-flex justify-content-center align-items-center">
-                    <img src="{% static 'cards/perk-card-booster.png' %}" class="perk-card-booster" draggable="false">
+		<section id="friends" class="">
+			<div class="container-fluid">
+				<div id="friends-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Friends</h1>
+						<form>
+							<input placeholder="Username...">
+							<button type="submit">&#128269;</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="container-fluid friendships mt-2 d-flex flex-column align-items-center">
+				<div class="row d-flex justify-content-center align-items-center w-75 mt-2">
+					<div class="col-6 d-flex justify-content-start align-items-center">
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="friendships-profile open-profile">				
+						<span class="friendships-profile open-profile">Tgernez</span>
+					</div>
+					<div class="col-6 d-flex flex-row justify-content-end">
+						<button class="profile-action-button open-chat" data-username="username" title="Chat"><img src="../static/icons/chat.png" draggable="false"></button>
+						<button class="profile-action-button" data-username="username" title="Remove friend"><img src="../static/icons/remove-friend.png" draggable="false"></button>
+						<button class="profile-action-button" data-username="username" title="Block user"><img src="../static/icons/block.png" draggable="false"></button>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+		<section id="podium" class="">
+			<div class="container-fluid">
+				<div id="podium-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Podium</h1>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="row d-flex justify-content-center align-items-end podium-segments">
+					<div id="second-place" class="col-4 d-flex justify-content-center podium-segment">
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="podium-profile open-profile">
+					</div>
+					<div id="first-place" class="col-4 d-flex justify-content-center podium-segment">
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="podium-profile  open-profile">
+					</div>
+					<div id="third-place" class="col-4 d-flex justify-content-center podium-segment">
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="podium-profile  open-profile">
+					</div>
+				</div>
+			</div>
+
+			<h2>Ranking</h2>
+			<div id="podium-list" class="container-fluid w-75">
+				<div class="row">
+					<div class="col d-flex align-items-center">
+						<span>4.</span>
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="podium-profile  open-profile">
+						<span class="podium-profile open-profile d-flex align-items-center">Tgernez</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col d-flex align-items-center">
+						<span>5.</span>
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="podium-profile open-profile">
+						<span class="podium-profile open-profile d-flex align-items-center">Tgernez</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <section id="chats" class="">
+            <div class="container-fluid">
+				<div id="chats-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Chats</h1>
+					</div>
+				</div>
+			</div>
+            <div class="container-fluid w-75 all-chats">
+                <div class="row">
+                    <div class="col d-flex justify-content-start align-items-center">
+						<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="chats-profile open-profile">
+                        <span class="chats-profile open-profile">Tgernez</span>
+                    </div>
+					<div class="col d-flex justify-content-end align-items-center">
+						<button class="profile-action-button open-chat" data-username="username" title="Chat"><img src="../static/icons/chat.png" draggable="false"></button>
+						<button class="profile-action-button" data-username="username" title="Remove friend"><img src="../static/icons/remove-friend.png" draggable="false"></button>
+						<button class="profile-action-button" data-username="username" title="Block user"><img src="../static/icons/block.png" draggable="false"></button>
+					</div>
                 </div>
             </div>
         </section>
+
+		<section id="my-profile" class="active">
+			<div class="container-fluid">
+				<div id="my-profile-header" class="row justify-content-between">
+					<div class="col-auto d-flex align-items-center">
+						<img id="my-profile-picture" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="m-3">
+						<div class="ml-3">
+							<h5 id="my-username"><span class="online-status online"></span>Tgernez</h5>
+							<p id="my-profile-rank"><span>Rank: </span>#1</p>
+							<p id="my-profile-elo"><span>Elo: </span>1000</p>
+							<p id="my-profile-winrate"><span>Winrate: </span>1.0</p>
+							<p id="my-profile-joined"><span>Joined: </span>26/01/2024</p>
+						</div>
+					</div>
+					<div class="col-auto">
+						<button class="profile-action-button open-settings" title="Settings">
+							<img src="../static/icons/settings.png" draggable="false">
+						</button>
+					</div>
+				</div>
+			</div>
+			
+			<div id="my-profile-history">
+				<h4>Match History</h4>
+				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+					<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="username" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+						</div>
+						<div class="col-2 history-perks d-flex align-items-center justify-content-between flex-wrap">
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-result">WIN</div>
+							<div class="history-game-time">5:56</div>
+							<div class="history-game-type">Ranked</div>
+							<div class="history-time-since">11hours ago</div>
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-score">3 / 1</div>
+							<div class="history-game-elo">+20 PP</div>
+						</div>
+						<div class="col-2 m-0 history-perks d-flex align-items-center justify-content-between flex-wrap">
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+							<div class="col-6 p-0 d-flex justify-content-center">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							</div>
+						</div>
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="tgernez" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+					</div>
+					<div class="col-2 history-perks d-flex align-items-center justify-content-between flex-wrap">
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0 history-perks d-flex align-items-center justify-content-between flex-wrap">
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+						<div class="col-6 p-0 d-flex justify-content-center">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+						</div>
+					</div>
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <section id="register" class="">
+            <div class="container-fluid d-flex flex-column align-items-center">
+                <div class="row">
+                    <div class="col">
+                        <h1>Register</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <form id="register-form">
+                            <div>
+                                <input type="text" placeholder="Username...">
+                            </div>
+                            <div>
+                                <input type="email" placeholder="Email...">
+                            </div>
+                            <div>
+                                <input type="password" placeholder="Password...">
+                            </div>
+                            <div>
+                                <input type="password" placeholder="Confirm password...">
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit">Register</button>
+                            </div>
+                        </form>
+                        <div class="d-flex justify-content-center">
+                            <button id="already-account">Already have an account?</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="login" class="">
+            <div class="container-fluid d-flex flex-column align-items-center">
+                <div class="row">
+                    <div class="col">
+                        <h1>Login</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <form id="login-form">
+                            <div>
+                                <input type="text" placeholder="Username...">
+                            </div>
+                            <div>
+								<input type="password" placeholder="Password...">
+                            </div>
+                            <div class="d-flex justify-content-center">
+								<button type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+	
     </main>
-    <script src="{% static 'js/index.js' %}"></script>
-    <script src="{% static 'js/users/auth.js' %}"></script>
-	<script src="{% static 'js/users/search.js' %}"></script>
-	<script src="{% static 'js/users/profile.js' %}"></script>
-	<script src="{% static 'js/chat/chat.js' %}"></script>
-	<script src="{% static 'js/chat/notification.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+	<div id="chat-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h5><span class="online-status online"></span>Tgernez</h5>
+			</div>
+		</div>
+		<div class="chat-messages">
+			<div class="message d-flex">
+				<div>
+					<img class="open-profile" data-username="username" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+				</div>
+				<div class="message-content">
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan lorem sit amet tellus maximus iaculis. Praesent mattis ante lacus, vel ultricies arcu consequat a. Integer non volutpat mi. Etiam non massa quis purus elementum rhoncus ac et eros. Integer risus risus, fermentum eu augue sed, porta venenatis urna. Praesent vitae viverra metus.</p>
+					<span>16:20</span>
+				</div>
+			</div>
+
+			<div class="message d-flex">
+				<div>
+					<img class="open-profile" data-username="username" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+				</div>
+				<div class="message-content">
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan lorem sit amet tellus maximus iaculis. Praesent mattis ante lacus, vel ultricies arcu consequat a. Integer non volutpat mi. Etiam non massa quis purus elementum rhoncus ac et eros. Integer risus risus, fermentum eu augue sed, porta venenatis urna. Praesent vitae viverra metus.</p>
+					<span>16:20</span>
+				</div>
+			</div>
+
+			<div class="message d-flex">
+				<div>
+					<img class="open-profile" data-username="username" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+				</div>
+				<div class="message-content">
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan lorem sit amet tellus maximus iaculis. Praesent mattis ante lacus, vel ultricies arcu consequat a. Integer non volutpat mi. Etiam non massa quis purus elementum rhoncus ac et eros. Integer risus risus, fermentum eu augue sed, porta venenatis urna. Praesent vitae viverra metus.</p>
+					<span>16:20</span>
+				</div>
+			</div>
+
+			<div class="message d-flex flex-row-reverse">
+				<div>
+					<img class="open-profile" data-username="username" src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false">
+				</div>
+				<div class="message-content">
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan lorem sit amet tellus maximus iaculis. Praesent mattis ante lacus, vel ultricies arcu consequat a. Integer non volutpat mi. Etiam non massa quis purus elementum rhoncus ac et eros. Integer risus risus, fermentum eu augue sed, porta venenatis urna. Praesent vitae viverra metus.</p>
+					<span>16:20</span>
+				</div>
+			</div>
+			<!-- Messages here -->
+		</div>
+		<div class="chat-input w-100 row d-flex">
+			<div class="col-10">
+				<input type="text" class="form-control w-100" placeholder="Type a message...">
+			</div>
+			<div class="col-1 m-0">
+				<button class="">
+					<img src="../static/icons/send.png">
+				</button>
+			</div>
+			<div class="col-1 m-0">
+				<button class="">
+					<img src="../static/icons/clash.png">
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<div id="card-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h4>Basher</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-6 my-0">
+				<img class="card-visual" src="../static/cards/card-basher-1.png" draggable="false">
+			</div>
+			<div class="col-6 d-flex flex-column mt-5">
+				<div class="col mt-2">
+					<div><span class="rank">Rank 1: </span>+5% ball speed</div>
+					<div><span class="rank">Rank 2: </span>+10% return ball speed</div>
+				</div>
+				<div class="col mt-0 p-0">
+					<div class="quote">"Oh you wanna play it like that? TAKE THIS"</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="profile-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h5><span class="online-status online"></span>Tgernez</h5>
+			</div>
+		</div>
+		<div class="row d-inline-flex">
+			<div class="col m-0">
+				<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="profile-picture">
+			</div>
+			<div class="col m-0 p-0">
+				<p><span class="attribute">Rank: </span>#1</p>
+				<p><span class="attribute">Elo: </span>1000</p>
+				<p><span class="attribute">Winrate: </span>1.0</p>
+				<p><span class="attribute">Joined: </span>26/01/2024</p>
+			</div>
+		</div>
+		<div class="row m-2">
+			<div class="col">
+				<span class="attribute">Bio: </span> This is a bio, it's not such a long text, but that still does the trick, I hope. That would be pretty sad if that was too short to make a proper test, or too long that it would look stupid, no?
+			</div>
+		</div>
+		<div class="row m-2">
+			<div class="col">
+				<!-- TODO change ID for CLASS -->
+				<button id="profile-popup-chat" class="open-chat" data-username="username"><img src="../static/icons/chat.png" title="Chat" draggable="false"></button>
+				<button id="profile-popup-add-friend" data-username="username"><img src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
+				<!-- TODO <button id="profile-popup-remove-friend" data-username="username"><img src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button> -->
+				<button id="profile-popup-block" data-username="username"><img src="../static/icons/block.png" title="Block user" draggable="false"></button>
+				<!-- TODO <button id="profile-popup-unblock" data-username="username"><img src="../static/icons/check.png" title="Unblock user" draggable="false"></button> -->
+				<button id="profile-popup-profile" data-username="username"><img src="../static/icons/profile.png" title="Profile" draggable="false"></button>
+			</div>
+		</div>
+	</div>
+
+	<div id="notification" class="container d-none">
+		<div class="row d-flex align-items-center justify-content-center">
+			<div class="col-3 m-0 p-0 d-flex align-items-center justify-content-center">
+				<img src="../static/icons/bell.png">
+			</div>
+			<div class="col-9 my-2">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan lorem sit amet tellus maximus iaculis <a>here</a>.
+			</div>
+		</div>
+	</div>
+
+	<div id="settings-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h5>Settings</h5>
+			</div>
+		</div>
+		<div class="row w-100 d-flex justify-content-start">
+			<div class="col m-0">
+				<p>Click to change photo</p>
+				<input type="file" id="profile-picture-input" hidden accept="image/*">
+				<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="settings-picture">
+			</div>
+			<div class="col m-0 p-0">
+				<form>
+					<div><input id="settings-username" placeholder="Username..." name="username" type="text" value="tgernez"></div>
+					<div><input id="settings-email" placeholder="Email..." name="email" type="email" value="tgernez@student.42.fr"></div>
+					<div><input id="settings-first-name" placeholder="First name..." name="first-name" type="text" value="Tom"></div>
+					<div><input id="settings-last-name" placeholder="Last name..." name="last-name" type="text" value="Gernez"></div>
+					<div><textarea id="settings-bio" placeholder="Bio..." name="bio">Content of a bio</textarea></div>
+					<div class="form-group"><input type="checkbox" id="settings-2fa" name="2fa"><label for="settings-2fa">Enable 2FA</label></div>
+					<div>
+						<button type="submit">Save</button>
+						<button type="button" id="reset-password">Reset Password</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script src="../static/js/index.js"></script>
+	<script src="../static/js/chat/chats.js"></script>
+	<script src="../static/js/chat/notifications.js"></script>
+	<script src="../static/js/cards/cards.js"></script>
+	<script src="../static/js/users/profile.js"></script>
+	<script src="../static/js/general/navigation.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

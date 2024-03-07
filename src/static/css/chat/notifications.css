@@ -1,0 +1,25 @@
+#notification {
+	position: fixed;
+	bottom: 0vh;
+	right: 0vw;
+	width: 40vh;
+	/* height: 10vh; */
+	z-index: 105; /* 5 higher than popups */
+	background-color: white;
+	border: 5px black solid;
+	background-image: url("../../backgrounds/old-paper-background.jpg");
+	background-position: center;
+	color: black;
+	font-size: large;
+	font-weight: medium;
+}
+
+#notification img {
+	width: 5vh;
+	height: 5vh;
+}
+
+#notification a {
+	text-decoration: underline;
+	font-weight: bold;
+}

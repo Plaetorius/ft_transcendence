@@ -1,0 +1,111 @@
+#podium {
+	padding-left: 20vw;
+	padding-right: 20vw;
+}
+
+#podium h1 {
+	text-align: center;
+	font-size: 3.5rem;
+	font-family: 'Belgrano-Regular';
+}
+
+#podium .podium-segment {
+	width: 12vw;
+}
+
+#podium #first-place {
+	height: 15vh;
+	background-color: rgb(241, 185, 41);
+}
+
+#podium #second-place {
+	height: 12vh;
+	background-color: silver;
+}
+
+#podium #third-place {
+	height: 9vh;
+	background-color: rgb(119, 89, 14);
+}
+
+#podium .podium-segments {
+	margin-top: 6rem;
+}
+
+#podium .podium-segments img {
+	width: 9vh;
+	height: 9vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 15%;
+	cursor: pointer;
+	margin-top: -4rem;
+}
+
+#podium .podium-profile {
+	height: 8vh;
+	width: 8vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 15%;
+	cursor: pointer;
+	cursor: pointer;
+	margin-left: 0.5rem;
+	font-size: 2rem;
+	font-family: 'Mouse-Memoirs';
+}
+
+#podium img.podium-profile:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#podium span.podium-profile {
+	margin-left: 1rem;
+	height: auto;
+	width: auto;
+}
+
+#podium span.podium-profile:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#podium button.profile-action-button {
+	background: none;
+	border: none;
+}
+
+#podium button.profile-action-button img {
+	height: 4vh;
+	width: 4vh;
+}
+
+#podium button.profile-action-button img:hover {
+	transition: transform 0.3s ease;
+	transform: scale(1.2);
+}
+
+#podium-list .row {
+	border-bottom: 0.1rem black solid;
+	padding-bottom: 1rem;
+	padding-top: 1rem;
+}
+
+#podium h2 {
+	font-size: 2.5rem;
+	font-family: 'Belgrano-Regular';
+	text-align: center;
+	margin: 0;
+	margin-top: 1rem;
+	padding: 0;
+}
+
+#podium span {
+	font-size: large;
+	font-family: 'Belgrano-Regular';
+	font-size: 3rem;
+	margin-right: 0.5rem;
+}
