@@ -12,7 +12,7 @@ from .views import (
     UserBlockAPIView,
     UserListBlockedAPIView,
     UserEditAPIView,
-	OAuthCallbackView
+	# OAuthCallbackView
 )
 from .consumers import (
     UserNotification,
@@ -29,5 +29,5 @@ urlpatterns = [
     path('block/<str:username>', UserBlockAPIView.as_view(), name="block-api"),
     path('list-blocked/', UserListBlockedAPIView.as_view(), name="list-blocked-api"),
     path('edit-user/', UserEditAPIView.as_view(), name="edit-user-api"),
-	path('oauth2/callback', OAuthCallbackView.as_view(), name='oauth-callback'),
+	# path('oauth2/callback', OAuthCallbackView.as_view(), name='oauth-callback'),
 ]
