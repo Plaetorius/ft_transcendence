@@ -23,7 +23,7 @@ function handleErrors(errorData, errorElementId) {
 }
 
 // Registration
-document.getElementById('registrationForm').addEventListener('submit', (e) => {
+document.getElementById('registerForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const userData = {
         username: document.getElementById('registerUsername').value,
@@ -46,7 +46,6 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Registered and logged');
-            userRegistered();
         } else {
             console.log("No data access");
             throw Error('No data access');
@@ -57,6 +56,7 @@ document.getElementById('registrationForm').addEventListener('submit', (e) => {
 
 // Login
 document.getElementById('loginForm').addEventListener('submit', (e) => {
+	console.log("In login");
     e.preventDefault();
     const loginData = {
         username: document.getElementById('loginUsername').value,
@@ -77,7 +77,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             console.log('Logged in successfully');
-            userLoggedIn();
         } else {
             throw Error('No data access');
         }

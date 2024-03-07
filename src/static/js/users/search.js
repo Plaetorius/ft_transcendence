@@ -26,25 +26,13 @@ function getUser(username) {
 		return response.json();
 	})
 	.then(userData => {
-		showUserProfile(userData);
+		// TODO Just do it better
+		console.log(userData);
 	});	
 }
 
-function showUserProfile(userData) {
-	document.getElementById('friendsError').innerHTML = '';
-	const searchedProfileDiv = document.getElementById('searchedProfile');
-	searchedProfileDiv.innerHTML = `
-		<h4>${userData.username}</h4>
-		<p>Bio: ${userData.bio}</p>
-		<img src="${userData.profile_picture}">
-		<p>Elo: ${userData.elo}</p>
-		<button id="searchAddFriendButton" data-username="${userData.username}"> Add Friend </button>
-		<button id="searchRemoveFriendButton" data-username="${userData.username}"> Remove Friend </button>
-		<button id="searchBlockUserButton" data-username="${userData.username}"> Block user </button>
-		<button id="searchUnblockUserButton" data-username="${userData.username}"> Unblock user </button>
-		`;
-}
 
+// TODO not comptaible anymore
 document.getElementById('searchedProfile').addEventListener('click', (e) => {
 	if (e.target && e.target.id === 'searchAddFriendButton') {
 		const username = e.target.getAttribute('data-username');
@@ -62,7 +50,7 @@ document.getElementById('searchedProfile').addEventListener('click', (e) => {
 		const username = e.target.getAttribute('data-username');
 		unblockUser(username);
 	}
-})
+});
 
 function addFriend(username) {
 	fetch(`/users/friend/${username}`, {

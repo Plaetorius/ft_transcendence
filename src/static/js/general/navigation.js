@@ -1,5 +1,6 @@
 // Default section to activate on page load, if none is specified in the URL
-const defaultSection = 'chats';
+// TODO change to home
+const defaultSection = 'login';
 const currentHash = window.location.hash.replace('#', '');
 const initialSection = currentHash || defaultSection;
 
