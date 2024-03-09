@@ -1,3 +1,6 @@
+// TODO add message to confirm registration / login
+// TODO remove ? in url after logging in
+
 // Utils
 function getCookie(name) {
     let cookieValue = null;
@@ -45,18 +48,18 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-            console.log('Registered and logged');
+			navigateToSection('home');
         } else {
             console.log("No data access");
             throw Error('No data access');
         }
     })
+	// TODO handle errors
     .catch(error => handleErrors(error, 'registrationErrors'));
 });
 
 // Login
 document.getElementById('loginForm').addEventListener('submit', (e) => {
-	console.log("In login");
     e.preventDefault();
     const loginData = {
         username: document.getElementById('loginUsername').value,
@@ -76,10 +79,11 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-            console.log('Logged in successfully');
-        } else {
+			navigateToSection('home');
+		} else {
             throw Error('No data access');
         }
     })
+	// TODO handle errors
     .catch(error => handleErrors(error, 'loginErrors'));
 });

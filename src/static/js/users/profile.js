@@ -206,7 +206,7 @@ document.querySelectorAll(".open-profile").forEach(element => {
 	});
 });
 
-// Close Profile Popup 
+// Close Profile Popup, handle buttons click
 document.addEventListener('click', (event) => {
 	if (!profilePopup.contains(event.target) && !event.target.matches('.open-profile')) {
 		event.stopPropagation();
@@ -214,7 +214,68 @@ document.addEventListener('click', (event) => {
 		profilePopup.classList.remove("d-block");
 		unblur_background();
 	}
+
+	const button = event.target.closest('button');
+	if (button) {
+		const username = button.dataset.username;
+		if (username) {
+			if (button.matches('button.open-chat')) {
+				handleChatClick(username); // Already handled in chat.js
+			} else if (button.matches('button.add-friend')) {
+				handleAddFriendClick(username);
+			} else if (button.matches('button.remove-friend')) {
+				handleRemoveFriendClick(username);
+			} else if (button.matches('button.block')) {
+				handleBlockClick(username);
+			} else if (button.matches('button.unblock')) {
+				handleUnblockClick(username);
+			} else if (button.matches('button.goto-profile')) {
+				handleGotoProfileClick(username);
+			}
+		}
+	}
 });
+
+function handleChatClick(username) {
+	console.log("Chat clicked for user:", username);
+}
+
+function handleAddFriendClick(username) {
+	console.log("Add friend clicked for user:", username);
+	
+	addFriend(username).then(data => {
+        console.log(`Friend added: ${data.success}`);
+        // Handle success, update the UI accordingly
+    }).catch(error => {
+        // Log the backend error message if it exists, otherwise log a default error message
+        console.log(`Failed to add friend: ${error.error ? error.error : 'An error occurred'}`);
+        // Handle failure, perhaps show a message to the user
+    });
+}
+
+function handleRemoveFriendClick(username) {
+    console.log("Remove friend clicked for user:", username);
+    removeFriend(username).then(data => {
+        console.log(`Friend removed: ${data.success}`);
+        // Handle success, update the UI accordingly
+    }).catch(error => {
+        // Log the backend error message if it exists, otherwise log a default error message
+        console.log(`Failed to remove friend: ${error.error ? error.error : 'An error occurred'}`);
+        // Handle failure, perhaps show a message to the user
+    });
+}
+
+function handleBlockClick(username) {
+	console.log("Block clicked for user:", username);
+}
+
+function handleUnblockClick(username) {
+	console.log("Unblock clicked for user:", username);
+}
+
+function handleGotoProfileClick(username) {
+	console.log("GotoProfile clicked for user:", username);
+}
 
 
 const settingsPopup = document.getElementById("settings-popup");

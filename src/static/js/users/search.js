@@ -52,54 +52,6 @@ document.getElementById('searchedProfile').addEventListener('click', (e) => {
 	}
 });
 
-function addFriend(username) {
-	fetch(`/users/friend/${username}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
-	})
-	.then(response => {
-		if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-		}
-		return response.json();
-	})
-	.then(data => {
-		// TODO handle success
-		console.log(`Success: ${data.success}`);
-	})
-	.catch(error => {
-		// TODO handle error
-		console.log(`Error: ${error.error ? error.error : error}`);
-	});
-}
-
-function removeFriend(username) {
-	fetch(`/users/friend/${username}`, {
-		method: 'DELETE',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
-	})
-	.then(response => {
-		if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-		}
-		return response.json();
-	})
-	.then(data => {
-		// TODO handle success
-		console.log(`Success: ${data.success}`);
-	})
-	.catch(error => {
-		// TODO handle error
-		console.log(`Error: ${error.error ? error.error : error}`);
-	});
-}
-
 function blockUser(username) {
 	fetch(`/users/block/${username}`, {
 		method: 'POST',
