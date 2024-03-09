@@ -267,11 +267,26 @@ function handleRemoveFriendClick(username) {
 
 function handleBlockClick(username) {
 	console.log("Block clicked for user:", username);
-}
+	
+	block(username).then(data => {
+        console.log(`Block: ${data.success}`);
+        // Handle success, update the UI accordingly
+    }).catch(error => {
+        // Log the backend error message if it exists, otherwise log a default error message
+        console.log(`Failed to block: ${error.error ? error.error : 'An error occurred'}`);
+        // Handle failure, perhaps show a message to the user
+    });}
 
 function handleUnblockClick(username) {
-	console.log("Unblock clicked for user:", username);
-}
+    console.log("Unblock clicked for user:", username);
+    unblock(username).then(data => {
+        console.log(`Unblock: ${data.success}`);
+        // Handle success, update the UI accordingly
+    }).catch(error => {
+        // Log the backend error message if it exists, otherwise log a default error message
+        console.log(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`);
+        // Handle failure, perhaps show a message to the user
+    });}
 
 function handleGotoProfileClick(username) {
 	console.log("GotoProfile clicked for user:", username);
