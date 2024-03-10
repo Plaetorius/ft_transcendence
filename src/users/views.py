@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
+from django.db.models import Q
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -20,6 +21,7 @@ from .serializers import (
     BlockedUserSerializer,
     UserAllSerializer,
     UserUpdateSerializer,
+	FriendshipDetailSerializer,
 )
 import requests
 import os
@@ -100,14 +102,15 @@ class UserProfileAPIView(generics.RetrieveAPIView):
         serializer = self.get_serializer(user)
         return Response(serializer.data)
 
-class UserFriendsAPIView(generics.RetrieveAPIView):
-	serializer_class = UserSerializer
-	permission_classes = [IsAuthenticated]
+class UserFriendsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
-	def get(self, request, *args, **kwargs):
-		user = get_object_or_404(User, id=request.user.id)
-		serializer = self.get_serializer(user)
-		return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        user_id = request.user.id
+        friendships = Friendship.objects.filter(Q(friend1_id=user_id) | Q(friend2_id=user_id))
+        serializer = FriendshipDetailSerializer(friendships, many=True, context={'request_user': request.user})
+        print(f"Serializer data: {serializer.data}")
+        return Response(serializer.data)
 
 
 # TODO cleaner code, reduce boilerplate code

@@ -1,7 +1,6 @@
 let user = undefined;
 
 function showProfile() {
-
     // document.getElementById('profileErrors').innerHTML = '';
     // let profileElement = document.getElementById('displayProfile');
     fetch('/users/profile/', {
@@ -275,7 +274,8 @@ function handleBlockClick(username) {
         // Log the backend error message if it exists, otherwise log a default error message
         console.log(`Failed to block: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
-    });}
+    });
+}
 
 function handleUnblockClick(username) {
     console.log("Unblock clicked for user:", username);
@@ -286,12 +286,12 @@ function handleUnblockClick(username) {
         // Log the backend error message if it exists, otherwise log a default error message
         console.log(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
-    });}
+    });
+}
 
 function handleGotoProfileClick(username) {
 	console.log("GotoProfile clicked for user:", username);
 }
-
 
 const settingsPopup = document.getElementById("settings-popup");
 

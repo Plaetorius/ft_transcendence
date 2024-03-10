@@ -138,6 +138,18 @@ class UserLoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError("Incorrect Credentials")
 
+class FriendshipDetailSerializer(serializers.ModelSerializer):
+    friend_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Friendship
+        fields = ['friend_details']
+
+    def get_friend_details(self, obj):
+        request_user = self.context.get('request_user')
+        friend = obj.friend1 if obj.friend1 != request_user else obj.friend2
+        return UserSerializer(friend).data
+
 class FriendshipSerializer(serializers.ModelSerializer):
     friend1_id = serializers.IntegerField(write_only=True)
     friend2_id = serializers.IntegerField(write_only=True)

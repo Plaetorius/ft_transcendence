@@ -1,6 +1,6 @@
 // Default section to activate on page load, if none is specified in the URL
 // TODO change to home
-const defaultSection = 'register';
+const defaultSection = 'friends';
 const currentHash = window.location.hash.replace('#', '');
 const initialSection = currentHash || defaultSection;
 
