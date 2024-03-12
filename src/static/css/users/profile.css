@@ -45,6 +45,7 @@
 #profile-popup p {
 	margin: 0px;
 	padding: 0px;
+	width: 25vw;
 }
 
 #profile-popup .attribute {
@@ -87,6 +88,7 @@ span.online-status.offline {
 	height: 3vh;
 	width: 3vh;
 	margin-bottom: 0.6rem;
+	margin-left: 0.6rem;
 }
 
 #settings-popup {

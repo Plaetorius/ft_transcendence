@@ -11,24 +11,20 @@ document.getElementById('userSearchForm').addEventListener('submit', (e) => {
 	});
 });
 
-function getUser(username) {
-	return fetch(`/users/search/${encodeURIComponent(username)}/`, {
+async function getUser(username) {
+	const response = await fetch(`/users/search/${encodeURIComponent(username)}/`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
 		}
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('User not found');
-		}
-		return response.json();
-	})
-	.then(userData => {
-		// TODO Just do it better
-		console.log(userData);
-	});	
+	});
+	if (!response.ok) {
+		// TODO better handling
+		throw new Error('User not found');
+	}
+	const userData = await response.json();
+	return userData;	
 }
 
 

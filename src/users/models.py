@@ -27,7 +27,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150, blank=True)
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
-    last_seen = models.DateTimeField(auto_now=True)
+    last_seen = models.DateTimeField(auto_now=True) # already in model
     oauth = models.BooleanField(default=False)
 
 

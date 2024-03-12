@@ -42,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'bio', 'profile_picture', 'profile_picture_url', 'elo')
+        fields = ('id', 'username', 'bio', 'profile_picture', 'profile_picture_url', 'elo', 'is_online', 'date_joined')
 
     def get_profile_picture_url(self, obj):
         if obj.profile_picture and hasattr(obj.profile_picture, 'url'):

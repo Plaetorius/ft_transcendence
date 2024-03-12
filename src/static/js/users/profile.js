@@ -186,57 +186,105 @@ showProfile();
 
 const profilePopup = document.getElementById("profile-popup");
 
-// Open Profile Popup
-function setOpenProfileListeners() {
-    document.getElementById('friendships').addEventListener('click', (event) => {
-        let targetElement = event.target;
+// Open Profile Popup, handle buttons click
+async function openProfileHandler(event) {
+	let targetElement = event.target;
 
-        // Traverse up to find the element with .open-profile
-        while (targetElement != null && !targetElement.matches('.open-profile')) {
-            targetElement = targetElement.parentElement;
-        }
+	// Traverse up to find the element with .open-profile
+	while (targetElement != null && !targetElement.matches('.open-profile')) {
+		targetElement = targetElement.parentElement;
+	}
 
-        // If a .open-profile element was clicked
-        if (targetElement) {
-            event.stopPropagation();
-            hide_popups();
-            profilePopup.classList.remove("d-none");
-            profilePopup.classList.add("d-block");
-            blur_background();
-        }
+	// If a .open-profile element was clicked
+	if (targetElement) {
+		event.stopPropagation();
+		hide_popups();
+
+		try {
+			// Await the getUser promise and then log the data
+			const user = await getUser(targetElement.dataset.username);
+			console.log(`openProfileHandler`, user);
+			updateProfilePopup(user);
+			profilePopup.classList.remove("d-none");
+			profilePopup.classList.add("d-block");
+			blur_background();
+		} catch (error) {
+			console.error('Error fetching user data:', error);
+		}
+	}
+}
+
+function updateProfilePopup(user) {
+	console.log(user);
+    let titleElem = profilePopup.querySelector("h5");
+    
+    // Clear existing online-status span if any
+    let existingStatus = titleElem.querySelector('.online-status');
+    if (existingStatus) {
+        existingStatus.remove();
+    }
+    
+    // Create and add new online status span
+    let onlineElem = document.createElement("span");
+    onlineElem.classList.add("online-status", user.is_online ? "online" : "offline");
+    titleElem.innerText = user.username;
+    titleElem.insertBefore(onlineElem, titleElem.firstChild);
+    
+    let imgElem = profilePopup.querySelector('img.profile-picture');
+    imgElem.src = user.profile_picture_url;
+    imgElem.draggable = false;
+    
+
+	// Convert the string into a Date object
+	const date = new Date(user.date_joined);
+
+	// Use Intl.DateTimeFormat to format the date
+	const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+
+	const formattedDate = new Intl.DateTimeFormat('fr-FR', options).format(date);
+
+    // Update other user information
+    // profilePopup.querySelector('#profile-popup-rank span.attribute + span').textContent = `#${user.rank}`; TODO implement
+    profilePopup.querySelector('#profile-popup-elo').innerHTML = `<span class="attribute">Elo: </span>${user.elo}`;
+    // profilePopup.querySelector('#profile-popup-winrate span.attribute + span').textContent = user.winrate; // TODO implement
+    profilePopup.querySelector('#profile-popup-joined').innerHTML = `<span class="attribute">Date Joined: </span>${formattedDate}`;
+    profilePopup.querySelector('#profile-popup-bio').innerHTML = `<span class="attribute">Bio: </span>${user.bio}`;
+
+    // Update buttons with the user's username
+    const buttonsToUpdate = profilePopup.querySelectorAll('button[data-username]');
+    buttonsToUpdate.forEach(button => {
+        button.dataset.username = user.username; me
     });
 }
 
 // Close Profile Popup, handle buttons click
-function setCloseProfileListeners() {
-	document.addEventListener('click', (event) => {
-		if (!profilePopup.contains(event.target) && !event.target.matches('.open-profile')) {
-			event.stopPropagation();
-			profilePopup.classList.add("d-none");
-			profilePopup.classList.remove("d-block");
-			unblur_background();
-		}
-	
-		const button = event.target.closest('button');
-		if (button) {
-			const username = button.dataset.username;
-			if (username) {
-				if (button.matches('button.open-chat')) {
-					handleChatClick(username); // Already handled in chat.js
-				} else if (button.matches('button.add-friend')) {
-					handleAddFriendClick(username);
-				} else if (button.matches('button.remove-friend')) {
-					handleRemoveFriendClick(username);
-				} else if (button.matches('button.block')) {
-					handleBlockClick(username);
-				} else if (button.matches('button.unblock')) {
-					handleUnblockClick(username);
-				} else if (button.matches('button.goto-profile')) {
-					handleGotoProfileClick(username);
-				}
+function closeProfileHandle(event) {
+	if (!profilePopup.contains(event.target) && !event.target.matches('.open-profile')) {
+		event.stopPropagation();
+		profilePopup.classList.add("d-none");
+		profilePopup.classList.remove("d-block");
+		unblur_background();
+	}
+
+	const button = event.target.closest('button');
+	if (button) {
+		const username = button.dataset.username;
+		if (username) {
+			if (button.matches('button.open-chat')) {
+				handleChatClick(username); // Already handled in chat.js
+			} else if (button.matches('button.add-friend')) {
+				handleAddFriendClick(username);
+			} else if (button.matches('button.remove-friend')) {
+				handleRemoveFriendClick(username);
+			} else if (button.matches('button.block')) {
+				handleBlockClick(username);
+			} else if (button.matches('button.unblock')) {
+				handleUnblockClick(username);
+			} else if (button.matches('button.goto-profile')) {
+				handleGotoProfileClick(username);
 			}
 		}
-	});
+	}
 }
 
 function handleChatClick(username) {

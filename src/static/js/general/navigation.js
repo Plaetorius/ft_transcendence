@@ -22,8 +22,10 @@ window.addEventListener('popstate', (event) => {
 });
 
 function navigateToSection(sectionId) {
+	removeListeners();
     setActiveSection(sectionId);
     history.pushState({ section: sectionId }, '', '#' + sectionId);
+	initializeListeners();
 }
 
 function setActiveSection(sectionId) {
@@ -42,7 +44,6 @@ function setActiveSection(sectionId) {
         document.getElementById(defaultSection).classList.add("active");
     }
 	// Actualise listeners no matter the page
-	actualiseListeners();
 }
 
 function hide_popups() {
@@ -56,9 +57,15 @@ function hide_popups() {
 	settingsPopup.classList.remove("d-block");
 }
 
-function actualiseListeners() {
+function initializeListeners() {
 	console.log("Actualise listeners called");
-	console.log("")
-	setOpenProfileListeners();
-	setCloseProfileListeners();
+	document.addEventListener('click', openProfileHandler);
+	document.addEventListener('click', closeProfileHandle);
+
+}
+
+function removeListeners() {
+    document.removeEventListener('click', openProfileHandler);
+	document.removeEventListener('click', closeProfileHandle);
+
 }
