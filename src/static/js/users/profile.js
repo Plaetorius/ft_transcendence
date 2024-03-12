@@ -19,7 +19,8 @@ function showProfile() {
     })
     .then(userData => {
         user = userData;
-		console.log(user);
+		let imgElem = document.getElementById('header-profile-picture');
+		imgElem.src = `..${user.profile_picture_url}`;
     })
     .catch(error => {
 		console.log(error);
