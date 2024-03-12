@@ -253,7 +253,7 @@ function updateProfilePopup(user) {
     // Update buttons with the user's username
     const buttonsToUpdate = profilePopup.querySelectorAll('button[data-username]');
     buttonsToUpdate.forEach(button => {
-        button.dataset.username = user.username; me
+        button.dataset.username = user.username;
     });
 }
 
@@ -296,6 +296,7 @@ function handleAddFriendClick(username) {
 	
 	addFriend(username).then(data => {
         console.log(`Friend added: ${data.success}`);
+		actualiseFriendsSection();
         // Handle success, update the UI accordingly
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
@@ -308,6 +309,7 @@ function handleRemoveFriendClick(username) {
     console.log("Remove friend clicked for user:", username);
     removeFriend(username).then(data => {
         console.log(`Friend removed: ${data.success}`);
+		actualiseFriendsSection();
         // Handle success, update the UI accordingly
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message

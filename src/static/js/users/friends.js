@@ -62,13 +62,13 @@ function loadAndDisplayFriends() {
             colActionDiv.classList.add('col-6', 'd-flex', 'flex-row', 'justify-content-end');
 
 			// TODO hanndle better by using global vars in HTML template
-            const chatButton = createActionButton('../static/icons/chat.png', 'Chat', friend.username);
-            const removeFriendButton = createActionButton('../static/icons/remove-friend.png', 'Remove friend', friend.username);
-            const blockButton = createActionButton('../static/icons/block.png', 'Block user', friend.username);
+            // const chatButton = createActionButton('../static/icons/chat.png', 'Chat', friend.username);
+            // const removeFriendButton = createActionButton('../static/icons/remove-friend.png', 'Remove friend', friend.username);
+            // const blockButton = createActionButton('../static/icons/block.png', 'Block user', friend.username);
 
-            colActionDiv.appendChild(chatButton);
-            colActionDiv.appendChild(removeFriendButton);
-            colActionDiv.appendChild(blockButton);
+            // colActionDiv.appendChild(chatButton);
+            // colActionDiv.appendChild(removeFriendButton);
+            // colActionDiv.appendChild(blockButton);
 
             // Append columns to the row
             rowDiv.appendChild(colProfileDiv);
@@ -138,4 +138,11 @@ function removeFriend(username) {
 		}
 		return response.json();
 	});
+}
+
+function actualiseFriendsSection() {
+	removeListeners();
+	loadAndDisplayFriends();
+
+	initializeListeners();
 }

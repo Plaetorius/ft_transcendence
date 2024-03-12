@@ -58,7 +58,6 @@ function hide_popups() {
 }
 
 function initializeListeners() {
-	console.log("Actualise listeners called");
 	document.addEventListener('click', openProfileHandler);
 	document.addEventListener('click', closeProfileHandle);
 

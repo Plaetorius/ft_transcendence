@@ -1,14 +1,16 @@
 // TODO create functions for better error handling for friend add, friend remove,
 // block user, unblock user
 
-document.getElementById('userSearchForm').addEventListener('submit', (e) => {
-	e.preventDefault();
-	const username = document.getElementById('searchUsername').value;
-	getUser(username)
-	.catch(error => {
-		document.getElementById('searchedProfile').innerHTML = '';
-		document.getElementById('friendsError').innerHTML = error.message;
-	});
+document.getElementById('userSearchForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const usernameInput = document.getElementById('searchUsername');
+    const username = usernameInput.value;
+
+	usernameInput.value = '';
+
+    addFriend(username);
+	actualiseFriendsSection();
+
 });
 
 async function getUser(username) {
