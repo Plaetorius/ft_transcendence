@@ -19,19 +19,11 @@ function showProfile() {
     })
     .then(userData => {
         user = userData;
-    //     profileElement.innerHTML = `
-    //         <h4>${userData.username}</h4>
-    //         <p>Bio: ${userData.bio}</p>
-    //         <img src="${userData.profile_picture}">
-    //         <p>Elo: ${userData.elo}</p>
-    // `;
 		console.log(user);
-    //TODO remove
-    // document.getElementById('connected-username').innerHTML = user.username;
     })
     .catch(error => {
-        // document.getElementById('profileErrors').innerHTML = error.message;
-    });
+		console.log(error);
+	});
 }
 
 // document.getElementById('editProfileButton').addEventListener('click', (e) => {
@@ -195,45 +187,57 @@ showProfile();
 const profilePopup = document.getElementById("profile-popup");
 
 // Open Profile Popup
-document.querySelectorAll(".open-profile").forEach(element => {
-	element.addEventListener('click', (event) => {
-		event.stopPropagation();
-		hide_popups();
-		profilePopup.classList.remove("d-none");
-		profilePopup.classList.add("d-block");
-		blur_background();
-	});
-});
+function setOpenProfileListeners() {
+    document.getElementById('friendships').addEventListener('click', (event) => {
+        let targetElement = event.target;
+
+        // Traverse up to find the element with .open-profile
+        while (targetElement != null && !targetElement.matches('.open-profile')) {
+            targetElement = targetElement.parentElement;
+        }
+
+        // If a .open-profile element was clicked
+        if (targetElement) {
+            event.stopPropagation();
+            hide_popups();
+            profilePopup.classList.remove("d-none");
+            profilePopup.classList.add("d-block");
+            blur_background();
+        }
+    });
+}
 
 // Close Profile Popup, handle buttons click
-document.addEventListener('click', (event) => {
-	if (!profilePopup.contains(event.target) && !event.target.matches('.open-profile')) {
-		event.stopPropagation();
-		profilePopup.classList.add("d-none");
-		profilePopup.classList.remove("d-block");
-		unblur_background();
-	}
-
-	const button = event.target.closest('button');
-	if (button) {
-		const username = button.dataset.username;
-		if (username) {
-			if (button.matches('button.open-chat')) {
-				handleChatClick(username); // Already handled in chat.js
-			} else if (button.matches('button.add-friend')) {
-				handleAddFriendClick(username);
-			} else if (button.matches('button.remove-friend')) {
-				handleRemoveFriendClick(username);
-			} else if (button.matches('button.block')) {
-				handleBlockClick(username);
-			} else if (button.matches('button.unblock')) {
-				handleUnblockClick(username);
-			} else if (button.matches('button.goto-profile')) {
-				handleGotoProfileClick(username);
+function setCloseProfileListeners() {
+	document.addEventListener('click', (event) => {
+		if (!profilePopup.contains(event.target) && !event.target.matches('.open-profile')) {
+			event.stopPropagation();
+			profilePopup.classList.add("d-none");
+			profilePopup.classList.remove("d-block");
+			unblur_background();
+		}
+	
+		const button = event.target.closest('button');
+		if (button) {
+			const username = button.dataset.username;
+			if (username) {
+				if (button.matches('button.open-chat')) {
+					handleChatClick(username); // Already handled in chat.js
+				} else if (button.matches('button.add-friend')) {
+					handleAddFriendClick(username);
+				} else if (button.matches('button.remove-friend')) {
+					handleRemoveFriendClick(username);
+				} else if (button.matches('button.block')) {
+					handleBlockClick(username);
+				} else if (button.matches('button.unblock')) {
+					handleUnblockClick(username);
+				} else if (button.matches('button.goto-profile')) {
+					handleGotoProfileClick(username);
+				}
 			}
 		}
-	}
-});
+	});
+}
 
 function handleChatClick(username) {
 	console.log("Chat clicked for user:", username);

@@ -1,6 +1,6 @@
 // Default section to activate on page load, if none is specified in the URL
 // TODO change to home
-const defaultSection = 'friends';
+const defaultSection = 'home';
 const currentHash = window.location.hash.replace('#', '');
 const initialSection = currentHash || defaultSection;
 
@@ -33,8 +33,32 @@ function setActiveSection(sectionId) {
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.classList.add("active");
+		// Calls to functions to load the section
+		if (sectionId === 'friends') {
+			loadAndDisplayFriends();
+		}
     } else {
-        // Fallback to default section if the specified ID is not found
+		// Fallback to default section if the specified ID is not found
         document.getElementById(defaultSection).classList.add("active");
     }
+	// Actualise listeners no matter the page
+	actualiseListeners();
+}
+
+function hide_popups() {
+	chatPopup.classList.add("d-none");
+	chatPopup.classList.remove("d-block");
+	profilePopup.classList.add("d-none");
+	profilePopup.classList.remove("d-block");
+	cardPopup.classList.add("d-none");
+	cardPopup.classList.remove("d-block");
+	settingsPopup.classList.add("d-none");
+	settingsPopup.classList.remove("d-block");
+}
+
+function actualiseListeners() {
+	console.log("Actualise listeners called");
+	console.log("")
+	setOpenProfileListeners();
+	setCloseProfileListeners();
 }
