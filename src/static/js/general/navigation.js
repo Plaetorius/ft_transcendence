@@ -39,6 +39,9 @@ function setActiveSection(sectionId) {
 		if (sectionId === 'friends') {
 			loadAndDisplayFriends();
 		}
+		else if (sectionId === 'podium') {
+			getPodium();
+		}
     } else {
 		// Fallback to default section if the specified ID is not found
         document.getElementById(defaultSection).classList.add("active");
