@@ -24,7 +24,7 @@ function loadAndDisplayFriends() {
         
         // Check if there are friends
         if (data.length === 0) {
-            console.log('No friendships found.');
+            console.log('No friendships found.'); // TODO useless OR handle better
             const noFriendsMessage = document.createElement('div');
             noFriendsMessage.textContent = 'No friends found.';
             friendshipsContainer.appendChild(noFriendsMessage);
