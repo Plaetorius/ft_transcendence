@@ -333,3 +333,11 @@ class UserEditAPIView(APIView):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+class UserPodiumAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        # Query the top users based on their ELO scores
+        top_players = User.objects.order_by('-elo')
+        serializer = UserSerializer(top_players, many=True)
+        return Response(serializer.data)
