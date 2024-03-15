@@ -1,30 +1,28 @@
 // TODO Add PONG invites system
-document.querySelectorAll(".chatRoomButton").forEach(element => {
-    element.addEventListener('click', (e) => {
-        const username = element.getAttribute('data-username');
-        const cookie = getCookie('csrftoken');
-        fetch(`chat/room-id/${username}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Username not found');
-            }
-            return response.json();
-        })
-        .then(data => {
-            enter_room(data.room_id)
-        })
-        .catch(error => {
-            // TODO proper error handling
-            console.log(error);
-        });
-    });
-});
+function getChatRoom(username) {
+	console.log("Clicked");
+	const cookie = getCookie('csrftoken');
+	fetch(`chat/room-id/${username}`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+		}
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Username not found');
+		}
+		return response.json();
+	})
+	.then(data => {
+		enter_room(data.room_id)
+	})
+	.catch(error => {
+		// TODO proper error handling
+		console.log(error);
+	});
+}
 
 let chatSocket = null;
 let blocked_list;
@@ -71,24 +69,53 @@ async function fetch_blocked_users(room_id) {
 }
 
 function create_dom_message(message, sender) {
-    // TODO optimize later to fetch user less times (not mandatory)
-    let divElem = document.createElement('div');
+    let messageDiv = document.createElement('div');
+    let profileDiv = document.createElement('div');
     let imgElem = document.createElement('img');
+    let messageContentDiv = document.createElement('div');
     let pElem = document.createElement('p');
-    divElem.classList.add('chat-message');
-    divElem.appendChild(imgElem);
-    divElem.appendChild(pElem);
-    imgElem.src = `${sender.profile_picture}`;
-    pElem.innerHTML = message;
-    if (blocked_list.includes(sender.username)) {
-        divElem.classList.add("d-none");        
+    let timeSpan = document.createElement('span');
+
+    // Applying classes based on whether the message is sent or received
+    messageDiv.classList.add('message', 'd-flex');
+    if (user.username === sender.username) {
+        // Message sent by the current user
+        messageDiv.classList.add('flex-row-reverse');
     }
-    document.getElementById('messages').appendChild(divElem);
+
+    imgElem.src = `${sender.profile_picture}`;
+    imgElem.className = 'open-profile';
+    imgElem.setAttribute('data-username', sender.username);
+    imgElem.draggable = false;
+    
+    pElem.innerHTML = message;
+    // TODO use real message time
+    timeSpan.textContent = '16:20';
+
+    profileDiv.appendChild(imgElem);
+
+    messageContentDiv.className = 'message-content';
+    messageContentDiv.appendChild(pElem);
+    messageContentDiv.appendChild(timeSpan);
+
+    messageDiv.appendChild(profileDiv);
+    messageDiv.appendChild(messageContentDiv);
+
+    if (blocked_list && blocked_list.includes(sender.username)) {
+        messageDiv.classList.add("d-none");
+    }
+
+    document.getElementById('messages').appendChild(messageDiv);
+
+    // After appending the message, scroll to the last message
+    scrollToLastMessages();
 }
 
 async function enter_room(room_id) {
+	console.log("Enter room entered");
     blocked_list = await fetch_blocked_users(room_id);
     const previous_messages = await fetch_room_messages(room_id);
+	console.log()
     if (previous_messages) {
         previous_messages.forEach(message => {
             create_dom_message(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
@@ -99,12 +126,11 @@ async function enter_room(room_id) {
     chatSocket = new WebSocket(address);
     
     chatSocket.onopen = (e) => {
-        history.pushState({ room: room_id}, "", `/chat/dm/${room_id}`);
         console.log(`Web socket opened`);
-        document.getElementById('chats-section').classList.remove("d-block");
-        document.getElementById('chats-section').classList.add("d-none");
-        document.getElementById('chat-section').classList.remove("d-none");
-        document.getElementById('chat-section').classList.add("d-block");
+        // document.getElementById('chats-section').classList.remove("d-block");
+        // document.getElementById('chats-section').classList.add("d-none");
+        // document.getElementById('chat-section').classList.remove("d-none");
+        // document.getElementById('chat-section').classList.add("d-block");
     };
 
     chatSocket.onerror = (e) => {
@@ -120,53 +146,57 @@ async function enter_room(room_id) {
         create_dom_message(message, sender);
     };
 
-    document.getElementById("send-message-btn").addEventListener('click', (e) => {
-        e.preventDefault();
-        let messageElem = document.getElementById('message-input');
-        const message = messageElem.value.trim();
-        if (message.length == 0) {
-            console.log("Message can't be empty");
-        } 
-        else if (message.length > 1024)
-            console.log('Message too long');
-        else {
-            messageElem.value = '';
+    document.getElementById("send-message-btn").addEventListener('click', handleSendMessage);
+}
 
-            
-            if (chatSocket.readyState === WebSocket.OPEN) {
-                chatSocket.send(JSON.stringify({
-                    message: message,
-                }));
-            } else {
-                console.error(`WebSocket is not open. State: ${chatSocket.readyState}`);
-            }
-        }
-    });
+function handleSendMessage(event) {
+	event.preventDefault();
+	let messageElem = document.getElementById('message-input');
+	const message = messageElem.value.trim();
+	if (message.length == 0) {
+		console.log("Message can't be empty");
+	} 
+	else if (message.length > 1024)
+		console.log('Message too long');
+	else {
+		messageElem.value = '';
+		if (chatSocket.readyState === WebSocket.OPEN) {
+			chatSocket.send(JSON.stringify({
+				message: message,
+			}));
+		} else {
+			console.error(`WebSocket is not open. State: ${chatSocket.readyState}`);
+		}
+	}
 }
 
 const chatPopup = document.getElementById("chat-popup");
 
-// Open for Chats
-document.querySelectorAll(".open-chat").forEach(element => {
-	element.addEventListener('click', (event) => {
-		event.stopPropagation();
-		hide_popups();
-		chatPopup.classList.remove("d-none");
-		chatPopup.classList.add("d-block");
-		blur_background();
-		scrollToLastMessages();
-	});
-});
+// // Open for Chats
+// document.querySelectorAll(".open-chat").forEach(element => {
+// 	element.addEventListener('click', (event) => {
+// 		event.stopPropagation();
+// 		hide_popups();
+// 		chatPopup.classList.remove("d-none");
+// 		chatPopup.classList.add("d-block");
+// 		blur_background();
+// 		scrollToLastMessages();
+// 	});
+// });
 
-// Close for Chats
-document.addEventListener('click', (event) => {
-    if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
-        event.stopPropagation();
-        chatPopup.classList.add("d-none");
-        chatPopup.classList.remove("d-block");
-        unblur_background();
-    }
-});
+// // Close for Chats
+function closeChatPopup(event) {
+	if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
+		event.stopPropagation();
+		chatPopup.classList.add("d-none");
+		chatPopup.classList.remove("d-block");
+		unblur_background();
+		document.removeEventListener('click', closeChatPopup);
+		document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
+		document.getElementById('messages').innerHTML = '';
+
+	}
+}
 
 function scrollToLastMessages() {
     const chatMessages = document.querySelector('.chat-messages');

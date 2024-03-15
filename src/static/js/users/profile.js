@@ -272,8 +272,9 @@ function closeProfileHandle(event) {
 		const username = button.dataset.username;
 		if (username) {
 			if (button.matches('button.open-chat')) {
-				handleChatClick(username); // Already handled in chat.js
+				handleChatClick(username);
 			} else if (button.matches('button.add-friend')) {
+				console.log("Comparing");
 				handleAddFriendClick(username);
 			} else if (button.matches('button.remove-friend')) {
 				handleRemoveFriendClick(username);
@@ -289,7 +290,16 @@ function closeProfileHandle(event) {
 }
 
 function handleChatClick(username) {
-	console.log("Chat clicked for user:", username);
+	console.log(`handleChatlick called to chat: ${username}`);
+	hide_popups();
+	getChatRoom(username);
+	chatPopup.classList.remove("d-none");
+	chatPopup.classList.add("d-block");
+	blur_background();
+	document.addEventListener('click', closeChatPopup);
+	scrollToLastMessages();
+
+
 }
 
 function handleAddFriendClick(username) {
