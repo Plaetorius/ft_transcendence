@@ -16,7 +16,8 @@ function getChatRoom(username) {
 		return response.json();
 	})
 	.then(data => {
-		enter_room(data.room_id)
+		enterRoom(data.room_id, username);
+
 	})
 	.catch(error => {
 		// TODO proper error handling
@@ -27,7 +28,7 @@ function getChatRoom(username) {
 let chatSocket = null;
 let blocked_list;
 
-async function fetch_room_messages(room_id) {
+async function fetchRoomMessages(room_id) {
     // Fetch URL with room_id to retrieve messages
     try {
         const response = await fetch(`/chat/room-messages/${room_id}`, {
@@ -49,7 +50,7 @@ async function fetch_room_messages(room_id) {
     }
 }
 
-async function fetch_blocked_users(room_id) {
+async function fetchBlockedUsers(room_id) {
     try {
         const response = await fetch(`/users/list-blocked/`, {
             method: 'GET',
@@ -68,7 +69,7 @@ async function fetch_blocked_users(room_id) {
     }
 }
 
-function create_dom_message(message, sender) {
+function createDomMessage(message, sender) {
     let messageDiv = document.createElement('div');
     let profileDiv = document.createElement('div');
     let imgElem = document.createElement('img');
@@ -111,14 +112,30 @@ function create_dom_message(message, sender) {
     scrollToLastMessages();
 }
 
-async function enter_room(room_id) {
+async function updateChatPopup(username) {
+	const user = await getUser(username);
+	let titleElem = chatPopup.querySelector("h5");
+    
+    // Clear existing online-status span if any
+    let existingStatus = titleElem.querySelector('.online-status');
+    if (existingStatus) {
+        existingStatus.remove();
+    }
+    
+    // Create and add new online status span
+    let onlineElem = document.createElement("span");
+    onlineElem.classList.add("online-status", user.is_online ? "online" : "offline");
+    titleElem.innerText = user.username;
+    titleElem.insertBefore(onlineElem, titleElem.firstChild);
+}
+
+async function enterRoom(room_id, username) {
 	console.log("Enter room entered");
-    blocked_list = await fetch_blocked_users(room_id);
-    const previous_messages = await fetch_room_messages(room_id);
-	console.log()
+    blocked_list = await fetchBlockedUsers(room_id);
+    const previous_messages = await fetchRoomMessages(room_id);
     if (previous_messages) {
         previous_messages.forEach(message => {
-            create_dom_message(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
+            createDomMessage(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
         });
     }
     const token = localStorage.getItem('accessToken');
@@ -126,11 +143,8 @@ async function enter_room(room_id) {
     chatSocket = new WebSocket(address);
     
     chatSocket.onopen = (e) => {
+		updateChatPopup(username);
         console.log(`Web socket opened`);
-        // document.getElementById('chats-section').classList.remove("d-block");
-        // document.getElementById('chats-section').classList.add("d-none");
-        // document.getElementById('chat-section').classList.remove("d-none");
-        // document.getElementById('chat-section').classList.add("d-block");
     };
 
     chatSocket.onerror = (e) => {
@@ -143,7 +157,7 @@ async function enter_room(room_id) {
         const data = JSON.parse(e.data);
         const message = data.message;
         const sender = data.sender;
-        create_dom_message(message, sender);
+        createDomMessage(message, sender);
     };
 
     document.getElementById("send-message-btn").addEventListener('click', handleSendMessage);
@@ -201,6 +215,7 @@ function closeChatPopup(event) {
 		document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
 		document.getElementById("message-input").removeEventListener('keydown', handleSendMessage);
 		document.getElementById('messages').innerHTML = '';
+		clearChatHeader();
 		chatSocket.close();
 	}
 }
@@ -209,5 +224,24 @@ function scrollToLastMessages() {
     const chatMessages = document.querySelector('.chat-messages');
     if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+function clearChatHeader() {
+    const h5Tag = document.querySelector("#chat-popup h5");
+    const statusSpan = h5Tag.querySelector(".online-status");
+
+    // Remove the username
+    h5Tag.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            node.nodeValue = '';
+        }
+    });
+
+    // Remove "online" or "offline" classes
+    if (statusSpan.classList.contains("online")) {
+        statusSpan.classList.remove("online");
+    } else if (statusSpan.classList.contains("offline")) {
+        statusSpan.classList.remove("offline");
     }
 }

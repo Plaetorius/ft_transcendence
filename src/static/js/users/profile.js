@@ -216,7 +216,6 @@ async function openProfileHandler(event) {
 }
 
 function updateProfilePopup(user) {
-	console.log(user);
     let titleElem = profilePopup.querySelector("h5");
     
     // Clear existing online-status span if any
