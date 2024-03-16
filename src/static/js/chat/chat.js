@@ -201,7 +201,7 @@ function closeChatPopup(event) {
 		document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
 		document.getElementById("message-input").removeEventListener('keydown', handleSendMessage);
 		document.getElementById('messages').innerHTML = '';
-
+		chatSocket.close();
 	}
 }
 
