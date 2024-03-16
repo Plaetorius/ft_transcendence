@@ -75,7 +75,7 @@ function createDomMessage(message, sender) {
     let imgElem = document.createElement('img');
     let messageContentDiv = document.createElement('div');
     let pElem = document.createElement('p');
-    let timeSpan = document.createElement('span');
+    // let timeSpan = document.createElement('span');
 
     // Applying classes based on whether the message is sent or received
     messageDiv.classList.add('message', 'd-flex');
@@ -91,13 +91,13 @@ function createDomMessage(message, sender) {
     
     pElem.innerHTML = message;
     // TODO use real message time
-    timeSpan.textContent = '16:20';
+    // timeSpan.textContent = '16:20';
 
     profileDiv.appendChild(imgElem);
 
     messageContentDiv.className = 'message-content';
     messageContentDiv.appendChild(pElem);
-    messageContentDiv.appendChild(timeSpan);
+    // messageContentDiv.appendChild(timeSpan);
 
     messageDiv.appendChild(profileDiv);
     messageDiv.appendChild(messageContentDiv);
