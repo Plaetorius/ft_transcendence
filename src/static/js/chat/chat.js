@@ -103,6 +103,7 @@ function createDomMessage(message, sender) {
     messageDiv.appendChild(messageContentDiv);
 
     if (blocked_list && blocked_list.includes(sender.username)) {
+		messageDiv.classList.remove("d-flex");
         messageDiv.classList.add("d-none");
     }
 
