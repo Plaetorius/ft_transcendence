@@ -147,9 +147,15 @@ async function enter_room(room_id) {
     };
 
     document.getElementById("send-message-btn").addEventListener('click', handleSendMessage);
+	document.getElementById("message-input").addEventListener('keydown', handleSendMessage);
+    document.getElementById('message-input').focus();
 }
 
 function handleSendMessage(event) {
+	if (event.type === 'keydown' && event.key !== 'Enter') {
+		return ;
+	}
+
 	event.preventDefault();
 	let messageElem = document.getElementById('message-input');
 	const message = messageElem.value.trim();
@@ -193,6 +199,7 @@ function closeChatPopup(event) {
 		unblur_background();
 		document.removeEventListener('click', closeChatPopup);
 		document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
+		document.getElementById("message-input").removeEventListener('keydown', handleSendMessage);
 		document.getElementById('messages').innerHTML = '';
 
 	}

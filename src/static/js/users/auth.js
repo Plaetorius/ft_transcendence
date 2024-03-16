@@ -1,5 +1,6 @@
 // TODO add message to confirm registration / login
 // TODO remove ? in url after logging in
+// TODO add return key listener for better UX
 
 // Utils
 function getCookie(name) {
