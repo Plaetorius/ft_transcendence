@@ -16,6 +16,7 @@ function createActionButton(iconSrc, title, username) {
 function loadAndDisplayFriends() {
 	if (!user)
 		return ;
+	console.log(`Load and Display friends called`);
     getFriends().then(data => {        
         const friendshipsContainer = document.getElementById('friendships');
         
@@ -143,6 +144,5 @@ function removeFriend(username) {
 function actualiseFriendsSection() {
 	removeListeners();
 	loadAndDisplayFriends();
-
 	initializeListeners();
 }

@@ -36,3 +36,5 @@ function unblur_background() {
 	main.classList.remove("blurry");
 	header.classList.remove("blurry");
 }
+
+showProfile();

@@ -21,6 +21,7 @@ function showProfile() {
         user = userData;
 		let imgElem = document.getElementById('header-profile-picture');
 		imgElem.src = `..${user.profile_picture_url}`;
+		loadAndDisplayFriends();
     })
     .catch(error => {
 		console.log(error);
