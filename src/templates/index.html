@@ -383,25 +383,25 @@
 				<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="profile-picture">
 			</div>
 			<div class="col m-0 p-0">
-				<p id="profile-popup-rank"><span class="attribute">Rank: </span>#1</p>
-				<p id="profile-popup-elo"><span class="attribute">Elo: </span>1000</p>
-				<p id="profile-popup-winrate"><span class="attribute">Winrate: </span>1.0</p>
-				<p id="profile-popup-joined"><span class="attribute">Joined: </span>26/01/2024</p>
+				<p id="profile-popup-rank"><span class="attribute">Rank: </span></p>
+				<p id="profile-popup-elo"><span class="attribute">Elo: </span></p>
+				<p id="profile-popup-winrate"><span class="attribute">Winrate: </span></p>
+				<p id="profile-popup-joined"><span class="attribute">Joined: </span></p>
 			</div>
 		</div>
 		<div class="row m-2">
 			<div id="profile-popup-bio" class="col">
-				<span class="attribute">Bio: </span>This is a bio, it's not such a long text, but that still does the trick, I hope. That would be pretty sad if that was too short to make a proper test, or too long that it would look stupid, no?
+				<span class="attribute">Bio: </span>
 			</div>
 		</div>
 		<div class="row m-2">
 			<div class="col">
-				<button id="profile-popup-chat" class="open-chat" data-username="stoupid"><img src="../static/icons/chat.png" title="Chat" draggable="false"></button>
-				<button id="profile-popup-add-friend" class="add-friend" data-username="eeee"><img src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
-				<button id="profile-popup-remove-friend" class="remove-friend" data-username="stoupid"><img src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button>
-				<button id="profile-popup-block" class="block" data-username="stoupid"><img src="../static/icons/block.png" title="Block user" draggable="false"></button>
-				<button id="profile-popup-unblock" class="unblock" data-username="stoupid"><img src="../static/icons/check.png" title="Unblock user" draggable="false"></button>
-				<button id="profile-popup-profile" class="goto-profile" data-username="stoupid"><img src="../static/icons/profile.png" title="Profile" draggable="false"></button>
+				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="../static/icons/chat.png" title="Chat" draggable="false"></button>
+				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
+				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button>
+				<button id="profile-popup-block" class="block" data-username=""><img src="../static/icons/block.png" title="Block user" draggable="false"></button>
+				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="../static/icons/check.png" title="Unblock user" draggable="false"></button>
+				<button id="profile-popup-profile" class="goto-profile" data-username=""><img src="../static/icons/profile.png" title="Profile" draggable="false"></button>
 			</div>
 		</div>
 	</div>
@@ -426,25 +426,25 @@
 		<div class="row w-100 d-flex justify-content-start">
 			<div class="col m-0">
 				<p>Click to change photo</p>
-				<input type="file" id="profile-picture-input" hidden accept="image/*">
-				<img src="../static/profile_pictures/tgernez-intra-pp.jpg" draggable="false" class="settings-picture">
+				<input type="file" id="profile-picture-input" hidden accept="image/*" name="profile_picture">
+				<img src="../static/profile_pictures/default.jpg" draggable="false" class="settings-picture" id="profile-picture-preview">
 			</div>
 			<div class="col m-0 p-0">
-				<form>
-					<div><input id="settings-username" placeholder="Username..." name="username" type="text" value="tgernez"></div>
-					<div><input id="settings-email" placeholder="Email..." name="email" type="email" value="tgernez@student.42.fr"></div>
-					<div><input id="settings-first-name" placeholder="First name..." name="first-name" type="text" value="Tom"></div>
-					<div><input id="settings-last-name" placeholder="Last name..." name="last-name" type="text" value="Gernez"></div>
-					<div><textarea id="settings-bio" placeholder="Bio..." name="bio">Content of a bio</textarea></div>
+				<form id="settings-form">
+					<div><input id="settings-username" placeholder="Username..." name="username" type="text"></div>
+					<div><input id="settings-email" placeholder="Email..." name="email" type="email"></div>
+					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text"></div>
+					<div><input id="settings-last-name" placeholder="Last name..." name="last_name" type="text"></div>
+					<div><textarea id="settings-bio" placeholder="Bio..." name="bio"></textarea></div>
 					<div class="form-group"><input type="checkbox" id="settings-2fa" name="2fa"><label for="settings-2fa">Enable 2FA</label></div>
 					<div>
 						<button type="submit">Save</button>
-						<button type="button" id="reset-password">Reset Password</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+	
 	<script src="{% static 'js/cards/cards.js' %}"></script>
 	<script src="{% static 'js/chat/chat.js' %}"></script>
 	<script src="{% static 'js/chat/notification.js' %}"></script>

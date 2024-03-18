@@ -50,7 +50,7 @@ async function fetchRoomMessages(room_id) {
     }
 }
 
-async function fetchBlockedUsers(room_id) {
+async function fetchBlockedUsers() {
     try {
         const response = await fetch(`/users/list-blocked/`, {
             method: 'GET',
