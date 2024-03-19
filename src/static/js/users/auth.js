@@ -86,8 +86,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 });
 
 // Hide pages if user not authenticated
-const accessToken = localStorage.getItem('accessToken');
-console.log("test");
 if (!accessToken) {
 	header.classList.add('d-none');
 	navigateToSection('register');
