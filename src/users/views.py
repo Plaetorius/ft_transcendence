@@ -311,11 +311,12 @@ class UserEditAPIView(APIView):
     # TODO add sanitization
     # TODO if OAuth, user can't modify email
     # TODO add password reset
-    def put(self, request):
+    def patch(self, request):
         """
             Updates the user's information
         """
         user = request.user
+        print(f"PATCH:\nUser: {user}\nData: {request.data}")
         serializer = UserUpdateSerializer(user, data=request.data, partial=True, context={'request': request})
 
         if serializer.is_valid():

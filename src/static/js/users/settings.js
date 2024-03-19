@@ -52,8 +52,9 @@ settingsForm.addEventListener('submit', function(e) {
 	// 	return ;
 	// }
 
+	console.log('Fetching on PUT');
     fetch('/users/edit-user/', {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -98,7 +99,7 @@ async function setupSettingsForm() {
             profilePicturePreview.src = userData.profile_picture_url;
         } else {
             // Set to a default image if no profile picture URL is provided
-            profilePicturePreview.src = '../static/profile_pictures/default.jpg';
+            profilePicturePreview.src = '../media/profile_pictures/default.jpg';
         }
 
     } catch (error) {
@@ -111,9 +112,10 @@ setupSettingsForm();
 
 async function getAllInfo() {
     try {
-        const response = await fetch(`/users/edit-user`, {
+        const response = await fetch(`/users/edit-user/`, {
             method: 'GET',
             headers: {
+				'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             }
         });

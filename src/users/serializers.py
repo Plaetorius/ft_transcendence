@@ -65,7 +65,6 @@ class UserAllSerializer(serializers.ModelSerializer):
         return None
 
 
-
 class UserUpdateSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, validators=[validate_image])
     username = serializers.CharField(validators=[username_validator])
@@ -94,6 +93,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.bio = validated_data.get('bio', instance.bio)
         if 'profile_picture' in validated_data:
             instance.profile_picture = validated_data['profile_picture']
+        print("\n============================\nSaving instance\n")
         instance.save()
         return instance
 

@@ -42,6 +42,9 @@ function setActiveSection(sectionId) {
 		else if (sectionId === 'podium') {
 			getPodium();
 		}
+		else if (sectionId === 'my-profile') {
+			setupSettingsForm();
+		}
     } else {
 		// Fallback to default section if the specified ID is not found
         document.getElementById(defaultSection).classList.add("active");

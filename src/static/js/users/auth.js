@@ -82,6 +82,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
 			setOnline();
+			// TODO change header top right icon on login / register dumbass
 			navigateToSection('home');
 		} else {
             throw Error('No data access');

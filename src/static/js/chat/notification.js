@@ -1,5 +1,37 @@
-function notification(notification) {
-    const message = notification.message; 
-    const path_to_icon = notification.path_to_icon;
-    console.log(`Notification: message:${message}, Path To Icon: ${path_to_icon}`);
+// Do NOT give a type for normal notifications
+function notification(message, pathToIcon, type) {
+	// Set a default icon
+	if (!pathToIcon)
+		pathToIcon = '../static/icons/bell.png';
+	else
+		pathToIcon = '../static/icons/' + pathToIcon + '.png';
+	
+
+	// Select the notification container and its components
+    const notificationContainer = document.getElementById('notification');
+    const notificationIcon = notificationContainer.querySelector('.col-3 img');
+    const notificationMessage = notificationContainer.querySelector('.col-9');
+
+	// Add type if any
+	if (type)
+		notificationContainer.classList.add(type);
+
+
+
+    // Update the icon's src attribute and message content
+    notificationIcon.src = pathToIcon;
+    notificationMessage.innerHTML = message;
+
+    // Make the notification visible
+    notificationContainer.classList.remove('d-none');
+
+    // Hide the notification after 3 seconds (3000 milliseconds)
+    setTimeout(() => {
+        notificationContainer.classList.add('d-none');
+		// Remove type if any
+		if (type)
+			notificationContainer.classList.remove(type);
+    }, 3000);
 }
+
+notification("Hey this is a test", 'check', 'success');

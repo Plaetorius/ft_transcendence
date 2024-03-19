@@ -12,9 +12,11 @@
 	color: black;
 	font-size: large;
 	font-weight: medium;
+	min-height: 8vh;
 }
 
 #notification img {
+	margin-top: 1vh;
 	width: 5vh;
 	height: 5vh;
 }
@@ -22,4 +24,28 @@
 #notification a {
 	text-decoration: underline;
 	font-weight: bold;
+}
+
+#notification.success {
+	background-color: green;
+	background-blend-mode: screen;
+	color: green;
+	border: 5px green solid;
+}
+
+#notification.success img {
+    filter: invert(41%) sepia(93%) saturate(1352%) hue-rotate(84deg) brightness(92%) contrast(88%);
+	-webkit-filter: invert(41%) sepia(93%) saturate(1352%) hue-rotate(84deg) brightness(92%) contrast(88%);
+}
+
+#notification.error {
+	background-color: red;
+	background-blend-mode: screen;
+	color: red;
+	border: 5px red solid;
+}
+
+#notification.error img {
+	filter: invert(15%) sepia(100%) saturate(7500%) hue-rotate(-5deg) brightness(100%) contrast(105%);
+	-webkit-filter: invert(15%) sepia(100%) saturate(7500%) hue-rotate(-5deg) brightness(100%) contrast(105%);
 }
