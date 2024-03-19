@@ -19,11 +19,11 @@ function getCookie(name) {
 }
 
 function handleErrors(errorData, errorElementId) {
-    let errorMessageHTML = '';
+    let errorMessage = '';
     Object.keys(errorData).forEach(key => {
-        errorMessageHTML += `<p>${key}: ${errorData[key].join(', ')}</p>`;
+        errorMessage += `\n${key}: ${errorData[key].join(', ')}`;
     });
-    document.getElementById(errorElementId).innerHTML = errorMessageHTML;
+	notification(errorMessage, 'cross', 'error');
 }
 
 // Registration
@@ -49,14 +49,11 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-			setOnline();
-			navigateToSection('home');
         } else {
             console.log("No data access");
             throw Error('No data access');
         }
     })
-	// TODO handle errors
     .catch(error => handleErrors(error, 'registrationErrors'));
 });
 
@@ -81,13 +78,29 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-			setOnline();
-			// TODO change header top right icon on login / register dumbass
-			navigateToSection('home');
 		} else {
             throw Error('No data access');
         }
     })
-	// TODO handle errors
     .catch(error => handleErrors(error, 'loginErrors'));
 });
+
+// Hide pages if user not authenticated
+const accessToken = localStorage.getItem('accessToken');
+console.log("test");
+if (!accessToken) {
+	header.classList.add('d-none');
+	navigateToSection('register');
+}
+
+document.getElementById('already-account').addEventListener('click', () => {
+	navigateToSection('login');
+});
+
+function authenticated() {
+	header.classList.remove("d-none");
+	setOnline();
+	// TODO actualise header image
+	navigateToSection('home');
+	notification('Successfully authenticated!', 'check', 'success');
+}

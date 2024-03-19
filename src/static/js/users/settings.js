@@ -46,6 +46,11 @@ settingsForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(settingsForm);
 
+	const profilePictureInput = document.getElementById('profile-picture-input');
+	if (profilePictureInput.files.length > 0) {
+		formData.append('profile_picture', profilePictureInput.files[0]);
+	}
+
 	// const errors = validateSettingsForm(formData);
 	// if (!errors.length === 0) {
 	// 	errors.forEach(error => console.log(error));
@@ -67,11 +72,13 @@ settingsForm.addEventListener('submit', function(e) {
         return response.json();
     })
     .then(data => {
+		notification('Profile updated!', 'check', 'success');
         console.log('Success:', data);
         // showProfile();
 		setupSettingsForm();
     })
     .catch(error => {
+		notification('Error updating your profile!', 'cross', 'error');
         console.error('Error:', error);
         // TODO Handle error
     });

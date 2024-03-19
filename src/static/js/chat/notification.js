@@ -34,4 +34,5 @@ function notification(message, pathToIcon, type) {
     }, 3000);
 }
 
-notification("Hey this is a test", 'check', 'success');
+// TODO remove
+// notification("Hey this is a test", 'check', 'success');
