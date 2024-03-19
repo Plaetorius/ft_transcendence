@@ -49,6 +49,7 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
+			authenticated();
         } else {
             console.log("No data access");
             throw Error('No data access');
@@ -78,6 +79,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
+			authenticated();
 		} else {
             throw Error('No data access');
         }
