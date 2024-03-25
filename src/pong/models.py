@@ -1,12 +1,13 @@
 # pong/models.py
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
 # pong/models.py
 
 class PongGame(models.Model):
-	players = models.ManyToManyField(User, related_name='pong_games')
+	players = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pong_games')
 	# Add other fields and methods as needed
 
 	name = models.CharField(max_length=255)

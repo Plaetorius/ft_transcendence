@@ -1,5 +1,6 @@
 // Default section to activate on page load, if none is specified in the URL
 // TODO change to home
+
 const defaultSection = 'login';
 const currentHash = window.location.hash.replace('#', '');
 const initialSection = currentHash || defaultSection;
@@ -36,7 +37,7 @@ function setActiveSection(sectionId) {
     if (activeSection) {
         activeSection.classList.add("active");
 		// Calls to functions to load the section
-		if (sectionId === 'friends') {
+		if (sectionId === 'friends' ) {
 			loadAndDisplayFriends();
 		}
 		else if (sectionId === 'podium') {
@@ -44,6 +45,9 @@ function setActiveSection(sectionId) {
 		}
 		else if (sectionId === 'my-profile') {
 			setupSettingsForm();
+		}
+		else if (sectionId === 'games') {
+			loadGames();
 		}
     } else {
 		// Fallback to default section if the specified ID is not found

@@ -104,3 +104,40 @@ function authenticated() {
 	navigateToSection('home');
 	notification('Successfully authenticated!', 'check', 'success');
 }
+
+
+/*
+// server.js
+
+const express = require('express');
+const passport = require('passport');
+const OAuth2Strategy = require('passport-oauth2');
+
+const app = express();
+
+passport.use(new OAuth2Strategy({
+    authorizationURL: 'https://api.intra.42.fr/oauth/authorize',
+    tokenURL: 'https://api.intra.42.fr/oauth/token',
+    clientID: FORTYTWO_APP_ID,
+    clientSecret: FORTYTWO_APP_SECRET,
+    callbackURL: "http://www.example.com/auth/42/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ fortyTwoId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+
+app.get('/auth/42',
+  passport.authenticate('oauth2'));
+
+app.get('/auth/42/callback', 
+  passport.authenticate('oauth2', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+app.listen(3000);
+*/

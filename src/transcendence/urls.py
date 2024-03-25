@@ -13,6 +13,7 @@ urlpatterns = [
     path('', index_view, name="index"),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('pong/', include('pong.urls')),
     path('users/', include('users.urls')),
     path('chat/', include('chat.urls')),
