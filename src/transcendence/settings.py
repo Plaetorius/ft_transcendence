@@ -104,6 +104,8 @@ DATABASES = {
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", 'default_password'),
         "HOST": os.getenv("POSTGRES_HOST", "db"),
         "PORT": os.getenv("POSTGRES_PORT", 5432),
+        "IDOAUTH" : os.getenv("42_CLIENT_ID","test"),
+        "SECRETOAUTH" : os.getenv("42_CLIENT_SECRET","tests"),
     }
 }
 

@@ -28,6 +28,7 @@ function loadAndDisplayFriends() {
             console.log('No friendships found.'); // TODO useless OR handle better
             const noFriendsMessage = document.createElement('div');
             noFriendsMessage.textContent = 'No friends found.';
+            console.log('42ID =' + IDOAUTH);
             friendshipsContainer.appendChild(noFriendsMessage);
             return;
         }

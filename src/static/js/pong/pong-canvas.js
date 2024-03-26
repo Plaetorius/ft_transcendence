@@ -5,6 +5,7 @@ let container;
 let camera, scene, renderer;
 let field_material;
 let group;
+let listener, audioloader, backgroundsound;
 
 const FIELD_LENGTH = 500;
 const FIELD_WIDTH = 200;
@@ -22,12 +23,24 @@ function init() {
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	container.appendChild(renderer.domElement);
+	listener = new THREE.AudioListener();
+	audioloader = new THREE.AudioLoader();
 
 	camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 100, 700);
 	camera.position.z = 400;
 	camera.position.y = -200;
+	camera.add(listener);
 
 	camera.lookAt(0, 0, 0);
+
+	backgroundsound = new THREE.Audio(listener);
+	audioloader.load('./static/sound/pong_f4.mp3', function(buffer){
+		backgroundsound.setBuffer(buffer);
+		backgroundsound.setLoop(true);
+		backgroundsound.setVolume(0.5);
+		backgroundsound.play();
+	}
+	)
 
 	// Scene creation
 	scene = new THREE.Scene();

@@ -106,8 +106,12 @@ function authenticated() {
 }
 
 
+function oauth42()
+{
+
+}
+
 /*
-// server.js
 
 const express = require('express');
 const passport = require('passport');
@@ -135,7 +139,6 @@ app.get('/auth/42',
 app.get('/auth/42/callback', 
   passport.authenticate('oauth2', { failureRedirect: '/login' }),
   function(req, res) {
-    // Successful authentication, redirect home.
     res.redirect('/');
   });
 
