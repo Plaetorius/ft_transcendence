@@ -101,6 +101,7 @@ function authenticated() {
 	header.classList.remove("d-none");
 	setOnline();
 	// TODO actualise header image
+	showProfile();
 	navigateToSection('home');
 	notification('Successfully authenticated!', 'check', 'success');
 }

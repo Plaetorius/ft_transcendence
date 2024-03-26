@@ -33,6 +33,3 @@ function notification(message, pathToIcon, type) {
 			notificationContainer.classList.remove(type);
     }, 3000);
 }
-
-// TODO remove
-// notification("Hey this is a test", 'check', 'success');

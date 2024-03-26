@@ -74,7 +74,7 @@ settingsForm.addEventListener('submit', function(e) {
     .then(data => {
 		notification('Profile updated!', 'check', 'success');
         console.log('Success:', data);
-        // showProfile();
+        showProfile();
 		setupSettingsForm();
     })
     .catch(error => {

@@ -20,7 +20,7 @@ function showProfile() {
     .then(userData => {
         user = userData;
 		let imgElem = document.getElementById('header-profile-picture');
-		imgElem.src = `..${user.profile_picture_url}`;
+		imgElem.src = user.profile_picture_url ? `..${user.profile_picture_url}`: '../media/profile_pictures/default.jpg';
 		loadAndDisplayFriends();
     })
     .catch(error => {
