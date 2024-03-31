@@ -1,4 +1,6 @@
 // TODO Add PONG invites system
+// TODO user must be able to access profile through the chat interface
+
 function getChatRoom(username) {
 	console.log("Clicked");
 	const cookie = getCookie('csrftoken');
@@ -114,7 +116,7 @@ function createDomMessage(message, sender) {
 }
 
 async function updateChatPopup(username) {
-	const user = await getUser(username);
+	const chatUser = await getUser(username);
 	let titleElem = chatPopup.querySelector("h5");
     
     // Clear existing online-status span if any
@@ -125,8 +127,8 @@ async function updateChatPopup(username) {
     
     // Create and add new online status span
     let onlineElem = document.createElement("span");
-    onlineElem.classList.add("online-status", user.is_online ? "online" : "offline");
-    titleElem.innerText = user.username;
+    onlineElem.classList.add("online-status", chatUser.is_online ? "online" : "offline");
+    titleElem.innerText = chatUser.username;
     titleElem.insertBefore(onlineElem, titleElem.firstChild);
 }
 

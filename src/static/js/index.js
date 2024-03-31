@@ -28,4 +28,4 @@ function unblur_background() {
 	header.classList.remove("blurry");
 }
 
-showProfile();
+// showProfile();

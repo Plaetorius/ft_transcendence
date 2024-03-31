@@ -93,6 +93,17 @@ if (!accessToken) {
 	navigateToSection('register');
 }
 
+
+
+if (accessToken) {
+	showProfile();
+	console.log(user);
+	getPodium();
+	setOnline();
+	actualiseFriendsSection();
+	setupSettingsForm();
+}
+
 document.getElementById('already-account').addEventListener('click', () => {
 	navigateToSection('login');
 });
@@ -101,7 +112,7 @@ function authenticated() {
 	header.classList.remove("d-none");
 	setOnline();
 	// TODO actualise header image
-	showProfile();
+	// showProfile();
 	navigateToSection('home');
 	notification('Successfully authenticated!', 'check', 'success');
 }

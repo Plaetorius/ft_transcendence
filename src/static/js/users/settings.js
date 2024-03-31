@@ -74,7 +74,7 @@ settingsForm.addEventListener('submit', function(e) {
     .then(data => {
 		notification('Profile updated!', 'check', 'success');
         console.log('Success:', data);
-        showProfile();
+        // showProfile();
 		setupSettingsForm();
     })
     .catch(error => {
@@ -113,9 +113,6 @@ async function setupSettingsForm() {
         console.error('Error setting up settings form:', error);
     }
 }
-
-// TODO maybe optimize
-setupSettingsForm();
 
 async function getAllInfo() {
     try {

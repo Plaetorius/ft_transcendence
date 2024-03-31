@@ -1,8 +1,4 @@
-let user = undefined;
-
 function showProfile() {
-    // document.getElementById('profileErrors').innerHTML = '';
-    // let profileElement = document.getElementById('displayProfile');
     fetch('/users/profile/', {
         method: 'GET',
         headers: {
@@ -18,10 +14,15 @@ function showProfile() {
         return response.json();
     })
     .then(userData => {
+		console.log("Assigning data");
         user = userData;
-		let imgElem = document.getElementById('header-profile-picture');
-		imgElem.src = user.profile_picture_url ? `..${user.profile_picture_url}`: '../media/profile_pictures/default.jpg';
-		loadAndDisplayFriends();
+		// console.log(`user.profile_picture_url: ${user.profile_picture_url}`);
+
+		// user.profile_picture_url = "BLABLABLA";
+		// let imgElem = document.getElementById('header-profile-picture');
+		// imgElem.src = user.profile_picture_url ? `..${user.profile_picture_url}`: '../media/profile_pictures/default.jpg';
+		
+		// loadAndDisplayFriends();
     })
     .catch(error => {
 		console.log(error);
@@ -51,8 +52,7 @@ function setOnline() {
     };
 }
 
-setOnline();
-showProfile();
+// showProfile();
 
 const profilePopup = document.getElementById("profile-popup");
 
@@ -72,9 +72,9 @@ async function openProfileHandler(event) {
 
 		try {
 			// Await the getUser promise and then log the data
-			const user = await getUser(targetElement.dataset.username);
-			console.log(`openProfileHandler`, user);
-			updateProfilePopup(user);
+			const userProfile = await getUser(targetElement.dataset.username);
+			console.log(`openProfileHandler`, userProfile);
+			updateProfilePopup(userProfile);
 			profilePopup.classList.remove("d-none");
 			profilePopup.classList.add("d-block");
 			blur_background();

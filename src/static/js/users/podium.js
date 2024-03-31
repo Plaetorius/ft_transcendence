@@ -30,7 +30,7 @@ function createPodium(users) {
             const container = document.getElementById(place);
             container.innerHTML = ''; // Clear existing content
             const img = document.createElement('img');
-            img.src = users[index].profile_picture_url;
+            img.src = users[index].profile_picture_url ? users[index].profile_picture_url : '../media/profile_pictures/default.jpg';
             img.draggable = false;
             img.className = 'podium-profile open-profile';
             img.setAttribute('data-username', users[index].username);
@@ -75,4 +75,3 @@ function createRankingList(users) {
 }
 
 // Call getPodium to fetch data and create podium and ranking list
-getPodium();

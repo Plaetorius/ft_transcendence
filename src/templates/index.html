@@ -1,4 +1,5 @@
 <!-- index.html -->
+<!-- TODO all links with static Django -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -427,7 +428,7 @@
 			<div class="col m-0">
 				<p>Click to change photo</p>
 				<input type="file" id="profile-picture-input" hidden accept="image/*" name="profile_picture">
-				<img src="../static/media/profile_pictures/default.jpg" draggable="false" class="settings-picture" id="profile-picture-preview">
+				<img src="" draggable="false" class="settings-picture" id="profile-picture-preview">
 			</div>
 			<div class="col m-0 p-0">
 				<form id="settings-form">
@@ -448,9 +449,11 @@
 	<script src="{% static 'js/cards/cards.js' %}"></script>
 	<script src="{% static 'js/chat/chat.js' %}"></script>
 	<script src="{% static 'js/chat/notification.js' %}"></script>
+
 	<script src="{% static 'js/users/podium.js' %}"></script>
 	<script src="{% static 'js/users/friends.js' %}"></script>
 	<script src="{% static 'js/users/profile.js' %}"></script>
+
 	<script src="{% static 'js/users/settings.js' %}"></script>
 	<script src="{% static 'js/users/block.js' %}"></script>
 	<script src="{% static 'js/users/search.js' %}"></script>

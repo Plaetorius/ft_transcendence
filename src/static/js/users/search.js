@@ -30,22 +30,4 @@ async function getUser(username) {
 }
 
 
-// TODO not comptaible anymore
-// document.getElementById('searchedProfile').addEventListener('click', (e) => {
-// 	if (e.target && e.target.id === 'searchAddFriendButton') {
-// 		const username = e.target.getAttribute('data-username');
-// 		addFriend(username);
-// 	}
-// 	if (e.target && e.target.id === 'searchRemoveFriendButton') {
-// 		const username = e.target.getAttribute('data-username');
-// 		removeFriend(username);
-// 	}
-// 	if (e.target && e.target.id === 'searchBlockUserButton') {
-// 		const username = e.target.getAttribute('data-username');
-// 		blockUser(username);
-// 	}
-// 	if (e.target && e.target.id === 'searchUnblockUserButton') {
-// 		const username = e.target.getAttribute('data-username');
-// 		unblockUser(username);
-// 	}
-// });
+

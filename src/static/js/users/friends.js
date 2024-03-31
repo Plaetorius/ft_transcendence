@@ -110,6 +110,9 @@ function showFriends(friendsData) {
 }
 
 function addFriend(username) {
+	username = username.trim();
+	if (!username)
+		return "Not a valid username";
 	return fetch(`/users/friend/${username}`, {
 		method: 'POST',
 		headers: {
@@ -126,6 +129,9 @@ function addFriend(username) {
 }
 
 function removeFriend(username) {
+	username = username.trim();
+	if (!username)
+		return "Not a valid username";
 	return fetch(`/users/friend/${username}`, {
 		method: 'DELETE',
 		headers: {
