@@ -52755,7 +52755,7 @@ class BoxHelper extends LineSegments {
 		const max = _box.max;
 
 		/*
-			5____4
+		  5____4
 		1/___0/|
 		| 6__|_7
 		2/___3/

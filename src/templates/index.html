@@ -1,63 +1,65 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcendence</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transcendence</title>
 	{% load static %}
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/fonts.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/my-profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/register.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/login.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/history.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/podium.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
+	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/header.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/fonts.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/general.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/my-profile.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/register.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/login.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/history.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/podium.css' %}">
+	<link rel="stylesheet" href="{% static 'css/cards/cards.css' %}">
+	<link rel="stylesheet" href="{% static 'css/users/profile.css' %}">
+	<link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
+	<link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
+	<link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
 </head>
+
 <body>
-    <header class="container-fluid px-5 active">
-        <div id="main-header" class="row align-items-center justify-content-between">
-            <div class="col-2 header-left-section">
-                <a id="header-chats" class="d-flex flex-column align-items-center justify-content-center">
+	<header class="container-fluid px-5 active">
+		<div id="main-header" class="row align-items-center justify-content-between">
+			<div class="col-2 header-left-section">
+				<a id="header-chats" class="d-flex flex-column align-items-center justify-content-center">
 					<img src="../static/icons/web.png" draggable="false">
 					<p>NEWS</p>
 				</a>
-            </div>
-            <div class="col-8 header-middle-section">
-                <h1 id="newspaperTitle">Transcendence</h1>
-            </div>
-            <div class="col-2 header-right-section">
+			</div>
+			<div class="col-8 header-middle-section">
+				<h1 id="newspaperTitle">Transcendence</h1>
+			</div>
+			<div class="col-2 header-right-section">
 				<a id="header-profile" class="d-flex flex-column align-items-center justify-content-center">
 					<img id="header-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false">
 					<p>PROFILE</p>
 				</a>
-            </div>
-        </div>
-        <div id="sub-header" class="row align-items-center justify-content-between">
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-home">HOME</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-games">GAMES</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-friends">FRIENDS</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-podium">PODIUM</a>
-            </div>
-        </div>
-    </header>
-    <nav>
-    </nav>
-    <main>
+			</div>
+		</div>
+		<div id="sub-header" class="row align-items-center justify-content-between">
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-home">HOME</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-games">GAMES</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-friends">FRIENDS</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-podium">PODIUM</a>
+			</div>
+		</div>
+	</header>
+	<nav>
+	</nav>
+	<main>
 		<section id="home" class="">
 			<div class="container-fluid">
 				<div class="row">
@@ -79,7 +81,17 @@
 				<div id="games-header" class="row">
 					<div class="col d-flex flex-column justify-content-center align-items-center">
 						<h1>Games</h1>
+						<div class="justify-content-center align-items-center">
+							<button id="pong-button-connect" style="height:80px;width:200px">
+								connect to pong
+							</button>
+							<button id="pong-button-disconnect" style="height:80px;width:200px">
+								connect to pong
+							</button>
+						</div>
 					</div>
+					
+
 				</div>
 			</div>
 			<div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
@@ -128,24 +140,25 @@
 			</div>
 		</section>
 
-        <section id="chats" class="">
-            <div class="container-fluid">
+		<section id="chats" class="">
+			<div class="container-fluid">
 				<div id="chats-header" class="row">
 					<div class="col d-flex flex-column justify-content-center align-items-center">
 						<h1>Chats</h1>
 					</div>
 				</div>
 			</div>
-            <div class="container-fluid w-75 all-chats">
-                
-            </div>
-        </section>
+			<div class="container-fluid w-75 all-chats">
+
+			</div>
+		</section>
 
 		<section id="my-profile" class="">
 			<div class="container-fluid">
 				<div id="my-profile-header" class="row justify-content-between">
 					<div class="col-auto d-flex align-items-center">
-						<img id="my-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false" class="m-3">
+						<img id="my-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false"
+							class="m-3">
 						<div class="ml-3">
 							<h5 id="my-username"><span class="online-status online"></span>Tgernez</h5>
 							<p id="my-profile-rank"><span>Rank: </span>#1</p>
@@ -161,26 +174,32 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div id="my-profile-history">
 				<h4>Match History</h4>
 				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-					<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+					<div
+						class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
 						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-							<img class="history-profile-picture open-profile" data-username="username" src="../media/profile_pictures/default.jpg" draggable="false">
+							<img class="history-profile-picture open-profile" data-username="username"
+								src="../media/profile_pictures/default.jpg" draggable="false">
 						</div>
 						<div class="col-2 history-perks d-flex align-items-center justify-content-between flex-wrap">
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 						</div>
 						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
@@ -193,44 +212,55 @@
 							<div class="history-game-score">3 / 1</div>
 							<div class="history-game-elo">+20 PP</div>
 						</div>
-						<div class="col-2 m-0 history-perks d-flex align-items-center justify-content-between flex-wrap">
+						<div
+							class="col-2 m-0 history-perks d-flex align-items-center justify-content-between flex-wrap">
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 							<div class="col-6 p-0 d-flex justify-content-center">
-								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+								<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+									draggable="false">
 							</div>
 						</div>
 						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-							<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+							<img class="history-profile-picture open-profile" data-username="tgernez"
+								src="../media/profile_pictures/default.jpg" draggable="false">
 						</div>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
 				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
 					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
 					</div>
 					<div class="col-2 history-perks d-flex align-items-center justify-content-between flex-wrap">
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 					</div>
 					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
@@ -245,86 +275,91 @@
 					</div>
 					<div class="col-2 m-0 history-perks d-flex align-items-center justify-content-between flex-wrap">
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 						<div class="col-6 p-0 d-flex justify-content-center">
-							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png" draggable="false">
+							<img class="history-perk-card open-card" src="../static/cards/card-basher-1.png"
+								draggable="false">
 						</div>
 					</div>
 					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
 					</div>
 				</div>
 			</div>
 		</section>
 
-        <section id="register" class="">
-            <div class="container-fluid d-flex flex-column align-items-center">
-                <div class="row">
-                    <div class="col">
-                        <h1>Register</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <form id="registerForm">
-                            <div>
-                                <input type="text" id="registerUsername" placeholder="Username...">
-                            </div>
-                            <div>
-                                <input type="email" id="registerEmail" placeholder="Email...">
-                            </div>
-                            <div>
-                                <input type="password" id="registerPassword1" placeholder="Password...">
-                            </div>
-                            <div>
-                                <input type="password" id="registerPassword2" placeholder="Confirm password...">
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <button type="submit">Register</button>
-                            </div>
-                        </form>
-                        <div class="d-flex justify-content-center">
-                            <button id="already-account">Already have an account?</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+		<section id="register" class="">
+			<div class="container-fluid d-flex flex-column align-items-center">
+				<div class="row">
+					<div class="col">
+						<h1>Register</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<form id="registerForm">
+							<div>
+								<input type="text" id="registerUsername" placeholder="Username...">
+							</div>
+							<div>
+								<input type="email" id="registerEmail" placeholder="Email...">
+							</div>
+							<div>
+								<input type="password" id="registerPassword1" placeholder="Password...">
+							</div>
+							<div>
+								<input type="password" id="registerPassword2" placeholder="Confirm password...">
+							</div>
+							<div class="d-flex justify-content-center">
+								<button type="submit">Register</button>
+							</div>
+						</form>
+						<div class="d-flex justify-content-center">
+							<button id="already-account">Already have an account?</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <section id="login" class="">
-            <div class="container-fluid d-flex flex-column align-items-center">
-                <div class="row">
-                    <div class="col">
-                        <h1>Login</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <form id="loginForm">
-                            <div>
-                                <input type="text" id="loginUsername" placeholder="Username...">
-                            </div>
-                            <div>
+		<section id="login" class="">
+			<div class="container-fluid d-flex flex-column align-items-center">
+				<div class="row">
+					<div class="col">
+						<h1>Login</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<form id="loginForm">
+							<div>
+								<input type="text" id="loginUsername" placeholder="Username...">
+							</div>
+							<div>
 								<input type="password" id="loginPassword" placeholder="Password...">
-                            </div>
-                            <div class="d-flex justify-content-center">
+							</div>
+							<div class="d-flex justify-content-center">
 								<button type="submit">Login</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-		
-	
-    </main>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+	</main>
 
 	<div id="chat-popup" class="container d-none popup">
 		<div class="row title">
@@ -351,7 +386,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="card-popup" class="container d-none popup">
 		<div class="row title">
 			<div class="col">
@@ -398,12 +433,18 @@
 		</div>
 		<div class="row m-2">
 			<div class="col">
-				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="../static/icons/chat.png" title="Chat" draggable="false"></button>
-				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
-				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button>
-				<button id="profile-popup-block" class="block" data-username=""><img src="../static/icons/block.png" title="Block user" draggable="false"></button>
-				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="../static/icons/check.png" title="Unblock user" draggable="false"></button>
-				<button id="profile-popup-profile" class="goto-profile" data-username=""><img src="../static/icons/profile.png" title="Profile" draggable="false"></button>
+				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="../static/icons/chat.png"
+						title="Chat" draggable="false"></button>
+				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img
+						src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
+				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img
+						src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button>
+				<button id="profile-popup-block" class="block" data-username=""><img src="../static/icons/block.png"
+						title="Block user" draggable="false"></button>
+				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="../static/icons/check.png"
+						title="Unblock user" draggable="false"></button>
+				<button id="profile-popup-profile" class="goto-profile" data-username=""><img
+						src="../static/icons/profile.png" title="Profile" draggable="false"></button>
 			</div>
 		</div>
 	</div>
@@ -429,16 +470,19 @@
 			<div class="col m-0">
 				<p>Click to change photo</p>
 				<input type="file" id="profile-picture-input" hidden accept="image/*" name="profile_picture">
-				<img src="../static/media/profile_pictures/default.jpg" draggable="false" class="settings-picture" id="profile-picture-preview">
+				<img src="../static/media/profile_pictures/default.jpg" draggable="false" class="settings-picture"
+					id="profile-picture-preview">
 			</div>
 			<div class="col m-0 p-0">
 				<form id="settings-form">
 					<div><input id="settings-username" placeholder="Username..." name="username" type="text"></div>
 					<div><input id="settings-email" placeholder="Email..." name="email" type="email"></div>
-					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text"></div>
+					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text">
+					</div>
 					<div><input id="settings-last-name" placeholder="Last name..." name="last_name" type="text"></div>
 					<div><textarea id="settings-bio" placeholder="Bio..." name="bio"></textarea></div>
-					<div class="form-group"><input type="checkbox" id="settings-2fa" name="2fa"><label for="settings-2fa">Enable 2FA</label></div>
+					<div class="form-group"><input type="checkbox" id="settings-2fa" name="2fa"><label
+							for="settings-2fa">Enable 2FA</label></div>
 					<div>
 						<button type="submit">Save</button>
 					</div>
@@ -464,4 +508,5 @@
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
 </body>
+
 </html>

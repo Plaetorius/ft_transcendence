@@ -3,6 +3,27 @@
 function loadGames() {
 	if (!user)
 		return;
+
+	const socket = new WebSocket(`wss://${window.location.host}/ws/pong/`);
+	socket.onopen = function (event) {
+		console.log("Pong WebSocket connection established.");
+	};
+	socket.onmessage = function (event) {
+		console.log("Pong Received message from server:", event.data);
+		// Update UI to display the received message
+	};
+	socket.onerror = function (event) {
+		console.error("Pong WebSocket error:", event);
+		console.log("error code is: ", event.code);
+		console.log("error message is: ", event.message);
+	};
+	socket.onclose = function (event) {
+		console.log("Pong WebSocket connection closed.");
+		console.log("close code is: ", event.code);
+		console.log("close reason is: ", event.reason);
+	};
+
+
 	console.log(`Load and Display game called`);
 
 	const gamesContainer = document.getElementById('pong-game');

@@ -5,42 +5,32 @@ let container;
 let camera, scene, renderer;
 let field_material;
 let group;
-let listener, audioloader, backgroundsound;
 
 const FIELD_LENGTH = 500;
 const FIELD_WIDTH = 200;
 const FIELD_HEIGTH = 10;
 
-console.log("Before Init pong game called");
 
 init();
 animate();
 
 function init() {
-	console.log("Init pong game called");
-
 	container = document.getElementById('canvas');
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	container.appendChild(renderer.domElement);
-	listener = new THREE.AudioListener();
-	audioloader = new THREE.AudioLoader();
+	renderer = new THREE.WebGLRenderer({ antialias: true });
 
-	camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 100, 700);
+	let canvas_width = container.getAttribute("width");
+	let canvas_height = container.getAttribute("height");
+
+	console.log("canvas size x: " + canvas_width + ", y:" + canvas_height);
+
+	renderer.setSize(canvas_width, canvas_height);
+	container.appendChild(renderer.domElement);
+
+	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 100, 700);
 	camera.position.z = 400;
 	camera.position.y = -200;
-	camera.add(listener);
 
 	camera.lookAt(0, 0, 0);
-
-	backgroundsound = new THREE.Audio(listener);
-	audioloader.load('./static/sound/pong_f4.mp3', function(buffer){
-		backgroundsound.setBuffer(buffer);
-		backgroundsound.setLoop(true);
-		backgroundsound.setVolume(0.5);
-		backgroundsound.play();
-	}
-	)
 
 	// Scene creation
 	scene = new THREE.Scene();
@@ -55,7 +45,7 @@ function init() {
 	let field_geometry = new THREE.BoxGeometry(FIELD_LENGTH, FIELD_HEIGTH, FIELD_WIDTH);
 	let field_mesh = new THREE.Mesh(field_geometry, field_material);
 	scene.add(field_mesh);
-	
+
 	// Cubes meshes creation
 	group = new THREE.Group();
 	scene.add(group);
@@ -99,8 +89,6 @@ function onWindowResize() {
 function animate() {
 
 	requestAnimationFrame(animate);
-
-	console.log("Animate pong game called");
 
 	render();
 

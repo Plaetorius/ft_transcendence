@@ -2,6 +2,6 @@
 # Register your models here.
 
 from django.contrib import admin
-from .models import PongGame
+#from .consumers import ( PongConsumer )
 
-admin.site.register(PongGame)
+#admin.site.register(PongConsumer)
