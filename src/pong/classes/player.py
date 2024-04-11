@@ -1,22 +1,19 @@
 
-from django.conf import settings
-
-import uuid
-
 #
 # CLASS PLAYER
 #
 
 class Player:
-	name:				str
-	uuid:				uuid.UUID
-	connected_channel:	str
-
-	def __init__(self, name: str, connected_channel: str) -> None:
+	def __init__(self, name: str, id: int) -> None:
 		self.name = name
-		self.uuid = uuid.uuid4()
-		self.connected_channel = connected_channel
+		self.id = id
 	
-	def __str__(self) -> str:
-		return "name: " + self.name + ", id: " + str(self.uuid) + "\n"
+	def __repr__(self) -> str:
+		return "name: " + self.name + ", id: " + self.id
+	
+	def to_dict(self):
+		return {
+			"name": self.name,
+			"id": self.id
+		}
 		

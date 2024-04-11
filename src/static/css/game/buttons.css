@@ -1,0 +1,149 @@
+/* #party-list party-uuid {
+	float: left;
+	list-style: none;
+	text-align: center;
+
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+
+	margin-right: 30px;
+	width: 150px;
+	line-height: 60px;
+}
+
+#party-list party-uuid button {
+	text-decoration: none;
+	height: 50px;
+	background-color: #182c25;
+	color: #FFFFFF;
+	display: block;
+}
+
+#party-list party-uuid button:hover {
+	text-decoration: none;
+	background-color: #306844;
+	height: 50px;
+	color: #000000;
+} */
+
+/* <button class="button-30" role="button">Button 30</button> */
+
+/* CSS */
+#party-list {
+	list-style: none;
+}
+
+#button_alan {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+
+	align-items: center;
+	appearance: none;
+	background-color: #F0F0F0;
+	border-radius: 4px;
+	border-width: 0;
+	box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+	box-sizing: border-box;
+	color: #36395A;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: 'cursive', monospace;
+	height: 48px;
+	justify-content: center;
+	line-height: 1;
+	list-style: none;
+	overflow: hidden;
+	padding-left: 16px;
+	padding-right: 16px;
+	position: relative;
+	text-align: left;
+	text-decoration: none;
+	transition: box-shadow .15s, transform .15s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap;
+	will-change: box-shadow, transform;
+	font-size: 18px;
+	
+	margin: 2px;
+}
+
+#button_alan:focus {
+	box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+#button_alan:hover {
+	box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+	transform: translateY(-2px);
+}
+
+#button_alan:active {
+	box-shadow: #1a1a20 0 3px 7px inset;
+	transform: translateY(2px);
+}
+
+
+/* INPUT FIELD */
+
+/* CSS */
+
+#uuid_form input {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+
+	align-items: center;
+	appearance: none;
+	background-color: #F0F0F0;
+	border-radius: 4px;
+	border-width: 0;
+	
+	/* change to inner */
+	/* box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset; */
+	box-shadow: #D6D6E7 0 0 0 1.5px inset;
+	box-sizing: border-box;
+	
+	color: #36395A;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: 'cursive', monospace;
+	height: 48px;
+	justify-content: center;
+	line-height: 1;
+	list-style: none;
+	overflow: hidden;
+	padding-left: 16px;
+	padding-right: 16px;
+	position: relative;
+	text-align: left;
+	text-decoration: none;
+	transition: box-shadow .15s, transform .15s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap;
+	will-change: box-shadow, transform;
+	font-size: 18px;
+	
+	margin: 2px;
+}
+
+#uuid_form input:focus {
+	box-shadow: #D6D6E7 0 3px 7px inset;
+}
+
+/* #uuid_form input:active {
+	box-shadow: #D6D6E7 0 3px 7px inset;
+	transform: translateY(2px);
+} */

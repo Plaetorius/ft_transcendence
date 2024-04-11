@@ -1,13 +1,11 @@
 
 from django.conf import settings
-
+from channels.layers import get_channel_layer
 from typing import List
 
-import json
 import asyncio
 
 import uuid
-import logging
 
 from .game_base import GameBase
 from .player import Player
@@ -17,27 +15,64 @@ from .player import Player
 #
 
 class Party(GameBase):
-	party_uuid:		uuid
-	players:		List[Player]
-	max_players:	int
-	
 	def __init__(self):
-		self.party_uuid = uuid.uuid4()
+		super().__init__()
+		
+		self.channel_layer = get_channel_layer()
+		
 		self.players = []
 		self.max_players = 2
+		
+		self.uuid = str(uuid.uuid4())
+		
+		self.channel_name = f"pong_party_{self.uuid}"
+		self.update_lock = asyncio.Lock()
+	
+	def __del__(self) -> None:
+		self.players.clear()
 
 # Player manager
-	def add_player(self, player):
-		if (self.players.count >= self.max_players):
+	async def add_player(self, player: Player) -> bool:
+		if (len(self.players) >= self.max_players):
 			return False
 		self.players.append(player)
-		return True
 		
-	def rem_player(self, player):
-		if (self.players.count == 0):
+		await self.channel_layer.group_add(
+				type = self.channel_name,
+				self.channel_name,
+				player.id,
+				)
+		
+		return True
+
+	async def rem_player(self, player: Player) -> bool:
+		if (len(self.players) == 0):
 			return False
 		self.players.remove(player)
+		
+		await self.channel_layer.group_discard(
+				self.channel_name,
+				player.id,
+				)
+		
 		return True
+
+	async def game_update(self, event):
+		"""
+		Called when someone talk to the party
+		"""
+		# Send a message down to the client
+		await self.send_json(
+			{
+				"msg_type": settings.MSG_TYPE_MESSAGE,
+				"room": event["room_id"],
+				"username": event["username"],
+				"message": event["message"],
+			},
+		)
+
+	# async def loop():
+	# 	pass
 
 
 #
@@ -46,11 +81,6 @@ class Party(GameBase):
 
 class PartyRoom:
 	_instance = None
-
-	parties:		List[Party]
-	players:		List[Player]
-	game_running:	bool
-	loop_task:		asyncio.Task
 	
 	def __new__(cls):
 		if cls._instance is None:
@@ -60,8 +90,7 @@ class PartyRoom:
 	def __init__(self):
 		self.parties = []
 		self.players = []
-		self.game_running = False
-		self.loop_task = None
+		self.loop_running = False
 
 # manager parties
 	def add_party(self, party: Party) -> bool:
@@ -75,17 +104,23 @@ class PartyRoom:
 		return True
 	
 	def rem_party_by_id(self, uuid: uuid) -> bool:
-		party = self.get_party_by_id(uuid)
+		party = self.get_party_by_uuid(uuid)
 		error = self.rem_party(party)
 		return error
 
-	# getter parties
-	def get_party_by_id(self, party_uuid: uuid) -> bool:
-		return self.parties[party_uuid]
+#
+	def get_party_by_uuid(self, party_uuid: str) -> bool:
+		for party in self.parties:
+			if party.uuid == party_uuid:
+				return party
+		return None
 		
 # manager players
 	def	add_player(self, player: Player) -> bool:
 		self.players.append(player)
+		print(f"	PONGGAME: Player {player.name} has joined the party room")
+		print(f"	PONGGAME: There is now {len(party_room.players)} players in the party room")
+		print("INFO: list of players: " + party_room.players.__repr__())
 		return True
 	
 	def rem_player(self, player: Player) -> bool:
@@ -94,18 +129,39 @@ class PartyRoom:
 		self.players.remove(player)
 		return True
 	
-	def rem_player_by_id(self, player_uuid: uuid) -> bool:
-		player = self.get_players_by_id(player_uuid)
+	def rem_player_by_id(self, player_id: int) -> bool:
+		player = self.get_player_by_id(player_id)
 		error = self.rem_player(player)
+		print(f"	PONGGAME: Player {player.name} has left the party room")
+		print(f"	PONGGAME: There is now {len(party_room.players)} players in the party room")
+		print("INFO: list of players: " + party_room.players.__repr__())
 		return error
 	
-	# getter players
-	def get_players_by_id(self, player_name: str) -> bool:
-		return self.players[player_name]
+#
+	def get_player_by_name(self, player_name: str) -> bool:
+		for player in self.players:
+			if player.name == player_name:	
+				return player
+		return None
 
-	def get_players_by_id(self, player_uuid: uuid) -> bool:
-		return self.players[player_uuid]
+	def get_player_by_id(self, player_id: int) -> bool:
+		for player in self.players:
+			if player.id == player_id:
+				return player
+		return None
 	
+	async def game_loop(self):
+		while self.loop_running:
+			# Update the game state
+			# self.game_state.update()
+			
+			# Send updates to all connected clients
+			#await self.send_game_state()
+
+			print("	GAMEPONG: INFO: Game loop running")
+
+			# Wait for a short interval (e.g., 20 milliseconds)
+			await asyncio.sleep(0.5)
 	
 # global game manager
 party_room = PartyRoom()

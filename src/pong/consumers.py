@@ -1,34 +1,276 @@
+# consumers.py
+
+from typing import List
+
+import json
+import uuid
+import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import User
+from channels.db import database_sync_to_async
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
-import logging
 
-from .includes import ( party_room, Player )
+from django.contrib.auth.models import ( AbstractUser )
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-class PongConsumer(AsyncWebsocketConsumer):
+from .classes.player import Player
+
+##
+##	CLASS PARTY
+##
+
+# PARTY CONSUMER
+class Party():
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.uuid: str				= str(uuid.uuid4())
+		self.players: List[Player]	= []
+		self.max_players: int		= 2
+		self.name: str				= f"party_default" # To display in the frontend
+		self.started: bool			= False
+		self.is_public: bool		= True
+		self.party_channel_name: str= f"party_{self.uuid}"
 	
+	def to_dict(self):
+		return {
+			"uuid": self.uuid,
+			"name": self.name,
+			"players": [player.to_dict() for player in self.players],
+			"max_players": self.max_players,
+			"started": self.started,
+			"is_public": self.is_public,
+			"party_channel_name": self.party_channel_name
+		}
+
+
+##
+##	CLASS PARTY MANAGER
+##
+
+class PartyManager():
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.parties: dict[str, Party]	= {}
+		self.in_games: dict[str, Party]	= {}
+		self.channel_layer = get_channel_layer()
+	
+	def create_party(self, name: str) -> Party:
+		party = Party()
+		party.name = f"{name}"
+		self.parties[party.uuid] = party
+		print(f"####	PartyManager: Party {party.uuid} created")
+		return party
+	
+	def delete_party(self, party_uuid: str) -> bool:
+		if party_uuid in self.parties:
+			del self.parties[party_uuid]
+			print(f"####	PartyManager: Party {party_uuid} deleted")
+			return True
+		return False
+	
+	
+	def join_party(self, party_uuid: str, player: Player) -> bool:
+		if (self.in_games.get(player.id, None) != None):
+			print(f"####	PartyManager: Player {player.name} cannot join a game (player already in a game)")
+			return False
+		party = self.parties.get(party_uuid, None)
+		if party != None:
+			if player.id not in [player.id for player in party.players]:
+				if len(party.players) < party.max_players:
+					party.players.append(player)
+					print(f"####	PartyManager: Player {player.name} joined party {party_uuid}")
+					self.in_games[player.id] = player
+					# start_game handle error cases by itself
+					# await self.channel_layer.group_send(party.party_channel_name, {"type": "update_party"})
+					self.start_game(party_uuid)
+					return True
+				else:
+					print(f"####	PartyManager: Player {player.name} could not join party {party_uuid} (party full)")
+					return False
+			else:
+				print(f"####	PartyManager: Player {player.name} could not join party {party_uuid} (player already in party n°{party_uuid})")
+				return False
+		print(f"####	PartyManager: Player {player.name} could not join party {party_uuid} (party not found)")
+		return False
+
+	def leave_party(self, party_uuid: str, player: Player) -> bool:
+		if (self.in_games.get(player.id, None) == None):
+			print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
+			return False
+		if party_uuid in self.parties:
+			party = self.parties[party_uuid]
+			
+			temp_player = next((player for player in party.players if player.id == player.id), None)
+			
+			if temp_player != None:
+				del self.in_games[player.id]		# Remove player from the playing list
+				party.players.remove(temp_player)	# Remove player from the party
+				print(f"####	PartyManager: Player {player.name} left party {party_uuid}")
+				print(f"####	PartyManager: Party {party_uuid} has {len(party.players)} players")
+				return True
+			
+			print(f"####	PartyManager: Player {player.name} could not leave party {party_uuid} (player not found)")
+			return False
+		print(f"####	PartyManager: Player {player.name} could not leave party {party_uuid} (party not found)")
+		return False
+	
+	def start_game(self, party_uuid: str) -> bool:
+		if party_uuid in self.parties:
+			party = self.parties[party_uuid]
+			if (party.started == True):
+				print(f"####	PartyManager: Could not start game for party {party_uuid} (game already started)")
+				return False
+			if len(party.players) == party.max_players:
+				print(f"####	PartyManager: Starting game for party {party_uuid}")
+				party.started = True
+				return True
+			else:
+				print(f"####	PartyManager: Could not start game for party {party_uuid} (not enough players)")
+				return False
+		print(f"####	PartyManager: Could not start game for party {party_uuid} (party not found)")
+		return False
+	
+	def stop_game(self, party_uuid: str) -> bool:
+		if party_uuid in self.parties:
+			party = self.parties[party_uuid]
+			if party.started == True:
+				print(f"####	PartyManager: Stopping game for party {party_uuid}")
+				return True
+			else:
+				print(f"####	ParyManager: Could not stop game for party {party_uuid} (game not started)")
+				return False
+		print(f"####	PartyManager: Could not stop game for party {party_uuid} (party not found)")
+		return False
+	
+	def to_dict(self):
+		return {
+			"parties": [value.to_dict() for key, value in self.parties.items()]
+	}
+
+
+# PARTY MANAGER SINGLETON
+g_party_manager: PartyManager	= PartyManager()
+
+
+
+# PARTY CONSUMER
+class PartyConsumer(AsyncWebsocketConsumer):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
 	async def connect(self):
-		# Called when the WebSocket is handshaking as part of the connection process
-		channel_user = self.scope['user']
+		# Init channel values
+		self.party_uuid: str			= self.scope['url_route']['kwargs']['party_uuid']
+		self.party: Party				= None
+		temp_user						= self.scope['user']
+		self.user						= await self.get_user(temp_user.username)
+		self.party_channel_name: str	= f"party_{self.party_uuid}"
 		
-		logging.critical("Connected")
-		logging.critical("CHAN_USR: " + str(channel_user))
+		# Check if party exists and if player can join
+		if (self.party_uuid not in g_party_manager.parties):
+			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (party not found)")
+			await self.close(code=99900)
+			return
+	
+		if (g_party_manager.in_games.get(self.user.id, None) != None):
+			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (player already in a game)")
+			await self.close(code=99902)
+			return
 		
-		temp_player = Player(channel_user.username, channel_user.id)
+		# Check if player can join the party and join it
+		temp_player = Player(self.user.username, self.user.id)
+		if (g_party_manager.join_party(self.party_uuid, temp_player) == False):
+			await self.close(code=99901)
+			return
 		
-		party_room.add_player(temp_player)
-		# debug
-		logging.critical(temp_player)
+		self.party = g_party_manager.parties[self.party_uuid]
 		
+		# If everything is ok, connect to the party
+		print(f"####	PartyConsumer: Connect to channel {self.party_channel_name} (party:{self.party_uuid})")
+		await self.channel_layer.group_add(self.party_channel_name, self.channel_name)
+		
+		
+		# Accept connection
 		await self.accept()
 
-	async def disconnect(self, close_code):
-		# Called when the WebSocket closes for any reason
-		logging.critical("Disconnected")
-		
-		temp_player = party_room.get_players_by_id(self.channel_name)
 
+	async def disconnect(self, close_code):
+		print(f"####	PartyConsumer: ERROR CODE: {close_code}")
+		await self.channel_layer.group_discard(self.party_channel_name, self.channel_name)
+		# if (g_party_manager.in_games.get(self.user.id, None) != None):
+		# 	return
+		player_to_remove = Player(self.scope['user'].username, self.scope['user'].id)
+		g_party_manager.leave_party(self.party_uuid, player_to_remove)
+		print(f"####	PartyConsumer: Disconnect from channel {self.party_channel_name} (party:{self.party_uuid})")
+	
+	
+	# Receive message from WebSocket
 	async def receive(self, text_data):
-		# Called when the consumer receives data over the WebSocket
-		logging.critical("Received")
-		logging.critical(text_data)
+		text_data_json = json.loads(text_data)
+		
+		if (text_data_json['type'] == "update"):
+			print("####		PartyConsumer: Received update command")
+		
+		await self.send(text_data=text_data)
+	
+	async def update_party(self, event):
+		# Send message to all players in the party
+		await self.channel_layer.group_send( self.party_channel_name, {self.party.to_dict()} )
+	
+	@database_sync_to_async
+	def get_user(self, field: str) -> User:
+		return User.objects.get(username=field)
+
+	# async def join_party(self, event):
+	# 	party_uuid = event['party_uuid']
+	# 	await self.channel_layer.group_send(
+	# 		f"party_{party_uuid}",
+	# 		{
+	# 			"type": "user_join",
+	# 			"user_channel_name": self.party_channel_name
+	# 		}
+	# 	)
+
+# #
+# #	GAMELOBBY MANAGER
+# #
+
+# # GAMELOBBYCONSUMER
+# class GameLobbyConsumer(AsyncWebsocketConsumer):
+# 	async def connect(self):
+# 		await self.accept()
+# 		await self.channel_layer.group_add("game_lobby", self.channel_name)
+# 		await self.send_json({"message": "You have entered the game lobby."})
+
+# 	async def disconnect(self, close_code):
+# 		await self.channel_layer.group_discard("game_lobby", self.channel_name)
+
+# 	async def join_party(self, event):
+# 		party_uuid = event['party_uuid']
+# 		await self.channel_layer.group_send(
+# 			f"party_{party_uuid}",
+# 			{
+# 				"type": "user_join",
+# 				"user_channel_name": self.channel_name
+# 			}
+# 		)
+
+# 	async def leave_party(self, event):
+# 		party_uuid = event['party_uuid']
+# 		await self.channel_layer.group_send(
+# 			f"party_{party_uuid}",
+# 			{
+# 				"type": "user_leave",
+# 				"user_channel_name": self.channel_name
+# 			}
+# 		)
+
+# 	async def user_joined(self, event):
+# 		user_channel_name = event['user_channel_name']
+# 		await self.send_json({"message": f"User {user_channel_name} joined the party."})
+
+# 	async def user_left(self, event):
+# 		user_channel_name = event['user_channel_name']
+# 		await self.send_json({"message": f"User {user_channel_name} left the party."})

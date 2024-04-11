@@ -1,5 +1,4 @@
 
-from django.conf import settings
 from enum import Enum
 
 from .player import Player
@@ -20,21 +19,12 @@ class Shape(Enum):
 # CLASS OBJECT_ABSTRACT
 #
 
-class object_abstract:
-	uuid:		uuid.UUID
-	controler:	Player
-	
-	shape:		Shape
-	pos:		vec2
-	vel:		vec2
-	rot:		float
-	
+class ObjectAbstract:
 	def __init__(self):
-		self.id = uuid.uuid4()
-		self.controler = None
-		self.shape = Shape.PADDLE
-		self.pos = 0, 0
-		self.vel = 0, 0
-		self.rot = 0, 0
+		self.uuid: uuid = uuid.uuid4()
+		self.controler: Player = None
 		
-	
+		self.shape = Shape.PADDLE
+		self.pos = vec2(0, 0)
+		self.vel = vec2(0, 0)
+		self.rot = vec2(0, 0)

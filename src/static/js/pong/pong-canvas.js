@@ -1,21 +1,26 @@
 
 import * as THREE from '../../three.js-master/build/three.module.js';
+// import { pong_websocket } from './pong-game.js';
 
 let container;
 let camera, scene, renderer;
 let field_material;
 let group;
 
+let clock = new THREE.Clock();
+let delta = 0;
+// 30 fps
+let interval = 1 / 30;
+
+
 const FIELD_LENGTH = 500;
 const FIELD_WIDTH = 200;
 const FIELD_HEIGTH = 10;
 
+initGamePong();
 
-init();
-animate();
-
-function init() {
-	container = document.getElementById('canvas');
+function initGamePong() {
+	container = document.getElementById('game-canvas');
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 
 	let canvas_width = container.getAttribute("width");
@@ -27,8 +32,8 @@ function init() {
 	container.appendChild(renderer.domElement);
 
 	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 100, 700);
-	camera.position.z = 400;
-	camera.position.y = -200;
+	camera.position.x = 400;
+	camera.position.y = 200;
 
 	camera.lookAt(0, 0, 0);
 
@@ -65,41 +70,63 @@ function init() {
 		mesh.rotation.y = Math.random();
 		mesh.rotation.z = Math.random();
 
-		mesh.scale.setScalar(Math.random() * 2 + 2);
+		mesh.scale.setScalar(Math.random() * 0.8 + 0.1);
 		group.add(mesh);
 
 	}
 
-	window.addEventListener('resize', onWindowResize);
+	// window.addEventListener('resize', onWindowResize);
+
+	animateGamePong();
+}
+
+// function onWindowResize() {
+
+// 	const width = window.innerWidth;
+// 	const height = window.innerHeight;
+
+// 	camera.aspect = width / height;
+// 	camera.updateProjectionMatrix();
+
+// 	renderer.setSize(width, height);
+
+// }
+
+function animateGamePong() {
+
+	requestAnimationFrame(animateGamePong);
+
+	renderGamePong();
 
 }
 
-function onWindowResize() {
-
-	const width = window.innerWidth;
-	const height = window.innerHeight;
-
-	camera.aspect = width / height;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize(width, height);
-
-}
-
-function animate() {
-
-	requestAnimationFrame(animate);
-
-	render();
-
-}
-
-function render() {
+function renderGamePong() {
 
 	const timer = performance.now();
 	group.rotation.x = timer * 0.0002;
 	group.rotation.y = timer * 0.0001;
+	group.rotation.z = timer * 0.0003;
 
-	renderer.render(scene, camera);
+
+	delta += clock.getDelta();
+
+	if (delta > interval) {
+		// The draw or time dependent code are here
+		renderer.render(scene, camera);
+		if(pong_websocket.readyState == 1)
+		{
+			const msg = {
+				type: "update",
+				// text: document.getElementById("text").value,
+				// id: clientID,
+				date: Date.now(),
+			  };
+			  pong_websocket.send(JSON.stringify(msg));
+		}
+
+		delta = delta % interval;
+	}
+
+
 
 }
