@@ -93,19 +93,12 @@ if (!accessToken) {
 	navigateToSection('register');
 }
 
-
-
-if (accessToken) {
-	showProfile();
-	console.log(user);
-	getPodium();
-	setOnline();
-	actualiseFriendsSection();
-	setupSettingsForm();
-}
-
 document.getElementById('already-account').addEventListener('click', () => {
 	navigateToSection('login');
+});
+
+document.getElementById('no-account').addEventListener('click', () => {
+	navigateToSection('register');
 });
 
 function authenticated() {

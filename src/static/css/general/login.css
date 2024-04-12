@@ -32,3 +32,17 @@ section#login {
 #login input::placeholder {
 	color: rgb(97, 69, 18);
 }
+
+#register #already-account,
+#login #no-account {
+    background: none;
+    border: none;
+}
+
+#register #already-account:hover,
+#login #no-account:hover {
+    color: rgb(94, 57, 2);
+    transform: scale(1.1);
+    transition: color 0.3s ease;
+    transition: transform 0.3s ease;
+}
