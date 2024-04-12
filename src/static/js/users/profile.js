@@ -1,4 +1,5 @@
 function showProfile() {
+	console.log("Call Show Profile");
     fetch('/users/profile/', {
         method: 'GET',
         headers: {
@@ -14,13 +15,8 @@ function showProfile() {
         return response.json();
     })
     .then(userData => {
-		console.log("Assigning data");
         user = userData;
-		// console.log(`user.profile_picture_url: ${user.profile_picture_url}`);
-
-		// user.profile_picture_url = "BLABLABLA";
-		// let imgElem = document.getElementById('header-profile-picture');
-		// imgElem.src = user.profile_picture_url ? `..${user.profile_picture_url}`: '../media/profile_pictures/default.jpg';
+		
 		
 		// loadAndDisplayFriends();
     })

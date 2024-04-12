@@ -6,7 +6,6 @@ function notification(message, pathToIcon, type) {
 	else
 		pathToIcon = '../static/icons/' + pathToIcon + '.png';
 	
-
 	// Select the notification container and its components
     const notificationContainer = document.getElementById('notification');
     const notificationIcon = notificationContainer.querySelector('.col-3 img');
@@ -15,8 +14,6 @@ function notification(message, pathToIcon, type) {
 	// Add type if any
 	if (type)
 		notificationContainer.classList.add(type);
-
-
 
     // Update the icon's src attribute and message content
     notificationIcon.src = pathToIcon;

@@ -99,7 +99,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, id=request.user.id)
-        serializer = self.get_serializer(user)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
 
 class UserFriendsAPIView(APIView):

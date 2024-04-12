@@ -1,5 +1,7 @@
 # users/serializers.py
 from rest_framework import serializers
+from django.templatetags.static import static
+from django.conf import settings
 from .models import User, Friendship, BlockedUser
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -7,6 +9,7 @@ from django.contrib.auth import authenticate
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import RegexValidator
 from django.core.files.storage import default_storage
+from django.core.cache import cache
 import re
 
 
@@ -48,7 +51,8 @@ class UserSerializer(serializers.ModelSerializer):
     def get_profile_picture_url(self, obj):
         if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
             return obj.profile_picture.url
-        return None
+        return static('../media/profile_pictures/default.jpg') # Shouldn't happen, if user removes pp in edit => should give the base one
+
 
 class UserAllSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
@@ -88,30 +92,30 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-            print(F"Validated data: {validated_data}")
-            instance.username = validated_data.get('username', instance.username)
-            instance.email = validated_data.get('email', instance.email)
-            instance.first_name = validated_data.get('first_name', instance.first_name)
-            instance.last_name = validated_data.get('last_name', instance.last_name)
-            instance.bio = validated_data.get('bio', instance.bio)
+        print(F"Validated data: {validated_data}")
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.bio = validated_data.get('bio', instance.bio)
 
-            if 'profile_picture' in validated_data:
-                # Check if there's an existing profile picture
-                if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
-                    # Delete the old picture file from storage
-                    try:
-                        picture_path = instance.profile_picture.path
-                        if default_storage.exists(picture_path):
-                            default_storage.delete(picture_path)
-                    except Exception as e:
-                        print(f"Error deleting old profile picture: {e}")
+        if 'profile_picture' in validated_data:
+            # Check if there's an existing profile picture
+            if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
+                # Delete the old picture file from storage
+                try:
+                    picture_path = instance.profile_picture.path
+                    if default_storage.exists(picture_path):
+                        default_storage.delete(picture_path)
+                except Exception as e:
+                    print(f"Error deleting old profile picture: {e}")
 
-                # Assign the new picture
-                instance.profile_picture = validated_data['profile_picture']
+            # Assign the new picture
+            instance.profile_picture = validated_data['profile_picture']
 
-            print("\n============================\nSaving instance\n")
-            instance.save()
-            return instance
+        print("\n============================\nSaving instance\n")
+        instance.save()
+        return instance
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
