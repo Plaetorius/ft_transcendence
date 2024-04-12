@@ -30,7 +30,14 @@
 	width: 300px;
 	height: 200px;
 
-	background-color: #fff;
+	/* background-color: #f5e0ab; */
+	/* background-image: './static/media/pong.png'; */
+	/* background-position: center; */
+	/* background-size: cover; */
+	/* background-image:	url("../../backgrounds/transparent_simple_noise.png"); */
+	/* background-image:	cross-fade(url("../../backgrounds/transparent_simple_noise.png") 50%, url('black.png') 50%); */
+	/* '../../backgrounds/old-paper-background.jpg' */
+	background-color:	#f5e0ab;
 	border: 5px solid black;
 	box-shadow: 0 0 0 7px #fff, 0 0 8px 5px #000;
 
@@ -47,7 +54,7 @@
 	position: relative;
 	width: 100%;
 	height: 65%;
-	background-color: #000;
+	background-color: #017cc0;
 	border-bottom: 5px solid #000;
 	z-index: 1;
 }

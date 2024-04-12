@@ -10,12 +10,16 @@ from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+import random
+
 
 from django.contrib.auth.models import ( AbstractUser )
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from .classes.player import Player
+
+from .classes.objects import ObjectAbstract
 
 ##
 ##	CLASS PARTY
@@ -26,13 +30,18 @@ class Party():
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.uuid: str				= str(uuid.uuid4())
+		self.name: str				= f"party_default" # To display in the frontend
 		self.players: List[Player]	= []
 		self.max_players: int		= 2
-		self.name: str				= f"party_default" # To display in the frontend
 		self.started: bool			= False
 		self.is_public: bool		= True
 		self.party_channel_name: str= f"party_{self.uuid}"
-	
+		self.objects: List[ObjectAbstract]	= []
+
+		for i in range(100):
+			baisetamere = ObjectAbstract()
+			self.objects.append(baisetamere)
+
 	def to_dict(self):
 		return {
 			"uuid": self.uuid,
@@ -41,7 +50,8 @@ class Party():
 			"max_players": self.max_players,
 			"started": self.started,
 			"is_public": self.is_public,
-			"party_channel_name": self.party_channel_name
+			"party_channel_name": self.party_channel_name,
+			"objects": [obj.to_dict() for obj in self.objects]
 		}
 
 
@@ -77,7 +87,11 @@ class PartyManager():
 			return False
 		party = self.parties.get(party_uuid, None)
 		if party != None:
-			if player.id not in [player.id for player in party.players]:
+			temp_list_id = [player.id for player in party.players]
+			print(f"####	PartyManager: Party {party_uuid} has {len(party.players)} and i am {player.id} players:")
+			for p in temp_list_id:
+				print(f"####	-{p}")
+			if player.id not in temp_list_id:
 				if len(party.players) < party.max_players:
 					party.players.append(player)
 					print(f"####	PartyManager: Player {player.name} joined party {party_uuid}")
@@ -102,7 +116,7 @@ class PartyManager():
 		if party_uuid in self.parties:
 			party = self.parties[party_uuid]
 			
-			temp_player = next((player for player in party.players if player.id == player.id), None)
+			temp_player = next((p for p in party.players if p.id == player.id), None)
 			
 			if temp_player != None:
 				del self.in_games[player.id]		# Remove player from the playing list
@@ -164,8 +178,7 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		# Init channel values
 		self.party_uuid: str			= self.scope['url_route']['kwargs']['party_uuid']
 		self.party: Party				= None
-		temp_user						= self.scope['user']
-		self.user						= await self.get_user(temp_user.username)
+		self.user						= await self.get_user(self.scope['user'].username)
 		self.party_channel_name: str	= f"party_{self.party_uuid}"
 		
 		# Check if party exists and if player can join
@@ -201,20 +214,28 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		await self.channel_layer.group_discard(self.party_channel_name, self.channel_name)
 		# if (g_party_manager.in_games.get(self.user.id, None) != None):
 		# 	return
-		player_to_remove = Player(self.scope['user'].username, self.scope['user'].id)
+		player_to_remove = Player(self.user.username, self.user.id)
 		g_party_manager.leave_party(self.party_uuid, player_to_remove)
 		print(f"####	PartyConsumer: Disconnect from channel {self.party_channel_name} (party:{self.party_uuid})")
 	
-	
+
 	# Receive message from WebSocket
 	async def receive(self, text_data):
+		# print(f"####	PartyConsumer: message received: {text_data}")
 		text_data_json = json.loads(text_data)
 		
-		if (text_data_json['type'] == "update"):
-			print("####		PartyConsumer: Received update command")
-		
-		await self.send(text_data=text_data)
-	
+		if (text_data_json['type'] == "update"):	
+			
+			for obj in self.party.objects:
+				obj.pos.x += random.uniform(-1, 1)
+				obj.pos.y += random.uniform(-1, 1)
+
+			message = {
+				"type": "update",
+				"party": self.party.to_dict()
+			}
+			await self.send(text_data=json.dumps(message))
+
 	async def update_party(self, event):
 		# Send message to all players in the party
 		await self.channel_layer.group_send( self.party_channel_name, {self.party.to_dict()} )

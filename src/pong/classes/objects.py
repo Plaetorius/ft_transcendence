@@ -21,10 +21,20 @@ class Shape(Enum):
 
 class ObjectAbstract:
 	def __init__(self):
-		self.uuid: uuid = uuid.uuid4()
+		self.uuid: uuid = str(uuid.uuid4())
 		self.controler: Player = None
 		
 		self.shape = Shape.PADDLE
 		self.pos = vec2(0, 0)
 		self.vel = vec2(0, 0)
-		self.rot = vec2(0, 0)
+		self.rot = 0
+	
+	def to_dict(self):
+		return {
+			"uuid": self.uuid,
+			"controler": self.controler.to_dict() if self.controler != None else None,
+			"shape": str(self.shape),
+			"pos": [self.pos.x, self.pos.y],
+			"vel": [self.vel.x, self.vel.y],
+			"rot": self.rot
+		}
