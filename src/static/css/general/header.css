@@ -73,8 +73,11 @@ header p {
     margin-bottom: 0.5rem;
     height: 6vh;
     width: 6vh;
-    overflow-x: hidden;
 	cursor: pointer;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 5%;
 }
 
 #main-header .header-right-section img:hover {	

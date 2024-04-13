@@ -27,6 +27,7 @@ function showProfile() {
 
 function loadMyProfile() {
     document.getElementById("my-profile-picture").src = user.profile_picture_url;
+	document.getElementById("header-profile-picture").src = user.profile_picture_url;
     document.getElementById("my-profile-username").innerHTML = `<span class="online-status online"></span>${user.username}`;
     document.getElementById("my-profile-elo").innerHTML = `<span>Elo: </span>${user.elo}`;
     const dateJoined = new Date(user.date_joined);
