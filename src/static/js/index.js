@@ -30,7 +30,7 @@ function unblur_background() {
 
 if (accessToken) {
 	showProfile();
-	// getPodium();
-	// setOnline();
-	// setupSettingsForm();
+	getPodium();
+	setOnline();
+	setupSettingsForm();
 }
