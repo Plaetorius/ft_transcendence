@@ -17,12 +17,26 @@ function showProfile() {
     .then(userData => {
         user = userData;
 		document.getElementById("my-profile-picture").src = user.profile_picture_url;
-		
-		// loadAndDisplayFriends();
+		loadMyProfile();
+		loadAndDisplayFriends();
     })
     .catch(error => {
 		console.log(error);
 	});
+}
+
+function loadMyProfile() {
+    document.getElementById("my-profile-picture").src = user.profile_picture_url;
+    document.getElementById("my-profile-username").innerHTML = `<span class="online-status online"></span>${user.username}`;
+    document.getElementById("my-profile-elo").innerHTML = `<span>Elo: </span>${user.elo}`;
+    const dateJoined = new Date(user.date_joined);
+    const formattedDate = [
+        dateJoined.getDate().toString().padStart(2, '0'),
+        (dateJoined.getMonth() + 1).toString().padStart(2, '0'),
+        dateJoined.getFullYear()
+    ].join('/');
+
+    document.getElementById("my-profile-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
 }
 
 // Socket serves both at checking if user is online
