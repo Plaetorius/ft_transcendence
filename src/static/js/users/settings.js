@@ -42,47 +42,47 @@ profilePictureInput.addEventListener('change', function() {
 });
 
 // Handle form submission
-settingsForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(settingsForm);
 
+async function handleSettingsFormSubmit(e) {
+	e.preventDefault();
+	const formData = new FormData(settingsForm);
 	const profilePictureInput = document.getElementById('profile-picture-input');
 	if (profilePictureInput.files.length > 0) {
 		formData.append('profile_picture', profilePictureInput.files[0]);
 	}
 
-	// const errors = validateSettingsForm(formData);
-	// if (!errors.length === 0) {
-	// 	errors.forEach(error => console.log(error));
-	// 	return ;
-	// }
+	for (let [key, value] of formData.entries()) {
+		if (value instanceof File) {
+			console.log(key, value.name, value.size, value.type);
+		} else {
+			console.log(key, value);
+		}
+	}
 
 	console.log('Fetching on PUT');
-    fetch('/users/edit-user/', {
-        method: 'PATCH',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: formData,
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok.');
-        }
-        return response.json();
-    })
-    .then(data => {
+	try {
+		const response = await fetch('/users/edit-user/', {
+			method: 'PATCH',
+			headers: {
+				'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+			},
+			body: formData,
+		});
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok.');
+		}
+		const data = await response.json();
 		notification('Profile updated!', 'check', 'success');
-        console.log('Success:', data);
-        // showProfile();
-		setupSettingsForm();
-    })
-    .catch(error => {
+		console.log('Success:', data);
+		await setupSettingsForm(); // Ensure this runs after the update
+	} catch (error) {
 		notification('Error updating your profile!', 'cross', 'error');
-        console.error('Error:', error);
-        // TODO Handle error
-    });
-});
+		console.error('Error:', error);
+	}
+}
+
+settingsForm.addEventListener('submit', handleSettingsFormSubmit);
 
 async function setupSettingsForm() {
     try {

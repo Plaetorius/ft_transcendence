@@ -29,7 +29,7 @@ function unblur_background() {
 }
 
 if (accessToken) {
-	// showProfile();
+	showProfile();
 	// getPodium();
 	// setOnline();
 	// setupSettingsForm();

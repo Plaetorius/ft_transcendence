@@ -13,7 +13,7 @@ class User(AbstractUser):
             'unique': "A user with that username already exists"
         },
     )
-    bio = models.TextField(max_length=500, blank=True)
+    bio = models.TextField(max_length=500, blank=True, default='')
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default="profile_pictures/default.jpg")
     email = models.EmailField(
         unique=True,
@@ -23,8 +23,8 @@ class User(AbstractUser):
             'unique': "A user with that email already exists."
         },
     )
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
+    first_name = models.CharField(max_length=30, blank=True, default='')
+    last_name = models.CharField(max_length=150, blank=True, default='')
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True) # already in model

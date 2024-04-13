@@ -21,13 +21,13 @@ username_validator = RegexValidator(
 )
 
 first_name_validator = RegexValidator(
-    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$',
-    message="Last name must only contain letters, spaces, hyphens, or apostrophes.",
+    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$|^$',
+    message="First name must only contain letters, spaces, hyphens, or apostrophes, or be empty.",
 )
 
 last_name_validator = RegexValidator(
-    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$',
-    message="Last name must only contain letters, spaces, hyphens, or apostrophes.",
+    regex=r'^[a-zA-Z]+(?:[-\'\s][a-zA-Z]+)*$|^$',
+    message="Last name must only contain letters, spaces, hyphens, or apostrophes, or be empty.",
 )
 
 def validate_image(file):
@@ -74,8 +74,8 @@ class UserAllSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, validators=[validate_image])
     username = serializers.CharField(validators=[username_validator])
-    first_name = serializers.CharField(required=False, validators=[first_name_validator])
-    last_name = serializers.CharField(required=False, validators=[last_name_validator])
+    first_name = serializers.CharField(required=False, default='', allow_blank=True, trim_whitespace=True, validators=[first_name_validator])
+    last_name = serializers.CharField(required=False, default='', allow_blank=True, trim_whitespace=True, validators=[last_name_validator])
 
     class Meta:
         model = User
@@ -92,12 +92,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
+        print("\n============================\nAfter Validation\n")
+        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
         print(F"Validated data: {validated_data}")
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.bio = validated_data.get('bio', instance.bio)
+        print("\n============================\nAfter Validation\n")
+        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
+
 
         if 'profile_picture' in validated_data:
             # Check if there's an existing profile picture
@@ -112,13 +117,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
             # Assign the new picture
             instance.profile_picture = validated_data['profile_picture']
-
+        print("\n============================\nBefore Saving instance\n")
+        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
         print("\n============================\nSaving instance\n")
         instance.save()
+        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
         return instance
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True) #TODO add required
     password2 = serializers.CharField(write_only=True)
     username = serializers.CharField(validators=[username_validator])
     class Meta:

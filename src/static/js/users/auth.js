@@ -103,7 +103,7 @@ document.getElementById('no-account').addEventListener('click', () => {
 
 function authenticated() {
 	header.classList.remove("d-none");
-	setOnline();
+	// setOnline();
 	// TODO actualise header image
 	// showProfile();
 	navigateToSection('home');
