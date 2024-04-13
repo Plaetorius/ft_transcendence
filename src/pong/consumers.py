@@ -19,7 +19,7 @@ User = get_user_model()
 
 from .classes.player import Player
 
-from .classes.objects import ObjectAbstract
+from .classes.objects import ObjectAbstract, Shape
 
 ##
 ##	CLASS PARTY
@@ -32,15 +32,15 @@ class Party():
 		self.uuid: str				= str(uuid.uuid4())
 		self.name: str				= f"party_default" # To display in the frontend
 		self.players: List[Player]	= []
-		self.max_players: int		= 2
+		self.max_players: int		= 1
 		self.started: bool			= False
 		self.is_public: bool		= True
 		self.party_channel_name: str= f"party_{self.uuid}"
 		self.objects: List[ObjectAbstract]	= []
 
-		for i in range(100):
-			baisetamere = ObjectAbstract()
-			self.objects.append(baisetamere)
+		# for i in range(2):
+		# 	baisetamere = ObjectAbstract()
+		# 	self.objects.append(baisetamere)
 
 	def to_dict(self):
 		return {
@@ -139,6 +139,10 @@ class PartyManager():
 			if len(party.players) == party.max_players:
 				print(f"####	PartyManager: Starting game for party {party_uuid}")
 				party.started = True
+				party.objects = [ObjectAbstract() for i in range(3)]
+				party.objects[0].pos.y = 250 - (16 / 2)		#taille de la map en y - taille du paddle / 2
+				party.objects[1].pos.y = -250 + (16 / 2)	#taille de la map en y + taille du paddle / 2
+				party.objects[2].shape = Shape.SPHERE
 				return True
 			else:
 				print(f"####	PartyManager: Could not start game for party {party_uuid} (not enough players)")
@@ -227,12 +231,25 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		if (text_data_json['type'] == "update"):	
 			
 			for obj in self.party.objects:
-				obj.pos.x += random.uniform(-1, 1)
-				obj.pos.y += random.uniform(-1, 1)
+				if obj.shape == Shape.PADDLE:
+					if obj.controler != None: # todo != None
+						#print(f"keys = {text_data_json['keys']} AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+						#if obj.controler.id == self.user.id:
+						if text_data_json['keys'].get("q", False) == True: # or "ArrowLeft"
+							obj.pos.x -= 10
+						if text_data_json['keys'].get("d", False) == True: # or "ArrowRight"
+							obj.pos.x += 10
+						if text_data_json['keys'].get("p", False) == True: 
+							obj.pos.y = random.uniform(-1, 1) * 220
+							obj.pos.x = random.uniform(-1, 1) * 50
+				else:
+					obj.pos.y += random.uniform(-1, 1)
+					obj.pos.x += random.uniform(-1, 1)
 
 			message = {
 				"type": "update",
-				"party": self.party.to_dict()
+				"party": self.party.to_dict(),
+				"color": "0x00FF00",
 			}
 			await self.send(text_data=json.dumps(message))
 

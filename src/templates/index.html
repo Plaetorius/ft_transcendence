@@ -23,6 +23,17 @@
 	<link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
 	<link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
 	<link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
+	<script type="importmap">
+		{
+			"imports": {
+				"three": "/static/threejs/build/three.module.js",
+				"addons/": "/static/threejs/examples/jsm/"
+			}
+		}
+	</script>
+	
+	
+
 </head>
 
 <body>
@@ -86,6 +97,7 @@
 				</div>
 			</div>
 			<div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
+
 			</div>
 		</section>
 
@@ -497,6 +509,7 @@
 	<script src="{% static 'js/index.js' %}"></script>
 	<script src="{% static 'jquery/jquery.js' %}"></script>
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	
 
 </body>
 

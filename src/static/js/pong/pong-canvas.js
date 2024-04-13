@@ -1,6 +1,13 @@
-import * as THREE from '../../three.js-master/build/three.module.js';
-// import { pong_websocket } from './pong-game.js';
 
+
+
+// import * as THREE from '../../threejs/build/three.module.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'addons/Addons.js';
+// import {GLTFLoader} from '../../threejs/examples/jsm/loaders/GLTFLoader.js';
+
+
+// import { pong_websocket } from './pong-game.js';
 let container;
 let camera, scene, renderer;
 let field_material;
@@ -10,14 +17,73 @@ let clock = new THREE.Clock();
 let delta = 0;
 
 // The frame per second
-let interval = 1 / 20;
+let interval = 1 / 40;
 
 
-const FIELD_LENGTH = 500;
-const FIELD_WIDTH = 200;
-const FIELD_HEIGTH = 10;
+const FIELD_LENGTH = 200; 	//z
+const FIELD_WIDTH = 500; 	//x
+const FIELD_HEIGTH = 10; 	//y
+
 
 let loaded_party = null;
+
+// Load 3D model
+const test = new GLTFLoader();
+
+test.load(
+  // URL du modèle GLTF
+  'static/3Dmodels/fall.glb',
+
+  // Fonction appelée lorsque le chargement est terminé
+  function (gltf) {
+    const model = gltf.scene;
+    model.position.set(300, 0, 0);
+    model.rotation.set(0, 0, 0);
+    model.scale.set(1000, 1000, 1000);
+    scene.add(model);
+  },
+  
+  // Fonction appelée pendant le chargement
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+  },
+
+  // Fonction appelée en cas d'erreur
+  function (error) {
+    console.log('An error happened', error);
+  }
+);
+
+// Création de la sphère géométrique
+var sky_geometry = new THREE.SphereGeometry(500, 16, 16);
+sky_geometry.scale(-1, 1, 1); // Inversion des normales pour l'intérieur de la sphère
+
+// Chargement des textures
+var textureLoader = new THREE.TextureLoader();
+var texture0 = textureLoader.load('static/skybox/sphere.jpg'); // Face avant
+var texture1 = textureLoader.load('static/skybox/ny.png'); // Face arrière
+var texture2 = textureLoader.load('static/skybox/nz.png'); // Face haut
+var texture3 = textureLoader.load('static/skybox/px.png'); // Face bas
+var texture4 = textureLoader.load('static/skybox/py.png'); // Face droite
+var texture5 = textureLoader.load('static/skybox/pz.png'); // Face gauche
+
+// Création du matériau pour la skybox
+var materialArray = [
+    new THREE.MeshBasicMaterial({ map: texture0 }),
+    new THREE.MeshBasicMaterial({ map: texture1 }),
+    new THREE.MeshBasicMaterial({ map: texture2 }),
+    new THREE.MeshBasicMaterial({ map: texture3 }),
+    new THREE.MeshBasicMaterial({ map: texture4 }),
+    new THREE.MeshBasicMaterial({ map: texture5 }),
+];
+// var skyboxMaterial = new THREE.Mesh(materialArray);
+
+// Création du maillage (mesh) de la skybox
+var skybox = new THREE.Mesh(sky_geometry, new THREE.MeshBasicMaterial({ map: texture0 }));
+
+// Ajout de la skybox à la scène
+
+
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
@@ -53,15 +119,17 @@ function initGamePong() {
 	renderer.setSize(canvas_width, canvas_height);
 	container.appendChild(renderer.domElement);
 
-	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 100, 700);
-	camera.position.x = 400;
+	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 0.1, 5000);
+	camera.position.x = 0;
 	camera.position.y = 200;
-
-	camera.lookAt(0, 0, 0);
+	camera.position.z = 400;
+	
+	//camera.lookAt(0, 0, 0);
 
 	// Scene creation
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xaaaaaa);
+	scene.add(skybox);
 
 	// Lights creation
 	scene.add(new THREE.DirectionalLight(0xffffff, 4));
@@ -98,6 +166,16 @@ function initGamePong() {
 	}
 }
 
+let pressed = {};
+
+window.addEventListener('keydown', function(event) {
+   pressed[event.key] =  true;
+});
+
+window.addEventListener('keyup', function(event) {
+	delete pressed[event.key];
+});
+
 
 function animateGamePong() {
 	
@@ -129,14 +207,33 @@ function getSceneById(id) {
 	return ret_obj;
 }
 
-function updateOrCreateObject(id, position, rotation, color) {
+let paddle_color = "#ff1684";
+
+function create_paddle() {
+	const geometry = new THREE.BoxGeometry(128, 10, 16);
+	const material = new THREE.MeshLambertMaterial({ color: paddle_color})
+	const paddle = new THREE.Mesh(geometry, material);
+	paddle.position.set(0, 0, 0);
+	paddle.rotation.set(0, 0, 0);
+	paddle.userId = user.id;
+	paddle.name = user.name;
+	scene.add(paddle);
+}
+
+function updateOrCreateObject(id, position, rotation, shape) {
     let object = getSceneById(id);
 
     if (object == null) {
         // Create new object
-		const color = '#' + Math.floor(Math.random()*16777215).toString(16);
-		const geometry = new THREE.BoxGeometry(32, Math.random() * 10 + 10, 16);
-        const material = new THREE.MeshLambertMaterial({ color: color})
+		//const color = '#' + Math.floor(Math.random()*16777215).toString(16);
+		let geometry;
+		if (shape === "Shape.PADDLE")
+			geometry = new THREE.BoxGeometry(128, 10, 16);
+		else if (shape === "Shape.SPHERE")
+			geometry = new THREE.SphereGeometry(10, 32, 32);
+		else
+			geometry = new THREE.BoxGeometry(10, 10, 10);
+        const material = new THREE.MeshLambertMaterial({ color: "#ff1684"})
 			
         let cube = new THREE.Mesh(geometry, material);
         cube.position.set(position.x, position.y, position.z);
@@ -148,7 +245,7 @@ function updateOrCreateObject(id, position, rotation, color) {
 		// console.log("THERE IS OBJECTS: " + position.x + ", " + position.y + ", " + position.z);
         object.position.set(position.x, position.y, position.z);
         object.rotation.set(0, rotation, 0);
-        object.material.color.set(color);
+       // object.material.color.set(color);
     }
 }
 
@@ -183,7 +280,8 @@ function renderGamePong() {
 	group.rotation.x = timer * 0.0002;
 	group.rotation.y = timer * 0.0001;
 
-
+	skybox.position.copy(camera.position);
+	camera.rotation.y = timer * 0.0001;
 	delta += clock.getDelta();
 
 	if (delta > interval) {
@@ -191,25 +289,27 @@ function renderGamePong() {
 		if (pong_websocket.readyState == 1) {
 			let msg = {
 				type: "update",
+				keys: pressed,
+				color: paddle_color,
 				date: Date.now()
 			};
 			pong_websocket.send(JSON.stringify(msg));
 		}
-
+		
 		if (loaded_party != null) {
 			const obj_array = loaded_party['objects'];
 			for (let obj of obj_array) {
 				const uuid = obj['uuid'];
 				const pos = new THREE.Vector3(obj['pos'][0], FIELD_HEIGTH, obj['pos'][1]);
-				const rot = obj['rot']
-
-				updateOrCreateObject(uuid, pos, rot);
+				const rot = obj['rot'];
+				const shape = obj['shape'];
+				updateOrCreateObject(uuid, pos, rot, shape);
 			}
 			setPlayerList();
 		}
-
+		
 		renderer.render(scene, camera);
-
+		
 		delta = delta % interval;
 	}
 }
