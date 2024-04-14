@@ -22,7 +22,8 @@ class GatherPartyAPIView(APIView):
 		# Get the list of parties
 		my_list = g_party_manager.to_dict()['parties']
 
-		# print(f"#################################   INFO: Parties {my_list}")
+		print(f"#################################   INFO: GatherPartyAPIView: {my_list}")
+
 		# Return the UUID of the created party
 		return Response({'parties': my_list}, status=status.HTTP_201_CREATED)
 	
@@ -32,8 +33,9 @@ class GatherPartyByIdAPIView(APIView):
 		party_uuid = kwargs['party_uuid']
 		my_party = g_party_manager.parties.get(party_uuid, None)
 
-		# print(f"#################################   INFO: Parties {my_list}")
-		# Return the UUID of the created party
+		if (my_party is None):
+			return Response({'detail': 'Party not found'}, status=status.HTTP_404_NOT_FOUND)
+
 		return Response({'party': my_party.to_dict()}, status=status.HTTP_201_CREATED)
 
 # class JoinPartyAPIView(LoginRequiredMixin, APIView):

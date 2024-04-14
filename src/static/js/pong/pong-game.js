@@ -23,7 +23,6 @@ async function loadHtmlElement(file_path) {
 
 	const parser = new DOMParser();
 	dom = parser.parseFromString(text, "text/html");
-	console.log('DOM:', dom);
 
 	return (dom.body.firstChild);
 }
@@ -73,7 +72,7 @@ async function getPartyList() {
 
 		const data = await response.json();
 		console.log('Response data:', data); // Log the response data for debugging
-		return data;
+		return data['parties'];
 	} catch (error) {
 		console.error('Error fetching party list:', error); // Log any errors for debugging
 		return [];
@@ -147,6 +146,7 @@ async function createPartyList() {
 
 		let raw_list = [];
 		raw_list = await getPartyList();
+		console.log('Raw list:', raw_list);
 		if (!raw_list) {
 			console.log('No parties available');
 			return;
@@ -156,11 +156,10 @@ async function createPartyList() {
 			return;
 		}
 
-		console.log('Raw list:', raw_list);
 
 		const default_party_card = await loadHtmlElement('../static/js/pong/party_list_card.html');
 
-		raw_list['parties'].forEach(party => {
+		for (let party of raw_list) {
 			console.log("party: " + party);
 
 			let party_card = default_party_card.cloneNode(true);
@@ -169,6 +168,9 @@ async function createPartyList() {
 
 			// const color_table = ['#00286d', '#ffce00', '#dae5e5', '#ff1a00', '#0b0b0b'];
 			const color_table = ['#398a74', '#394f8a', '#4b398a', '#8a394f', '#39788a'];
+
+			console.log("party: ");
+			console.log(party);
 
 			const randomNumber = cyrb128(party['uuid'])[0];
 			const randomColor = color_table[randomNumber % 5];
@@ -209,7 +211,7 @@ async function createPartyList() {
 			}
 
 			party_list.appendChild(party_card);
-		});
+		}
 	}
 }
 
@@ -338,8 +340,7 @@ async function loadGamesLobby() {
 			};
 			pong_websocket.onmessage = async function(event) {
 				// Update UI to display the received message
-				console.log("PONGGAME:", event.data);
-
+				// BITE
 			};
 			pong_websocket.onerror = function(event) {
 				notification(`Failed to join game:${chosenPartyUuid}`, null, null);

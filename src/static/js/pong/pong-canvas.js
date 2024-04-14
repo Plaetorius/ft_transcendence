@@ -3,19 +3,15 @@ import * as THREE from '../../three.js-master/build/three.module.js';
 
 let container;
 let camera, scene, renderer;
-let field_material;
 let group;
 
 let clock = new THREE.Clock();
 let delta = 0;
 
 // The frame per second
-let interval = 1 / 20;
+let interval = 1 / 60;
 
-
-const FIELD_LENGTH = 500;
-const FIELD_WIDTH = 200;
-const FIELD_HEIGTH = 10;
+const FIELD_HEIGTH = 10; 	//y
 
 let loaded_party = null;
 
@@ -26,7 +22,7 @@ function wait_for_base_party() {
 		setTimeout(wait_for_base_party, 50); //wait 50 millisecnds then recheck
 		return;
 	}
-	//real action
+	//real actionaaaaaa
 }
 
 initGamePong();
@@ -53,9 +49,10 @@ function initGamePong() {
 	renderer.setSize(canvas_width, canvas_height);
 	container.appendChild(renderer.domElement);
 
-	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 100, 700);
-	camera.position.x = 400;
+	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 0.1, 5000);
+	camera.position.x = 0;
 	camera.position.y = 200;
+	camera.position.z = 400;
 
 	camera.lookAt(0, 0, 0);
 
@@ -66,12 +63,6 @@ function initGamePong() {
 	// Lights creation
 	scene.add(new THREE.DirectionalLight(0xffffff, 4));
 	scene.add(new THREE.AmbientLight(0xffffff));
-
-	// Field mesh creation
-	field_material = new THREE.MeshLambertMaterial(0xFF8054);
-	let field_geometry = new THREE.BoxGeometry(FIELD_LENGTH, FIELD_HEIGTH, FIELD_WIDTH);
-	let field_mesh = new THREE.Mesh(field_geometry, field_material);
-	scene.add(field_mesh);
 
 	// Cubes meshes creation
 	group = new THREE.Group();
@@ -97,6 +88,16 @@ function initGamePong() {
 
 	}
 }
+
+let pressed = {};
+
+window.addEventListener('keydown', function(event) {
+   pressed[event.key.toLowerCase()] =  true;
+});
+
+window.addEventListener('keyup', function(event) {
+	delete pressed[event.key.toLowerCase()];
+});
 
 
 function animateGamePong() {
@@ -129,15 +130,38 @@ function getSceneById(id) {
 	return ret_obj;
 }
 
-function updateOrCreateObject(id, position, rotation, color) {
+function updateOrCreateObject(id, position, rotation, size, shape) {
     let object = getSceneById(id);
 
     if (object == null) {
         // Create new object
-		const color = '#' + Math.floor(Math.random()*16777215).toString(16);
-		const geometry = new THREE.BoxGeometry(32, Math.random() * 10 + 10, 16);
-        const material = new THREE.MeshLambertMaterial({ color: color})
-			
+		//const color = '#' + Math.floor(Math.random()*16777215).toString(16);
+		let geometry;
+		let material;
+		if (shape === "Shape.TERRAIN")
+		{
+			geometry = new THREE.BoxGeometry(size.x, 5, size.z);
+			material = new THREE.MeshLambertMaterial({ color: "#16ff24"})
+			position.y = -2.5;
+		}
+		else if (shape === "Shape.PADDLE")
+		{
+			geometry = new THREE.BoxGeometry(120, 10, 10);
+			material = new THREE.MeshLambertMaterial({ color: "#1684ff"})
+			position.y = 5;
+		}
+		else if (shape === "Shape.BALL")
+		{
+			geometry = new THREE.SphereGeometry(10, 16, 16);
+			material = new THREE.MeshLambertMaterial({ color: "#161184"})
+			position.y = 10;
+		}
+		else
+		{
+			geometry = new THREE.BoxGeometry(10, 10, 10);
+			material = new THREE.MeshLambertMaterial({ color: "#ff1684"})
+		}
+
         let cube = new THREE.Mesh(geometry, material);
         cube.position.set(position.x, position.y, position.z);
         cube.rotation.set(0, rotation, 0);
@@ -146,9 +170,9 @@ function updateOrCreateObject(id, position, rotation, color) {
     } else {
         // Update existing object
 		// console.log("THERE IS OBJECTS: " + position.x + ", " + position.y + ", " + position.z);
-        object.position.set(position.x, position.y, position.z);
+        object.position.set(position.x, object.position.y, position.z);
         object.rotation.set(0, rotation, 0);
-        object.material.color.set(color);
+       // object.material.color.set(color);
     }
 }
 
@@ -191,25 +215,29 @@ function renderGamePong() {
 		if (pong_websocket.readyState == 1) {
 			let msg = {
 				type: "update",
+				keys: pressed,
+				player_name: user.username,
 				date: Date.now()
 			};
+			console.log("keys: " + JSON.stringify(pressed));
 			pong_websocket.send(JSON.stringify(msg));
 		}
-
+		
 		if (loaded_party != null) {
 			const obj_array = loaded_party['objects'];
 			for (let obj of obj_array) {
 				const uuid = obj['uuid'];
-				const pos = new THREE.Vector3(obj['pos'][0], FIELD_HEIGTH, obj['pos'][1]);
-				const rot = obj['rot']
-
-				updateOrCreateObject(uuid, pos, rot);
+				const pos = new THREE.Vector3(obj['pos']['x'], FIELD_HEIGTH, obj['pos']['y']);
+				const rot = obj['rot'];
+				const size = new THREE.Vector3(obj['size']['x'], FIELD_HEIGTH, obj['size']['y']);;
+				const shape = obj['shape'];
+				updateOrCreateObject(uuid, pos, rot, size, shape);
 			}
 			setPlayerList();
 		}
-
+		
 		renderer.render(scene, camera);
-
+		
 		delta = delta % interval;
 	}
 }
