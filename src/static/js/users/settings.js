@@ -132,32 +132,3 @@ async function getAllInfo() {
         console.log(`Error: ${error}`);
     }
 }
-
-
-// const validateEmail = (email) => {
-//     return email.match(
-//       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-//     );
-// };
-
-// function validateSettingsForm(form) {
-//     let errors = [];
-    
-//     // Retrieve the username and email directly from the form fields
-// 	let username = form.get('username');
-//     let email = form.get('email');
-    
-//     // Validate username length
-//     if (username.length < 4) {
-//         errors.push("Username too short (must be more than 4 characters)!");
-//     }
-//     if (username.length > 20) {
-//         errors.push("Username too long (must be less than 20 characters)!");
-//     }
-
-//     // Validate email using the regex function
-//     if (!validateEmail(email)) {
-//         errors.push("Incorrect email format.");
-//     }
-//     return errors;
-// }
