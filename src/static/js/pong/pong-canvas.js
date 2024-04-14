@@ -3,13 +3,13 @@
 
 // import * as THREE from '../../threejs/build/three.module.js';
 import * as THREE from 'three';
-import { GLTFLoader } from 'addons/Addons.js';
+import { GLTFLoader,OrbitControls, AsciiEffect } from 'addons/Addons.js';
 // import {GLTFLoader} from '../../threejs/examples/jsm/loaders/GLTFLoader.js';
 
 
 // import { pong_websocket } from './pong-game.js';
 let container;
-let camera, scene, renderer;
+let camera, scene, renderer, effect, skybox, controls;
 let field_material;
 let group;
 
@@ -28,18 +28,13 @@ const FIELD_HEIGTH = 10; 	//y
 let loaded_party = null;
 
 // Load 3D model
-const test = new GLTFLoader();
+const Rocket = new GLTFLoader();
 
-test.load(
-  // URL du modèle GLTF
-  'static/3Dmodels/fall.glb',
-
-  // Fonction appelée lorsque le chargement est terminé
-  function (gltf) {
+Rocket.load('static/3Dmodels/rocket.glb', function (gltf) {
     const model = gltf.scene;
-    model.position.set(300, 0, 0);
+    model.position.set(0, 0, 0);
     model.rotation.set(0, 0, 0);
-    model.scale.set(1000, 1000, 1000);
+    model.scale.set(50, 50, 50);
     scene.add(model);
   },
   
@@ -55,35 +50,12 @@ test.load(
 );
 
 // Création de la sphère géométrique
-var sky_geometry = new THREE.SphereGeometry(500, 16, 16);
+var sky_geometry = new THREE.SphereGeometry(2, 16, 16);
 sky_geometry.scale(-1, 1, 1); // Inversion des normales pour l'intérieur de la sphère
 
 // Chargement des textures
 var textureLoader = new THREE.TextureLoader();
 var texture0 = textureLoader.load('static/skybox/sphere.jpg'); // Face avant
-var texture1 = textureLoader.load('static/skybox/ny.png'); // Face arrière
-var texture2 = textureLoader.load('static/skybox/nz.png'); // Face haut
-var texture3 = textureLoader.load('static/skybox/px.png'); // Face bas
-var texture4 = textureLoader.load('static/skybox/py.png'); // Face droite
-var texture5 = textureLoader.load('static/skybox/pz.png'); // Face gauche
-
-// Création du matériau pour la skybox
-var materialArray = [
-    new THREE.MeshBasicMaterial({ map: texture0 }),
-    new THREE.MeshBasicMaterial({ map: texture1 }),
-    new THREE.MeshBasicMaterial({ map: texture2 }),
-    new THREE.MeshBasicMaterial({ map: texture3 }),
-    new THREE.MeshBasicMaterial({ map: texture4 }),
-    new THREE.MeshBasicMaterial({ map: texture5 }),
-];
-// var skyboxMaterial = new THREE.Mesh(materialArray);
-
-// Création du maillage (mesh) de la skybox
-var skybox = new THREE.Mesh(sky_geometry, new THREE.MeshBasicMaterial({ map: texture0 }));
-
-// Ajout de la skybox à la scène
-
-
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
@@ -110,6 +82,7 @@ function initGamePong() {
 	container.appendChild(player_list);
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.autoClear = false;
 
 	let canvas_width = container.getAttribute("width");
 	let canvas_height = container.getAttribute("height");
@@ -124,13 +97,20 @@ function initGamePong() {
 	camera.position.y = 200;
 	camera.position.z = 400;
 	
-	//camera.lookAt(0, 0, 0);
-
-	// Scene creation
+	camera.lookAt(0, 0, 0);
+	
+	skybox = new THREE.Mesh(sky_geometry, new THREE.MeshBasicMaterial({ map: texture0 }));
+	skybox.renderOrder = 0;
+ 	skybox.material.depthTest = false;
+ 	skybox.material.depthWrite = false;
+	
+	controls = new OrbitControls(camera, renderer.domElement);
+	 
+	 // Scene creation
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xaaaaaa);
-	scene.add(skybox);
-
+	 
+	//scene.add(skybox);
 	// Lights creation
 	scene.add(new THREE.DirectionalLight(0xffffff, 4));
 	scene.add(new THREE.AmbientLight(0xffffff));
@@ -144,6 +124,10 @@ function initGamePong() {
 	// Cubes meshes creation
 	group = new THREE.Group();
 	scene.add(group);
+	effect = new AsciiEffect( renderer, ' .:-+*=%@#', { invert: true } );
+	effect.setSize( canvas_width, canvas_height );
+	effect.domElement.style.color = 'white';
+	effect.domElement.style.backgroundColor = 'black';
 
 	const geometry = new THREE.BoxGeometry(10, 10, 10);
 	for (let i = 0; i < 100; i++) {
@@ -178,7 +162,6 @@ window.addEventListener('keyup', function(event) {
 
 
 function animateGamePong() {
-	
 	renderGamePong();
 	requestAnimationFrame(animateGamePong);
 }
@@ -281,7 +264,7 @@ function renderGamePong() {
 	group.rotation.y = timer * 0.0001;
 
 	skybox.position.copy(camera.position);
-	camera.rotation.y = timer * 0.0001;
+	//camera.rotation.y = timer * 0.0001;
 	delta += clock.getDelta();
 
 	if (delta > interval) {
@@ -307,8 +290,8 @@ function renderGamePong() {
 			}
 			setPlayerList();
 		}
-		
-		renderer.render(scene, camera);
+		effect.render( scene, camera );
+		//renderer.render(scene, camera);
 		
 		delta = delta % interval;
 	}
