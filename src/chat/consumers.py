@@ -15,16 +15,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
 
-        if isinstance(self.scope['user'], AnonymousUser):
-            # Refuse the connection if user not authenticated
+        # Retrieve the room to check membership
+        room = await self.get_room(self.room_id)
+
+        if isinstance(self.scope['user'], AnonymousUser) or room is None:
+            # Refuse the connection if user not authenticated or room does not exist
             await self.close()
         else:
-            # Join room group if user is authenticated
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
-            await self.accept()
+            # Check if the user is a member of the room
+            if await self.is_member_of_room(room, self.scope['user']):
+                # Join room group if user is authenticated and a member of the room
+                await self.channel_layer.group_add(
+                    self.room_group_name,
+                    self.channel_name
+                )
+                await self.accept()
+            else:
+                # Close the connection if the user is not a member of the room
+                await self.close()
+
+    @database_sync_to_async
+    def get_room(self, room_id):
+        try:
+            return ChatRoom.objects.get(id=room_id)
+        except ChatRoom.DoesNotExist:
+            return None
+
+    @database_sync_to_async
+    def is_member_of_room(self, room, user):
+        return room.members.filter(id=user.id).exists()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

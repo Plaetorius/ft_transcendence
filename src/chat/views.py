@@ -63,16 +63,15 @@ class RoomId(APIView):
             )
 
 class RoomMessages(APIView):
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, room_id):
         """
-            GET on Messages 
+        GET on Messages
         """
         # Try to get the room from room_id
         try:
             room = ChatRoom.objects.get(id=room_id)
-        # If room doesn't exist, return error
         except ChatRoom.DoesNotExist:
             return Response(
                 {
@@ -80,18 +79,29 @@ class RoomMessages(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+        # Check if the current user is a member of the room
+        if not room.members.filter(id=request.user.id).exists():
+            return Response(
+                {
+                    'error': "You do not have permission to view messages in this room",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Get messages from the room
         messages = Message.objects.filter(room=room)
         serializer = MessageSerializer(messages, many=True, context={'request': request})
         return Response(
             {
-                'success': f"Messages retrieved",
+                'success': "Messages retrieved",
                 'messages': serializer.data,
             },
             status=status.HTTP_200_OK,
         )
 
 class RoomMembers(APIView):
-    permisssions_classes = [IsAuthenticated]
+    permisssion_classes = [IsAuthenticated]
 
     def get(self, request, room_id):
         """

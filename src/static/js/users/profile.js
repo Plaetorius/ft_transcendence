@@ -1,4 +1,5 @@
 function showProfile() {
+	//TODO remove console log 
 	console.log("Call Show Profile");
     fetch('/users/profile/', {
         method: 'GET',
@@ -9,9 +10,9 @@ function showProfile() {
     })
     .then(response => {
         if (!response.ok) {
+			// TODO hide error in the console
             throw new Error('User not found');
         }
-        // TODO hide error in the console
         return response.json();
     })
     .then(userData => {
@@ -21,6 +22,7 @@ function showProfile() {
 		loadAndDisplayFriends();
     })
     .catch(error => {
+		// OTDO Better handling
 		console.log(error);
 	});
 }
@@ -63,8 +65,6 @@ function setOnline() {
     };
 }
 
-// showProfile();
-
 const profilePopup = document.getElementById("profile-popup");
 
 // Open Profile Popup, handle buttons click
@@ -95,6 +95,7 @@ async function openProfileHandler(event) {
 	}
 }
 
+//TODO Only show relevant buttons: block if not blocked, unblock if blocked...
 function updateProfilePopup(user) {
     let titleElem = profilePopup.querySelector("h5");
     
