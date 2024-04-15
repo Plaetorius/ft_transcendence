@@ -139,6 +139,8 @@
 	border-radius: 1rem;
 	border: 2px black solid;
 	background-color: rgb(243, 211, 163);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 #chat-popup div.message p {
