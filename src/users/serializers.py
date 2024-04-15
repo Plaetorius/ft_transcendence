@@ -83,12 +83,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
-            raise serializers.ValidationError("A user with that username already exists.")
+            raise serializers.ValidationError("This username is already in use.")
         return value
 
     def validate_email(self, value):
         if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
-            raise serializers.ValidationError("A user with that email already exists.")
+            raise serializers.ValidationError("This email is already in use.")
         return value
 
     def update(self, instance, validated_data):
@@ -134,17 +134,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise ValidationError("Email already in use")
+            raise ValidationError("Email already in use.")
         return value
     
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
-            raise ValidationError("Username already in use")
+            raise ValidationError("Username already in use.")
         return value
 
     def validate(self, data):
         if data['password1'] != data['password2']:
-            raise ValidationError("Passwords must match")
+            raise ValidationError("Passwords must match!")
         return data
 
     def create(self, validated_data):

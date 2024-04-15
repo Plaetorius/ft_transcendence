@@ -1,7 +1,3 @@
-// TODO add message to confirm registration / login
-// TODO remove ? in url after logging in
-// TODO add return key listener for better UX
-
 // Utils
 function getCookie(name) {
     let cookieValue = null;
@@ -18,11 +14,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function handleErrors(errorData, errorElementId) {
-    let errorMessage = '';
-    Object.keys(errorData).forEach(key => {
-        errorMessage += `\n${key}: ${errorData[key].join(', ')}`;
-    });
+function handleErrors(data) {
+    let errorMessage = 'Error:\n';
+
+	for (const [key, value] of Object.entries(data)) {
+		errorMessage += value[0] + " ";
+	}
 	notification(errorMessage, 'cross', 'error');
 }
 
@@ -35,7 +32,6 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         password1: document.getElementById('registerPassword1').value,
         password2: document.getElementById('registerPassword2').value,
     };
-
     fetch('/users/register/', {
         method: 'POST',
         headers: {
@@ -46,16 +42,15 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     })
     .then(response => response.json())
     .then(data => {
+		console.log(data);
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
 			authenticated();
         } else {
-            console.log("No data access");
-            throw Error('No data access');
+			handleErrors(data);
         }
-    })
-    .catch(error => handleErrors(error, 'registrationErrors'));
+    });
 });
 
 // Login
@@ -76,15 +71,15 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     })
     .then(response => response.json())
     .then(data => {
+		console.log(data);
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
 			authenticated();
 		} else {
-            throw Error('No data access');
+			handleErrors(data);
         }
-    })
-    .catch(error => handleErrors(error, 'loginErrors'));
+    });
 });
 
 // Hide pages if user not authenticated

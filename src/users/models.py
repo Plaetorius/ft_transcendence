@@ -10,7 +10,7 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         error_messages={
-            'unique': "A user with that username already exists"
+            'unique': "This username is already in use."
         },
     )
     bio = models.TextField(max_length=500, blank=True, default='')
@@ -20,7 +20,7 @@ class User(AbstractUser):
         blank=False,
         null=False,
         error_messages={
-            'unique': "A user with that email already exists."
+            'unique': "This email is already in use."
         },
     )
     first_name = models.CharField(max_length=30, blank=True, default='')
