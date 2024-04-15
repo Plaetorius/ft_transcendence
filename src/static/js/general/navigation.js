@@ -57,8 +57,6 @@ function hide_popups() {
 	chatPopup.classList.remove("d-block");
 	profilePopup.classList.add("d-none");
 	profilePopup.classList.remove("d-block");
-	cardPopup.classList.add("d-none");
-	cardPopup.classList.remove("d-block");
 	settingsPopup.classList.add("d-none");
 	settingsPopup.classList.remove("d-block");
 }
@@ -66,11 +64,9 @@ function hide_popups() {
 function initializeListeners() {
 	document.addEventListener('click', openProfileHandler);
 	document.addEventListener('click', closeProfileHandle);
-
 }
 
 function removeListeners() {
     document.removeEventListener('click', openProfileHandler);
 	document.removeEventListener('click', closeProfileHandle);
-
 }
