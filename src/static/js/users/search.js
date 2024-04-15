@@ -1,6 +1,3 @@
-// TODO create functions for better error handling for friend add, friend remove,
-// block user, unblock user
-
 document.getElementById('userSearchForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const usernameInput = document.getElementById('searchUsername');
@@ -22,8 +19,7 @@ async function getUser(username) {
 		}
 	});
 	if (!response.ok) {
-		// TODO better handling
-		throw new Error('User not found');
+		notification("User not found", "cross", "error");
 	}
 	const userData = await response.json();
 	return userData;	
