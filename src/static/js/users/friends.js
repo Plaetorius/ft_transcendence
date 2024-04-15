@@ -16,7 +16,6 @@ function createActionButton(iconSrc, title, username) {
 function loadAndDisplayFriends() {
 	if (!user)
 		return ;
-	console.log(`Load and Display friends called`);
     getFriends().then(data => {        
         const friendshipsContainer = document.getElementById('friendships');
         
@@ -25,7 +24,6 @@ function loadAndDisplayFriends() {
         
         // Check if there are friends
         if (data.length === 0) {
-            console.log('No friendships found.'); // TODO useless OR handle better
             const noFriendsMessage = document.createElement('div');
             noFriendsMessage.textContent = 'No friends found.';
             friendshipsContainer.appendChild(noFriendsMessage);
@@ -45,7 +43,7 @@ function loadAndDisplayFriends() {
             colProfileDiv.classList.add('col-6', 'd-flex', 'justify-content-start', 'align-items-center');
 
             const img = document.createElement('img');
-            img.src = friend.profile_picture_url; // Assuming 'profile_picture_url' is correct
+            img.src = friend.profile_picture_url;
             img.draggable = false;
             img.classList.add('friendships-profile', 'open-profile');
 			img.dataset.username=friend.username;
@@ -62,15 +60,6 @@ function loadAndDisplayFriends() {
             const colActionDiv = document.createElement('div');
             colActionDiv.classList.add('col-6', 'd-flex', 'flex-row', 'justify-content-end');
 
-			// TODO hanndle better by using global vars in HTML template
-            // const chatButton = createActionButton('../static/icons/chat.png', 'Chat', friend.username);
-            // const removeFriendButton = createActionButton('../static/icons/remove-friend.png', 'Remove friend', friend.username);
-            // const blockButton = createActionButton('../static/icons/block.png', 'Block user', friend.username);
-
-            // colActionDiv.appendChild(chatButton);
-            // colActionDiv.appendChild(removeFriendButton);
-            // colActionDiv.appendChild(blockButton);
-
             // Append columns to the row
             rowDiv.appendChild(colProfileDiv);
             rowDiv.appendChild(colActionDiv);
@@ -79,7 +68,7 @@ function loadAndDisplayFriends() {
             friendshipsContainer.appendChild(rowDiv);
         });
     }).catch(error => {
-        console.log(`Failed to getFriends: ${error.error ? error.error : 'An error occurred'}`);
+        notification(`Failed to get friends`, 'cross', 'error');
     });
 }
 
@@ -97,16 +86,6 @@ function getFriends() {
 		}
 		return response.json();
 	});
-}
-
-
-function showFriends(friendsData) {
-	const friendshipsElem = document.getElementById('friendships');
-	friendsData.array.forEach(element => {
-		console.log(element);
-	});
-
-
 }
 
 function addFriend(username) {
