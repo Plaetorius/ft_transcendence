@@ -20,7 +20,7 @@ function getChatRoom(username) {
 
 	})
 	.catch(error => {
-		notification(error, '', 'error');
+		notification(error, 'cross', 'error');
 	});
 }
 
@@ -44,7 +44,7 @@ async function fetchRoomMessages(room_id) {
         // Return fetched messages
         return data.messages;
     } catch (error) {
-        notification(error, '', 'error');
+        notification(error, 'cross', 'error');
         return undefined;
     }
 }
@@ -64,7 +64,7 @@ async function fetchBlockedUsers() {
         const data = await response.json();
         return data.list;
     } catch (error) {
-		notification(error, '', 'error');
+		notification(error, 'cross', 'error');
         return undefined;
     }
 }
@@ -127,7 +127,6 @@ async function updateChatPopup(username) {
 }
 
 async function enterRoom(room_id, username) {
-	console.log("Enter room entered");
     blocked_list = await fetchBlockedUsers(room_id);
     const previous_messages = await fetchRoomMessages(room_id);
     if (previous_messages) {
@@ -141,11 +140,10 @@ async function enterRoom(room_id, username) {
     
     chatSocket.onopen = (e) => {
 		updateChatPopup(username);
-        console.log(`Web socket opened`);
     };
 
     chatSocket.onerror = (e) => {
-		notification("You are allowed in this room!", '', 'error');
+		notification("You are allowed in this room!", 'cross', 'error');
         chatSocket.close();
     }
 
@@ -170,10 +168,10 @@ function handleSendMessage(event) {
 	let messageElem = document.getElementById('message-input');
 	const message = messageElem.value.trim();
 	if (message.length == 0) {
-		console.log("Message can't be empty");
+		notification("Message can't be empty", 'cross', 'error');
 	} 
 	else if (message.length > 1024)
-		console.log('Message too long');
+		notification('Message too long', 'cross', 'error');
 	else {
 		messageElem.value = '';
 		if (chatSocket.readyState === WebSocket.OPEN) {
@@ -181,7 +179,7 @@ function handleSendMessage(event) {
 				message: message,
 			}));
 		} else {
-			notification("Problem connecting to the server. Please retry", '', 'error');
+			notification("Problem connecting to the server. Please retry", 'cross', 'error');
 		}
 	}
 }
