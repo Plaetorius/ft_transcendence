@@ -22,7 +22,6 @@ function notification(message, pathToIcon, type) {
     // Make the notification visible
     notificationContainer.classList.remove('d-none');
 
-    // Hide the notification after 3 seconds (3000 milliseconds)
     setTimeout(() => {
         notificationContainer.classList.add('d-none');
 		// Remove type if any

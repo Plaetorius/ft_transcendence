@@ -43,7 +43,6 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
     })
     .then(response => response.json())
     .then(data => {
-		console.log(data);
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
@@ -72,7 +71,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     })
     .then(response => response.json())
     .then(data => {
-		console.log(data);
         if (data.access) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);

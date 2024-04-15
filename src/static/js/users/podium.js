@@ -17,7 +17,7 @@ async function getPodium() {
         createPodium(users);
         createRankingList(users);
     } catch (error) {
-        console.error("Failed to fetch podium:", error);
+        notificationr(error, 'cross', 'error');
     }
 }
 
@@ -73,5 +73,3 @@ function createRankingList(users) {
         listContainer.appendChild(row);
     });
 }
-
-// Call getPodium to fetch data and create podium and ranking list
