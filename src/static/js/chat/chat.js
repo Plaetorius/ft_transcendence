@@ -1,8 +1,6 @@
 // TODO Add PONG invites system
-// TODO user must be able to access profile through the chat interface
 
 function getChatRoom(username) {
-	console.log("Clicked");
 	const cookie = getCookie('csrftoken');
 	fetch(`chat/room-id/${username}`, {
 		method: 'GET',
@@ -22,8 +20,7 @@ function getChatRoom(username) {
 
 	})
 	.catch(error => {
-		// TODO proper error handling
-		console.log(error);
+		notification(error, '', 'error');
 	});
 }
 
@@ -47,7 +44,7 @@ async function fetchRoomMessages(room_id) {
         // Return fetched messages
         return data.messages;
     } catch (error) {
-        console.log(error);
+        notification(error, '', 'error');
         return undefined;
     }
 }
@@ -67,6 +64,7 @@ async function fetchBlockedUsers() {
         const data = await response.json();
         return data.list;
     } catch (error) {
+		notification(error, '', 'error');
         return undefined;
     }
 }
@@ -77,7 +75,6 @@ function createDomMessage(message, sender) {
     let imgElem = document.createElement('img');
     let messageContentDiv = document.createElement('div');
     let pElem = document.createElement('p');
-    // let timeSpan = document.createElement('span');
 
     // Applying classes based on whether the message is sent or received
     messageDiv.classList.add('message', 'd-flex');
@@ -92,14 +89,11 @@ function createDomMessage(message, sender) {
     imgElem.draggable = false;
     
     pElem.innerHTML = message;
-    // TODO use real message time
-    // timeSpan.textContent = '16:20';
 
     profileDiv.appendChild(imgElem);
 
     messageContentDiv.className = 'message-content';
     messageContentDiv.appendChild(pElem);
-    // messageContentDiv.appendChild(timeSpan);
 
     messageDiv.appendChild(profileDiv);
     messageDiv.appendChild(messageContentDiv);
@@ -151,8 +145,7 @@ async function enterRoom(room_id, username) {
     };
 
     chatSocket.onerror = (e) => {
-        // TODO display propperly
-        console.log("Not allowed to enter that room");
+		notification("You are allowed in this room!", '', 'error');
         chatSocket.close();
     }
 
@@ -188,26 +181,14 @@ function handleSendMessage(event) {
 				message: message,
 			}));
 		} else {
-			console.error(`WebSocket is not open. State: ${chatSocket.readyState}`);
+			notification("Problem connecting to the server. Please retry", '', 'error');
 		}
 	}
 }
 
 const chatPopup = document.getElementById("chat-popup");
 
-// // Open for Chats
-// document.querySelectorAll(".open-chat").forEach(element => {
-// 	element.addEventListener('click', (event) => {
-// 		event.stopPropagation();
-// 		hide_popups();
-// 		chatPopup.classList.remove("d-none");
-// 		chatPopup.classList.add("d-block");
-// 		blur_background();
-// 		scrollToLastMessages();
-// 	});
-// });
-
-// // Close for Chats
+// Close for Chats
 function closeChatPopup(event) {
 	if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
 		event.stopPropagation();
