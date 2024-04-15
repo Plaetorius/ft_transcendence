@@ -1,7 +1,7 @@
 const newspaper_title = document.getElementById('newspaperTitle');
 newspaper_title.addEventListener('click', () => {
     if (newspaper_title.innerHTML == 'Boston Bugle')
-        console.log('Congrats for finding the easter egg :)'); 
+        notification('Congrats for finding the easter egg :)', 'check', 'success'); 
 });
 
 window.addEventListener('scroll', () => {
