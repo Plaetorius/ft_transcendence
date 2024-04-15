@@ -63,9 +63,7 @@ async function handleSettingsFormSubmit(e) {
 			throw new Error("Error in form");
 		}
 		const data = await response.json();
-		// await setupSettingsForm();
-		// showProfile();
-		await onPageReload();
+		onPageReload();
 		notification('Profile updated!', 'check', 'success');
 	} catch (error) {
 		notification('Error updating your profile!', 'cross', 'error');
@@ -114,11 +112,11 @@ async function getAllInfo() {
             }
         });
         if (!response.ok) {
-            throw new Error("Couldn't fetch all data");
+            throw new Error("Error fetching the data");
         }
         const userData = await response.json();
         return userData.data;
     } catch (error) {
-		notification("Error fetching data", 'cross', 'error');
+		notification(error, 'cross', 'error');
     }
 }
