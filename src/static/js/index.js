@@ -33,4 +33,6 @@ if (accessToken) {
 	getPodium();
 	setOnline();
 	setupSettingsForm();
+	actualiseFriendsSection();
+	setupSettingsForm();
 }
