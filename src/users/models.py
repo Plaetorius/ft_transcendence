@@ -2,19 +2,35 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.utils.deconstruct import deconstructible
+import os
 
+@deconstructible
+class UploadToPathAndRename(object):
+    def __init__(self, path):
+        self.sub_path = path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        filename = '{}.{}'.format(instance.username, ext)
+        return os.path.join(self.sub_path, filename)
 
 # User class, implementing AbstractUser for greater flex
 class User(AbstractUser):
     username = models.CharField(
-        max_length=150,
+        max_length=20,
         unique=True,
         error_messages={
             'unique': "This username is already in use."
         },
     )
     bio = models.TextField(max_length=500, blank=True, default='')
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, default="profile_pictures/default.jpg")
+    profile_picture = models.ImageField(
+		upload_to=UploadToPathAndRename('profile_pictures/'),
+		blank=True,
+		null=True,
+		default="profile_pictures/default.jpg"
+	)
     email = models.EmailField(
         unique=True,
         blank=False,
@@ -24,7 +40,7 @@ class User(AbstractUser):
         },
     )
     first_name = models.CharField(max_length=30, blank=True, default='')
-    last_name = models.CharField(max_length=150, blank=True, default='')
+    last_name = models.CharField(max_length=50, blank=True, default='')
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True) # already in model
