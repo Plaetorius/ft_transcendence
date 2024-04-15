@@ -32,6 +32,7 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
         password1: document.getElementById('registerPassword1').value,
         password2: document.getElementById('registerPassword2').value,
     };
+
     fetch('/users/register/', {
         method: 'POST',
         headers: {

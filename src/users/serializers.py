@@ -125,9 +125,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(write_only=True) #TODO add required
-    password2 = serializers.CharField(write_only=True)
-    username = serializers.CharField(validators=[username_validator])
+    password1 = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
+    username = serializers.CharField(required=True, validators=[username_validator])
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
