@@ -28,11 +28,16 @@ function unblur_background() {
 	header.classList.remove("blurry");
 }
 
-if (accessToken) {
-	showProfile();
-	getPodium();
-	setOnline();
-	setupSettingsForm();
-	actualiseFriendsSection();
-	setupSettingsForm();
+function onPageReload() {
+	if (accessToken) {
+		showProfile();
+		getPodium();
+		setOnline();
+		setupSettingsForm();
+		actualiseFriendsSection();
+		setupSettingsForm();
+	}
 }
+
+onPageReload();
+

@@ -1,6 +1,4 @@
 function showProfile() {
-	//TODO remove console log 
-	console.log("Call Show Profile");
     fetch('/users/profile/', {
         method: 'GET',
         headers: {
@@ -10,7 +8,6 @@ function showProfile() {
     })
     .then(response => {
         if (!response.ok) {
-			// TODO hide error in the console
             throw new Error('User not found');
         }
         return response.json();
@@ -22,8 +19,7 @@ function showProfile() {
 		loadAndDisplayFriends();
     })
     .catch(error => {
-		// OTDO Better handling
-		console.log(error);
+		notification(error, 'cross', 'error');
 	});
 }
 
@@ -47,12 +43,11 @@ function loadMyProfile() {
 let notificationSocket = undefined;
 
 function setOnline() {
-	console.log("Set online called");
     const token = localStorage.getItem('accessToken');
     notificationSocket = new WebSocket(`wss://${window.location.host}/ws/user-status/?token=${token}`);
 
     notificationSocket.onopen = (e) => {
-        console.log(`You are online`);
+		notification("You are online!", "check", "success");
     };
 
     notificationSocket.onmessage = (e) => {
@@ -61,8 +56,8 @@ function setOnline() {
     };
 
     notificationSocket.onclose = (e) => {
-        console.log(`You turned offline`);
-    };
+
+	};
 }
 
 const profilePopup = document.getElementById("profile-popup");
@@ -84,13 +79,12 @@ async function openProfileHandler(event) {
 		try {
 			// Await the getUser promise and then log the data
 			const userProfile = await getUser(targetElement.dataset.username);
-			console.log(`openProfileHandler`, userProfile);
 			updateProfilePopup(userProfile);
 			profilePopup.classList.remove("d-none");
 			profilePopup.classList.add("d-block");
 			blur_background();
 		} catch (error) {
-			console.error('Error fetching user data:', error);
+			notification("Error fetching user data", "cross", "error");
 		}
 	}
 }
@@ -125,9 +119,7 @@ function updateProfilePopup(user) {
 	const formattedDate = new Intl.DateTimeFormat('fr-FR', options).format(date);
 
     // Update other user information
-    // profilePopup.querySelector('#profile-popup-rank span.attribute + span').textContent = `#${user.rank}`; TODO implement
     profilePopup.querySelector('#profile-popup-elo').innerHTML = `<span class="attribute">Elo: </span>${user.elo}`;
-    // profilePopup.querySelector('#profile-popup-winrate span.attribute + span').textContent = user.winrate; // TODO implement
     profilePopup.querySelector('#profile-popup-joined').innerHTML = `<span class="attribute">Date Joined: </span>${formattedDate}`;
     profilePopup.querySelector('#profile-popup-bio').innerHTML = `<span class="attribute">Bio: </span>${user.bio}`;
 
@@ -170,7 +162,6 @@ function closeProfileHandle(event) {
 }
 
 function handleChatClick(username) {
-	console.log(`handleChatlick called to chat: ${username}`);
 	hide_popups();
 	getChatRoom(username);
 	chatPopup.classList.remove("d-none");
@@ -178,59 +169,51 @@ function handleChatClick(username) {
 	blur_background();
 	document.addEventListener('click', closeChatPopup);
 	scrollToLastMessages();
-
-
 }
 
 function handleAddFriendClick(username) {
-	console.log("Add friend clicked for user:", username);
-	
 	addFriend(username).then(data => {
-        console.log(`Friend added: ${data.success}`);
-		actualiseFriendsSection();
         // Handle success, update the UI accordingly
+		notification(`Friend added: ${data.success}`, "check", "success");
+		actualiseFriendsSection();
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
-        console.log(`Failed to add friend: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
+        notification(`Failed to add friend: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
     });
 }
 
 function handleRemoveFriendClick(username) {
-    console.log("Remove friend clicked for user:", username);
     removeFriend(username).then(data => {
-        console.log(`Friend removed: ${data.success}`);
-		actualiseFriendsSection();
         // Handle success, update the UI accordingly
+        notification(`Friend removed: ${data.success}`, "check", "success");
+		actualiseFriendsSection();
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
-        console.log(`Failed to remove friend: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
+        notification(`Failed to removed friend: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
     });
 }
 
-function handleBlockClick(username) {
-	console.log("Block clicked for user:", username);
-	
+function handleBlockClick(username) {	
 	block(username).then(data => {
-        console.log(`Block: ${data.success}`);
         // Handle success, update the UI accordingly
+        notification(`Blocked ${data.success}!`, "check", "cross");
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
-        console.log(`Failed to block: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
+        notification(`Failed to block: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
     });
 }
 
 function handleUnblockClick(username) {
-    console.log("Unblock clicked for user:", username);
     unblock(username).then(data => {
-        console.log(`Unblock: ${data.success}`);
+        notification(`Unblock: ${data.success}`, "check", "error");
         // Handle success, update the UI accordingly
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
-        console.log(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`);
         // Handle failure, perhaps show a message to the user
+        notificationSocket(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
     });
 }
 

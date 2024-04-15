@@ -5,16 +5,6 @@ from django.conf import settings
 from django.utils.deconstruct import deconstructible
 import os
 
-@deconstructible
-class UploadToPathAndRename(object):
-    def __init__(self, path):
-        self.sub_path = path
-
-    def __call__(self, instance, filename):
-        ext = filename.split('.')[-1]
-        filename = '{}.{}'.format(instance.username, ext)
-        return os.path.join(self.sub_path, filename)
-
 # User class, implementing AbstractUser for greater flex
 class User(AbstractUser):
     username = models.CharField(
@@ -26,7 +16,7 @@ class User(AbstractUser):
     )
     bio = models.TextField(max_length=500, blank=True, default='')
     profile_picture = models.ImageField(
-		upload_to=UploadToPathAndRename('profile_pictures/'),
+		upload_to='profile_pictures/',
 		blank=True,
 		null=True,
 		default="profile_pictures/default.jpg"

@@ -42,7 +42,6 @@ profilePictureInput.addEventListener('change', function() {
 });
 
 // Handle form submission
-
 async function handleSettingsFormSubmit(e) {
 	e.preventDefault();
 	const formData = new FormData(settingsForm);
@@ -51,15 +50,6 @@ async function handleSettingsFormSubmit(e) {
 		formData.append('profile_picture', profilePictureInput.files[0]);
 	}
 
-	for (let [key, value] of formData.entries()) {
-		if (value instanceof File) {
-			console.log(key, value.name, value.size, value.type);
-		} else {
-			console.log(key, value);
-		}
-	}
-
-	console.log('Fetching on PUT');
 	try {
 		const response = await fetch('/users/edit-user/', {
 			method: 'PATCH',
@@ -70,15 +60,15 @@ async function handleSettingsFormSubmit(e) {
 		});
 
 		if (!response.ok) {
-			throw new Error('Network response was not ok.');
+			throw new Error("Error in form");
 		}
 		const data = await response.json();
+		// await setupSettingsForm();
+		// showProfile();
+		await onPageReload();
 		notification('Profile updated!', 'check', 'success');
-		console.log('Success:', data);
-		await setupSettingsForm(); // Ensure this runs after the update
 	} catch (error) {
 		notification('Error updating your profile!', 'cross', 'error');
-		console.error('Error:', error);
 	}
 }
 
@@ -88,8 +78,8 @@ async function setupSettingsForm() {
     try {
         const userData = await getAllInfo();
         if (!userData) {
-            console.log('No user data received');
-            return;
+			notification("Error fetching user data", 'cross', 'error');
+			return;
         }
 
         // Set form field values
@@ -110,8 +100,8 @@ async function setupSettingsForm() {
         }
 
     } catch (error) {
-        console.error('Error setting up settings form:', error);
-    }
+		notification("Error in settings form", 'cross', 'error');
+	}
 }
 
 async function getAllInfo() {
@@ -129,6 +119,6 @@ async function getAllInfo() {
         const userData = await response.json();
         return userData.data;
     } catch (error) {
-        console.log(`Error: ${error}`);
+		notification("Error fetching data", 'cross', 'error');
     }
 }
