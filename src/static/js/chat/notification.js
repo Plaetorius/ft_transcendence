@@ -11,7 +11,7 @@ function notification(message, pathToIcon, type) {
     const notificationIcon = notificationContainer.querySelector('.col-3 img');
     const notificationMessage = notificationContainer.querySelector('.col-9');
 
-	// Add type if any
+	// Add type if any (types are: success, error)
 	if (type)
 		notificationContainer.classList.add(type);
 
