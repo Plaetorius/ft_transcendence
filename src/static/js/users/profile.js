@@ -146,7 +146,6 @@ function closeProfileHandle(event) {
 			if (button.matches('button.open-chat')) {
 				handleChatClick(username);
 			} else if (button.matches('button.add-friend')) {
-				console.log("Comparing");
 				handleAddFriendClick(username);
 			} else if (button.matches('button.remove-friend')) {
 				handleRemoveFriendClick(username);
@@ -218,6 +217,7 @@ function handleUnblockClick(username) {
 }
 
 function handleGotoProfileClick(username) {
+	//TODO implement me
 	console.log("GotoProfile clicked for user:", username);
 }
 
