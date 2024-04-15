@@ -40,19 +40,6 @@
 	border-radius: 0.3rem;
 }
 
-.history-perk-card {
-	height: 2.5rem;
-	overflow: hidden;
-	object-fit: cover;
-	object-position: center;
-	cursor: pointer;
-}
-
-.history-perk-card:hover {
-	transition: transform 0.3s ease;
-	transform: scale(1.5);
-}
-
 .history-row.history-win {
 	background-color: rgb(34, 75, 153);
 }
