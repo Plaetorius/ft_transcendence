@@ -69,8 +69,6 @@ class UserAllSerializer(serializers.ModelSerializer):
             return obj.profile_picture.url
         return None
 
-
-# TODO delete old profile picture
 class UserUpdateSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, validators=[validate_image])
     username = serializers.CharField(validators=[username_validator])
@@ -92,18 +90,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        print("\n============================\nAfter Validation\n")
-        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
-        print(F"Validated data: {validated_data}")
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.bio = validated_data.get('bio', instance.bio)
-        print("\n============================\nAfter Validation\n")
-        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
-
-
         if 'profile_picture' in validated_data:
             # Check if there's an existing profile picture
             if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
@@ -117,11 +108,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
             # Assign the new picture
             instance.profile_picture = validated_data['profile_picture']
-        print("\n============================\nBefore Saving instance\n")
-        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
-        print("\n============================\nSaving instance\n")
         instance.save()
-        print(f"instance.first_name: {instance.first_name}, instance.last_name: {instance.last_name}")
         return instance
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
