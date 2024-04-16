@@ -102,7 +102,7 @@ class UserLoginAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data
 
         refresh = RefreshToken.for_user(user)
         access_token = refresh.access_token
@@ -126,7 +126,7 @@ class UserLoginAPIView(generics.GenericAPIView):
             samesite='Lax',
             path='/',
         )
-        
+
         return response
 
 class UserSearchAPIView(generics.RetrieveAPIView):

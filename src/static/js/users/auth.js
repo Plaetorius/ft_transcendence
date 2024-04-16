@@ -26,7 +26,7 @@ function handleErrors(data) {
 // Registration
 document.getElementById('registerForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    const userData = {
+    const registerData = {
         username: document.getElementById('registerUsername').value,
         email: document.getElementById('registerEmail').value,
         password1: document.getElementById('registerPassword1').value,
@@ -39,18 +39,21 @@ document.getElementById('registerForm').addEventListener('submit', (e) => {
             'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken'),
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(registerData),
+		credentials: 'include',
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.access) {
-            localStorage.setItem('accessToken', data.access);
-            localStorage.setItem('refreshToken', data.refresh);
+	.then(response => {
+        if (response.ok) {
 			authenticated();
         } else {
-			handleErrors(data);
+            return response.json();
         }
-    });
+    })
+	.then(data => {
+		if (data) {
+			handleErrors(data);
+		}
+	});
 });
 
 // Login
@@ -68,17 +71,20 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
             'X-CSRFToken': getCookie('csrftoken'),
         },
         body: JSON.stringify(loginData),
+		credentials: 'include',
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.access) {
-            localStorage.setItem('accessToken', data.access);
-            localStorage.setItem('refreshToken', data.refresh);
+	.then(response => {
+        if (response.ok) {
 			authenticated();
-		} else {
-			handleErrors(data);
+        } else {
+            return response.json();
         }
-    });
+    })
+	.then(data => {
+		if (data) {
+			handleErrors(data);
+		}
+	});
 });
 
 // Hide pages if user not authenticated
