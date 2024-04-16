@@ -30,6 +30,15 @@ import os
 
 User = get_user_model()
 
+class CheckSessionView(APIView):
+	permissions_classes = [IsAuthenticated]
+
+	def get(self, request, *args, **kwargs):
+		return Response({
+			'status': 'Authenticated',
+			'user': request.user.username,
+		})
+
 # TODO Don't forget to escape bio before rendering it
 # I think that send_user_notification is useless
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
@@ -383,7 +392,10 @@ class OAuthCallbackView(generics.GenericAPIView):
 			'username': user.username,
 			'email': user.email,
 		}
-		return Response(res_data, status=status.HTTP_201_CREATED)
+		response = redirect('https://localhost/#home')
+		response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='Lax', secure=True)
+		response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='Lax', secure=True)
+		return response
 
 	def exchange_code_for_token(self, code):
 		token_url = 'https://api.intra.42.fr/oauth/token'

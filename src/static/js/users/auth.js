@@ -82,6 +82,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 });
 
 // Hide pages if user not authenticated
+//TODO uncomment me
 if (!accessToken) {
 	header.classList.add('d-none');
 	navigateToSection('register');
@@ -106,9 +107,19 @@ function authenticated() {
 document.getElementById("oauth-button").addEventListener("click", oauth_register);
 
 function oauth_register() {
-    // const clientId = 'u-s4t2ud-4cf77c385e4067e3dc3de603d034c7e441b48ba5f16b3d4e77063066fb464532';
-    // const redirectUri = encodeURIComponent('https://localhost/users/oauth2/callback');
-    // const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
 	const authUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-4cf77c385e4067e3dc3de603d034c7e441b48ba5f16b3d4e77063066fb464532&redirect_uri=https%3A%2F%2Flocalhost%2Fusers%2Foauth2%2Fcallback&response_type=code"
     window.location.href = authUrl;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUrl = window.location.href;
+    if (currentUrl.includes('/users/oauth2/callback')) {
+        // Check if there are any essential parameters or cookies you expect to be set
+        if (document.cookie.includes('access_token')) {
+            window.location.href = 'https://localhost/#home';
+        } else {
+            console.error('Token was not set properly.');
+            // Redirect to an error page or show an error message
+        }
+    }
+});

@@ -13,7 +13,8 @@ from .views import (
     UserListBlockedAPIView,
     UserEditAPIView,
 	UserPodiumAPIView,
-	OAuthCallbackView
+	OAuthCallbackView,
+	CheckSessionView
 )
 from .consumers import (
     UserNotification,
@@ -32,4 +33,5 @@ urlpatterns = [
     path('edit-user/', UserEditAPIView.as_view(), name="edit-user-api"),
 	path('podium/', UserPodiumAPIView.as_view(), name="podium-api"),
 	path('oauth2/callback', OAuthCallbackView.as_view(), name='oauth-callback'),
+	path('check-session/', CheckSessionView.as_view(), name='check-session'),
 ]
