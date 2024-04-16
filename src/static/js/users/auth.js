@@ -123,3 +123,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+function checkAuthentication() {
+    fetch('users/check-session/', {
+        method: 'GET',
+        credentials: 'include', // Ensure cookies are included with the request
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Not authenticated');
+    })
+    .then(data => {
+        console.log('User is authenticated:', data.user);
+        // Handle authenticated user
+    })
+    .catch(error => {
+        console.error('User is not authenticated:', error);
+        // Handle unauthenticated user, e.g., redirect to login
+		header.classList.add('d-none');
+		navigateToSection('register');
+    });
+}

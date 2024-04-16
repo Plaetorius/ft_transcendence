@@ -74,11 +74,25 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
-            res_data = {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }
-            return Response(res_data, status=status.HTTP_201_CREATED)
+
+            response = Response(stauts=status.HTTP_201_CREATED)
+            response.set_cookie(
+                'refresh_token', str(refresh),
+                httponly=True,
+                samesite='Lax',
+                secure=True,
+                max_age=3600*24*14,
+                path='/',
+            )
+            response.set_cookie(
+                'access_token', str(refresh.access_token),
+                httponly=True,
+                samesite='Lax',
+                secure=True,
+                max_age=3600*2,
+                path='/',
+            )
+            return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginAPIView(generics.GenericAPIView):
@@ -88,14 +102,32 @@ class UserLoginAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
+        user = serializer.validated_data['user']
+
         refresh = RefreshToken.for_user(user)
-        user_data = UserSerializer(user).data
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            'user': user_data,
+        access_token = refresh.access_token
+
+        response = Response({
+            'user': UserSerializer(user).data,
         }, status=status.HTTP_200_OK)
+
+        response.set_cookie(
+            'refresh_token', str(refresh),
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            path='/',
+        )
+
+        response.set_cookie(
+            'access_token', str(access_token),
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            path='/',
+        )
+        
+        return response
 
 class UserSearchAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
@@ -329,7 +361,6 @@ class UserEditAPIView(APIView):
             Updates the user's information
         """
         user = request.user
-        print(f"PATCH:\nUser: {user}\nData: {request.data}")
         serializer = UserUpdateSerializer(user, data=request.data, partial=True, context={'request': request})
 
         if serializer.is_valid():
