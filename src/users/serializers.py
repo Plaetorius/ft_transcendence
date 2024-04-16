@@ -86,8 +86,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_email(self, value):
-        if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
-            raise serializers.ValidationError("This email is already in use.")
+        if value.lower().endswith("@student.42.fr"):
+            raise serializers.ValidationError("Using '@student.42.fr' emails is not allowed for registration or updates.")
+        if User.objects.exclude(pk=self.instance.pk).filter(email__iexact=value).exists():
+            raise serializers.ValidationError("This email is already in use by another user.")
         return value
 
     def update(self, instance, validated_data):
@@ -123,7 +125,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password1', 'password2')
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        if value.lower().endswith("@student.42.fr"):
+            raise ValidationError("Registration using '@student.42.fr' emails is not allowed.")
+        if User.objects.filter(email__iexact=value).exists():
             raise ValidationError("This email is already in use.")
         return value
     
