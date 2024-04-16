@@ -2,6 +2,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
@@ -26,8 +28,10 @@ from .serializers import (
 import requests
 import os
 
-# TODO Don't forget to escape bio before rendering it
+User = get_user_model()
 
+# TODO Don't forget to escape bio before rendering it
+# I think that send_user_notification is useless
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
     """
         send_user_notification()
@@ -342,3 +346,58 @@ class UserPodiumAPIView(APIView):
         top_players = User.objects.order_by('-elo')
         serializer = UserSerializer(top_players, many=True)
         return Response(serializer.data)
+
+class OAuthCallbackView(generics.GenericAPIView):
+	serializer_class = UserSerializer
+
+	def get(self, request, *args, **kwargs):
+		code = request.GET.get('code')
+		token_response = self.exchange_code_for_token(code)
+		access_token = token_response.json().get('access_token')
+		if access_token is None:
+			return Response(
+				{
+                	"error": "Invalid API Call",
+            	},
+            	status=status.HTTP_400_BAD_REQUEST,
+			)
+		user_data = self.get_user_data(access_token)
+
+		user, created = User.objects.update_or_create(
+			username=user_data['login'],
+			defaults={
+				'email': user_data['email'],
+				# 'profile_picture': user_data['image']['link'], TODO GET the picture
+			}
+		)
+
+		if created:
+			user.set_unusable_password()
+			user.save()
+
+		refresh = RefreshToken.for_user(user)
+		#TODO implement the front
+		res_data = {
+			'refresh': str(refresh),
+			'access': str(refresh.access_token),
+			'username': user.username,
+			'email': user.email,
+		}
+		return Response(res_data, status=status.HTTP_201_CREATED)
+
+	def exchange_code_for_token(self, code):
+		token_url = 'https://api.intra.42.fr/oauth/token'
+		payload = {
+			'grant_type': 'authorization_code',
+			'client_id': settings.OAUTH_CLIENT_ID,
+			'client_secret': settings.OAUTH_CLIENT_SECRET,
+			'code': code,
+			'redirect_uri': settings.OAUTH_REDIRECT_URI,
+		}
+		return requests.post(token_url, data=payload)
+
+	def get_user_data(self, access_token):
+		user_info_url = 'https://api.intra.42.fr/v2/me'
+		headers = {'Authorization': f'Bearer {access_token}'}
+		response = requests.get(user_info_url, headers=headers)
+		return response.json()

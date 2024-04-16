@@ -29,6 +29,13 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
+#TODO check that any sensible data has been put in the .env
+#TODO add OAUTH
+OAUTH_CLIENT_ID = os.getenv("OAUTH_CLIENT_ID")
+OAUTH_CLIENT_SECRET = os.getenv("OAUTH_CLIENT_SECRET")
+OAUTH_REDIRECT_URI = os.getenv("OAUTH_REDIRECT_URI", "")
+
+
 
 #TODO check if everything is on HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -34,11 +34,28 @@ class User(AbstractUser):
     elo = models.IntegerField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True) # already in model
-    oauth = models.BooleanField(default=False)
-
+    oauth_cred = models.OneToOneField(
+		'OAuthCred', 
+		on_delete=models.CASCADE, 
+		null=True, 
+		blank=True,
+		related_name='user_profile',
+	)
 
     def __str__(self):
         return f"User: {self.username} Id: {self.id}"
+
+# OAuth Credentials Class
+class OAuthCred(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='oauth_credentials')
+	provider = models.CharField(max_length=50)
+	uid = models.CharField(max_length=255)
+	access_token = models.CharField(max_length=255)
+	refresh_token = models.CharField(max_length=255, null=True, blank=True)
+	expires_in = models.DateTimeField(null=True, blank=True)
+
+	class Meta:
+		unique_together = ['provider', 'uid']
 
 # Match history Class
 class MatchHistory(models.Model):
