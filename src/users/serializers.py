@@ -124,12 +124,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise ValidationError("Email already in use.")
+            raise ValidationError("This email is already in use.")
         return value
     
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
-            raise ValidationError("Username already in use.")
+            raise ValidationError("This username is already in use.")
         return value
 
     def validate(self, data):
