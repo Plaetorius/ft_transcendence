@@ -8,6 +8,7 @@ from django.db.models import Q
 from .models import User, Friendship, BlockedUser
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from users.authentication import CookieJWTAuthentication
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -31,13 +32,16 @@ import os
 User = get_user_model()
 
 class CheckSessionView(APIView):
-	permissions_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-	def get(self, request, *args, **kwargs):
-		return Response({
-			'status': 'Authenticated',
-			'user': request.user.username,
-		})
+    def get(self, request, *args, **kwargs):
+        print(f"==========================\nRequest User:\n{request.user}")
+        username = request.user.get_username()
+        return Response({
+            'status': 'Authenticated',
+            'user': username,
+        })
 
 # TODO Don't forget to escape bio before rendering it
 # I think that send_user_notification is useless
@@ -77,7 +81,8 @@ class UserRegistrationAPIView(generics.CreateAPIView):
 
             response = Response(stauts=status.HTTP_201_CREATED)
             response.set_cookie(
-                'refresh_token', str(refresh),
+                'refresh_token',
+                str(refresh),
                 httponly=True,
                 samesite='Lax',
                 secure=True,
@@ -85,7 +90,8 @@ class UserRegistrationAPIView(generics.CreateAPIView):
                 path='/',
             )
             response.set_cookie(
-                'access_token', str(refresh.access_token),
+                'access_token',
+                str(refresh.access_token),
                 httponly=True,
                 samesite='Lax',
                 secure=True,
@@ -112,18 +118,22 @@ class UserLoginAPIView(generics.GenericAPIView):
         }, status=status.HTTP_200_OK)
 
         response.set_cookie(
-            'refresh_token', str(refresh),
+            'refresh_token',
+            str(refresh),
             httponly=True,
-            secure=True,
             samesite='Lax',
+            secure=True,
+            max_age=3600*24*14,
             path='/',
         )
 
         response.set_cookie(
-            'access_token', str(access_token),
+            'access_token',
+            str(access_token),
             httponly=True,
-            secure=True,
             samesite='Lax',
+            secure=True,
+            max_age=3600*2,
             path='/',
         )
 
@@ -338,12 +348,13 @@ class UserListBlockedAPIView(APIView):
         )
 
 class UserEditAPIView(APIView):
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         """
             Returns all the data (even sensitive) from the user emitting the request
         """
+        print(f"Request User: f{request.user}")
         serializer = UserAllSerializer(request.user)
         return Response(
             {
@@ -424,8 +435,24 @@ class OAuthCallbackView(generics.GenericAPIView):
 			'email': user.email,
 		}
 		response = redirect('https://localhost/#home')
-		response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='Lax', secure=True)
-		response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='Lax', secure=True)
+		response.set_cookie(
+            'refresh_token',
+            str(refresh),
+            httponly=True,
+            samesite='Lax',
+            secure=True,
+            max_age=3600*24*14,
+            path='/',
+        )
+		response.set_cookie(
+            'access_token',
+            str(refresh.access_token),
+            httponly=True,
+            samesite='Lax',
+            secure=True,
+            max_age=3600*2,
+            path='/',
+        )
 		return response
 
 	def exchange_code_for_token(self, code):

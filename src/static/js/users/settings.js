@@ -105,11 +105,12 @@ async function setupSettingsForm() {
 async function getAllInfo() {
     try {
         const response = await fetch(`/users/edit-user/`, {
-            method: 'GET',
-            headers: {
-				'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            }
+			method: 'GET',
+            // headers: {
+			// 	'Content-Type': 'application/json',
+            //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            // },
+            credentials: 'include',
         });
         if (!response.ok) {
             throw new Error("Error fetching the data");

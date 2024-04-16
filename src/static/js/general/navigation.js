@@ -42,7 +42,7 @@ function setActiveSection(sectionId) {
 			getPodium();
 		}
 		else if (sectionId === 'my-profile') {
-			setupSettingsForm();
+			// setupSettingsForm();
 		}
     } else {
 		// Fallback to default section if the specified ID is not found

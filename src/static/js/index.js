@@ -29,13 +29,13 @@ function unblur_background() {
 }
 
 function onPageReload() {
-	if (accessToken) {
+	console.log("call");
+	if (checkAuthentication()) {
 		showProfile();
 		getPodium();
 		setOnline();
-		setupSettingsForm();
+		// setupSettingsForm();
 		actualiseFriendsSection();
-		setupSettingsForm();
 	}
 }
 

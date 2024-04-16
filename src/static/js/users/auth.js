@@ -89,10 +89,12 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 
 // Hide pages if user not authenticated
 //TODO uncomment me
-if (!accessToken) {
-	header.classList.add('d-none');
-	navigateToSection('register');
-}
+// if (!checkAuthentication()) {
+// 	header.classList.add('d-none');
+// 	navigateToSection('register');
+// }
+
+checkAuthentication();
 
 document.getElementById('already-account').addEventListener('click', () => {
 	navigateToSection('login');
@@ -120,20 +122,14 @@ function oauth_register() {
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
     if (currentUrl.includes('/users/oauth2/callback')) {
-        // Check if there are any essential parameters or cookies you expect to be set
-        if (document.cookie.includes('access_token')) {
-            window.location.href = 'https://localhost/#home';
-        } else {
-            console.error('Token was not set properly.');
-            // Redirect to an error page or show an error message
-        }
+        window.location.href = 'https://localhost/#home';
     }
 });
 
 function checkAuthentication() {
-    fetch('users/check-session/', {
+    fetch('/users/check-session/', {
         method: 'GET',
-        credentials: 'include', // Ensure cookies are included with the request
+        credentials: 'include',
     })
     .then(response => {
         if (response.ok) {
@@ -143,12 +139,12 @@ function checkAuthentication() {
     })
     .then(data => {
         console.log('User is authenticated:', data.user);
-        // Handle authenticated user
+		return true;
     })
     .catch(error => {
         console.error('User is not authenticated:', error);
-        // Handle unauthenticated user, e.g., redirect to login
 		header.classList.add('d-none');
 		navigateToSection('register');
+		return false;
     });
 }
