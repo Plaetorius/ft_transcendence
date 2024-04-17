@@ -86,7 +86,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_email(self, value):
-        if value.lower().endswith("@student.42.fr"):
+        oauth_linked = hasattr(self.instance, 'oauth_credentials') and self.instance.oauth_credentials is not None
+        if not oauth_linked and value.lower().endswith("@student.42.fr"):
             raise serializers.ValidationError("Using '@student.42.fr' emails is not allowed for registration or updates.")
         if User.objects.exclude(pk=self.instance.pk).filter(email__iexact=value).exists():
             raise serializers.ValidationError("This email is already in use by another user.")
@@ -101,16 +102,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
         if 'profile_picture' in validated_data:
-            # Check if there's an existing profile picture
             if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
-                # Delete the old picture file from storage
-                try:
-                    picture_path = instance.profile_picture.path
-                    if default_storage.exists(picture_path):
-                        default_storage.delete(picture_path)
-                except Exception as e:
-                    print(f"Error deleting old profile picture: {e}")
-
+                if not instance.profile_picture.name.endswith("default.png"):
+                    try:
+                        picture_path = instance.profile_picture.path
+                        if default_storage.exists(picture_path):
+                            default_storage.delete(picture_path)
+                    except Exception as e:
+                        print(f"Error deleting old profile picture: {e}")
             # Assign the new picture
             instance.profile_picture = validated_data['profile_picture']
         instance.save()
@@ -125,7 +124,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password1', 'password2')
 
     def validate_email(self, value):
-        if value.lower().endswith("@student.42.fr"):
+        oauth_linked = hasattr(self.instance, 'oauth_credentials') and self.instance.oauth_credentials is not None
+        if not oauth_linked and value.lower().endswith("@student.42.fr"):
             raise ValidationError("Registration using '@student.42.fr' emails is not allowed.")
         if User.objects.filter(email__iexact=value).exists():
             raise ValidationError("This email is already in use.")
