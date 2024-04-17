@@ -208,8 +208,8 @@ function handleBlockClick(username) {
 
 function handleUnblockClick(username) {
     unblock(username).then(data => {
-        notification(`Unblock: ${data.success}`, "check", "error");
         // Handle success, update the UI accordingly
+        notification(`Unblock: ${data.success}`, "check", "error");
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
         // Handle failure, perhaps show a message to the user
