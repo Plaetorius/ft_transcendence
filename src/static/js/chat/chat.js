@@ -6,8 +6,8 @@ function getChatRoom(username) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-		}
+		},
+		credentials: 'include',
 	})
 	.then(response => {
 		if (!response.ok) {
@@ -33,9 +33,9 @@ async function fetchRoomMessages(room_id) {
         const response = await fetch(`/chat/room-messages/${room_id}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            }
+				'Content-Type': 'application/json',
+			},
+			credentials: 'include',
         });
         if (!response.ok) {
             throw new Error('Message fetching failed');
@@ -54,9 +54,9 @@ async function fetchBlockedUsers() {
         const response = await fetch(`/users/list-blocked/`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            }
+				'Content-Type': 'application/json',
+			},
+			credentials: 'include',
         });
         if (!response.ok) {
             throw new Error("Blocked list fetching failed");

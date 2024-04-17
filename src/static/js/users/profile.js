@@ -3,8 +3,8 @@ function showProfile() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
+		},
+		credentials: 'include',
     })
     .then(response => {
         if (!response.ok) {

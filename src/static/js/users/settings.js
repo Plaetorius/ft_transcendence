@@ -53,9 +53,7 @@ async function handleSettingsFormSubmit(e) {
 	try {
 		const response = await fetch('/users/edit-user/', {
 			method: 'PATCH',
-			headers: {
-				'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-			},
+			credentials: 'include',
 			body: formData,
 		});
 
@@ -106,10 +104,6 @@ async function getAllInfo() {
     try {
         const response = await fetch(`/users/edit-user/`, {
 			method: 'GET',
-            // headers: {
-			// 	'Content-Type': 'application/json',
-            //     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            // },
             credentials: 'include',
         });
         if (!response.ok) {

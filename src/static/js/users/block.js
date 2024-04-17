@@ -1,11 +1,11 @@
-
 function block(username) {
 	return fetch(`/users/block/${username}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
+		},
+		credentials: 'include',
+
 	})
 	.then(response => {
 		if (!response.ok) {
@@ -20,8 +20,8 @@ function unblock(username) {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
+		},
+		credentials: 'include',
 	})
 	.then(response => {
 		if (!response.ok) {

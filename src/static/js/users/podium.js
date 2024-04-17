@@ -4,8 +4,8 @@ async function getPodium() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            }
+			},
+			credentials: 'include',
         });
 
         if (!response.ok) {

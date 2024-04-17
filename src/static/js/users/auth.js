@@ -87,13 +87,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 	});
 });
 
-// Hide pages if user not authenticated
-//TODO uncomment me
-// if (!checkAuthentication()) {
-// 	header.classList.add('d-none');
-// 	navigateToSection('register');
-// }
-
 checkAuthentication();
 
 document.getElementById('already-account').addEventListener('click', () => {
@@ -126,25 +119,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function checkAuthentication() {
-    fetch('/users/check-session/', {
-        method: 'GET',
-        credentials: 'include',
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
+async function checkAuthentication() {
+    try {
+        const response = await fetch('/users/check-session/', {
+            method: 'GET',
+            credentials: 'include',  
+        });
+
+        if (!response.ok) {
+            throw new Error('Not authenticated');
         }
-        throw new Error('Not authenticated');
-    })
-    .then(data => {
+
+        const data = await response.json();
         console.log('User is authenticated:', data.user);
-		return true;
-    })
-    .catch(error => {
+        return true;
+    } catch (error) {
         console.error('User is not authenticated:', error);
-		header.classList.add('d-none');
-		navigateToSection('register');
-		return false;
-    });
+        header.classList.add('d-none');
+        navigateToSection('register');
+        return false;
+    }
 }

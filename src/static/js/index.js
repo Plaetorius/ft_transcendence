@@ -28,14 +28,18 @@ function unblur_background() {
 	header.classList.remove("blurry");
 }
 
-function onPageReload() {
-	console.log("call");
-	if (checkAuthentication()) {
+async function onPageReload() {
+	const isAuthenticated = await checkAuthentication();
+	if (isAuthenticated) {
+		console.log("call");
 		showProfile();
 		getPodium();
 		setOnline();
-		// setupSettingsForm();
+		setupSettingsForm();
 		actualiseFriendsSection();
+	} else {
+		header.classList.add('d-none');
+		navigateToSection('register');
 	}
 }
 

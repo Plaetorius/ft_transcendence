@@ -15,8 +15,8 @@ async function getUser(username) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-		}
+		},
+		credentials: 'include',
 	});
 	if (!response.ok) {
 		notification("User not found", "cross", "error");

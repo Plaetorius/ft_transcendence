@@ -77,8 +77,8 @@ function getFriends() {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
+		},
+		credentials: 'include',
 	})
 	.then(response => {
 		if (!response.ok) {
@@ -96,8 +96,8 @@ function addFriend(username) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
+		},
+		credentials: 'include',
 	})
 	.then(response => {
 		if (!response.ok) {
@@ -115,8 +115,8 @@ function removeFriend(username) {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-		}
+		},
+		credentials: 'include',
 	})
 	.then(response => {
 		if (!response.ok) {
