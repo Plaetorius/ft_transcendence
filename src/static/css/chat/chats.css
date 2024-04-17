@@ -1,73 +1,12 @@
-#chats {
+#news {
 	padding-left: 20vw;
 	padding-right: 20vw;
 }
 
-#chats h1 {
+#news h1 {
 	text-align: center;
 	font-size: 3.5rem;
 	font-family: 'Belgrano-Regular';
-}
-
-#chats .chats-profile {
-	height: 8vh;
-	width: 8vh;
-	overflow: hidden;
-	object-fit: cover;
-    object-position: center;
-	border-radius: 15%;
-	cursor: pointer;
-	margin-left: 0.5rem;
-	font-size: 2rem;
-	font-family: 'Mouse-Memoirs';
-}
-
-#chats span.chats-profile {
-	margin-left: 1rem;
-	height: auto;
-	width: auto;
-}
-
-#chats img.chats-profile:hover {
-	transition: transform 0.3s ease;
-	transform: scale(1.2);
-}
-
-#chats span.chats-profile {
-	margin-left: 1rem;
-	height: auto;
-	width: auto;
-}
-
-#chats span.chats-profile:hover {
-	transition: transform 0.3s ease;
-	transform: scale(1.2);
-}
-
-#chats .profile-action-button {
-	width: 6vh;
-	height: 6vh;
-	background: none;
-	border: none;
-}
-
-#chats .profile-action-button img {
-	width: 4vh;
-	height: 4vh;
-	overflow: hidden;
-	object-fit: cover;
-    object-position: center;
-}
-
-#chats .profile-action-button:hover {
-	transition: transform 0.3s ease;
-	transform: scale(1.2);
-}
-
-#chats .all-chats .row {
-	border-bottom: 0.1rem black solid;
-	padding-bottom: 1rem;
-	padding-top: 1rem;
 }
 
 #chat-popup {

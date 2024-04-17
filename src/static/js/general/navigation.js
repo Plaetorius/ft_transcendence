@@ -11,7 +11,7 @@ document.getElementById("header-home").onclick = () => navigateToSection("home")
 document.getElementById("header-games").onclick = () => navigateToSection("games");
 document.getElementById("header-friends").onclick = () => navigateToSection("friends");
 document.getElementById("header-podium").onclick = () => navigateToSection("podium");
-document.getElementById("header-chats").onclick = () => navigateToSection("chats");
+document.getElementById("header-news").onclick = () => navigateToSection("news");
 document.getElementById("header-profile").onclick = () => navigateToSection("profile");
 
 // Listen for popstate event
@@ -42,7 +42,7 @@ function setActiveSection(sectionId) {
 			getPodium();
 		}
 		else if (sectionId === 'profile') {
-			// setupSettingsForm();
+			setupSettingsForm();
 		}
     } else {
 		// Fallback to default section if the specified ID is not found
