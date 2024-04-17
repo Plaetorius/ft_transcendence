@@ -134,8 +134,7 @@ async function enterRoom(room_id, username) {
             createDomMessage(message.content, {'username': message.sender_username, 'profile_picture': message.sender_pp_url});
         });
     }
-    const token = localStorage.getItem('accessToken');
-    const address = `wss://${window.location.host}/ws/dm/${room_id}/?token=${token}`;
+    const address = `wss://${window.location.host}/ws/dm/${room_id}/`;
     chatSocket = new WebSocket(address);
     
     chatSocket.onopen = (e) => {

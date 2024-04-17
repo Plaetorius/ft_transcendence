@@ -9,14 +9,6 @@ from .views import (
     RoomMembers,
 )
 
-# Move in an ASGI file
-application =  ProtocolTypeRouter({
-    'websocket': URLRouter([
-        path('ws/chat/<str:username>/', ChatConsumer.as_asgi()),
-    ]),
-})
-
-
 urlpatterns = [
     path('room-id/<str:username>/', RoomId.as_view(), name="room-id"),
     path('room-messages/<int:room_id>/', RoomMessages.as_view(), name="room-messages"),

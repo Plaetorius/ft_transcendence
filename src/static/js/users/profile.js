@@ -44,8 +44,7 @@ function loadMyProfile() {
 let notificationSocket = undefined;
 
 function setOnline() {
-    const token = localStorage.getItem('accessToken');
-    notificationSocket = new WebSocket(`wss://${window.location.host}/ws/user-status/?token=${token}`);
+    notificationSocket = new WebSocket(`wss://${window.location.host}/ws/user-status/`);
 
     notificationSocket.onopen = (e) => {
 		notification("You are online!", "check", "success");
