@@ -143,7 +143,7 @@ async function enterRoom(room_id, username) {
     };
 
     chatSocket.onerror = (e) => {
-		notification("You are allowed in this room!", 'cross', 'error');
+		notification("You are not allowed in this room!", 'cross', 'error');
         chatSocket.close();
     }
 
