@@ -1,9 +1,9 @@
-#my-profile {
+#profile {
 	padding-left: 20vw;
 	padding-right: 20vw;
 }
 
-#my-profile #my-profile-picture {
+#profile #profile-picture {
 	height: 14vh;
 	width: 14vh;
 	overflow: hidden;
@@ -12,48 +12,48 @@
 	border-radius: 5%;
 }
 
-#my-profile #my-profile-username {
+#profile #profile-username {
 	margin-top: 0.6rem;
 	font-size: 1.5rem;
 	font-family: 'Belgrano-Regular';
 }
 
-#my-profile-header span {
+#profile-header span {
 	font-weight: bold;
 }
 
-#my-profile-header p {
+#profile-header p {
 	margin: 0;
 	padding: 0;
 }
 
-#my-profile-header #my-profile-rank {
+#profile-header #profile-rank {
 	margin-top: -0.5rem;	
 }
 
-#my-profile-header #my-profile-elo {
+#profile-header #profile-elo {
 	margin-top: -0.3rem;	
 }
 
-#my-profile-header #my-profile-winrate {
+#profile-header #profile-winrate {
 	margin-top: -0.3rem;
 }
 
-#my-profile-header #my-profile-joined {
+#profile-header #profile-joined {
 	margin-top: -0.3rem;
 }
 
-#my-profile-history {
+#profile-history {
 	margin-top: 2vh;
 }
 
-#my-profile-history h4 {
+#profile-history h4 {
 	font-family: 'Belgrano-Regular';
 	font-size: 3rem;
 	text-align: center;
 }
 
-#my-profile span.online-status {
+#profile span.online-status {
 	height: 2vh;
 	width: 2vh;
 	margin-right: 0.3rem;

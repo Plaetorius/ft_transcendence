@@ -64,18 +64,18 @@
 	margin-left: -0.3rem;
 }
 
-#my-profile button {
+#profile button {
 	border: none;
 	background: none;
 }
 
-#my-profile button img {
+#profile button img {
 	height: 4vh;
 	width: 4vh;
 	margin: 1vh;
 }
 
-#my-profile button img:hover {
+#profile button img:hover {
 	transition: transform 0.3s ease;
 	transform: scale(1.3);
 }

@@ -12,7 +12,7 @@ document.getElementById("header-games").onclick = () => navigateToSection("games
 document.getElementById("header-friends").onclick = () => navigateToSection("friends");
 document.getElementById("header-podium").onclick = () => navigateToSection("podium");
 document.getElementById("header-chats").onclick = () => navigateToSection("chats");
-document.getElementById("header-profile").onclick = () => navigateToSection("my-profile");
+document.getElementById("header-profile").onclick = () => navigateToSection("profile");
 
 // Listen for popstate event
 window.addEventListener('popstate', (event) => {
@@ -41,7 +41,7 @@ function setActiveSection(sectionId) {
 		else if (sectionId === 'podium') {
 			getPodium();
 		}
-		else if (sectionId === 'my-profile') {
+		else if (sectionId === 'profile') {
 			// setupSettingsForm();
 		}
     } else {
