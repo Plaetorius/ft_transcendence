@@ -5,7 +5,7 @@ from django.views import View
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from .models import User, Friendship, BlockedUser
+from .models import User, Friendship, BlockedUser, OAuthCred
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from users.authentication import CookieJWTAuthentication
@@ -372,9 +372,6 @@ class UserEditAPIView(APIView):
             status=status.HTTP_200_OK,
         )
     
-    # TODO add sanitization
-    # TODO if OAuth, user can't modify email
-    # TODO add password reset
     def patch(self, request):
         """
             Updates the user's information
@@ -430,20 +427,21 @@ class OAuthCallbackView(generics.GenericAPIView):
 			}
 		)
 
-		oauth_cred, _ = OAuthCred.objects.update_or_create(
-            user=user,
-            defaults={
-                'provider': '42',  # Assuming '42' as the provider name
-                'uid': user_data['id'],  # Assuming 'id' is part of user_data
-                'access_token': access_token,
-                'refresh_token': token_response.json().get('refresh_token'),
-                'expires_in': token_response.json().get('expires_in')  # Convert to appropriate datetime if necessary
-            }
-        )
-
 		if created:
 			user.set_unusable_password()
 			user.save()
+
+		oauth_cred, _ = OAuthCred.objects.update_or_create(
+            user=user,
+            defaults={
+                'provider': '42', 
+                'uid': user_data['id'], 
+                'access_token': access_token,
+                'refresh_token': token_response.json().get('refresh_token'),
+				#TODO add expire?
+            }
+        )
+
 
 		refresh = RefreshToken.for_user(user)
 		#TODO implement the front
