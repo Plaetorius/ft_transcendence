@@ -84,7 +84,6 @@ async function setupSettingsForm() {
         document.getElementById('settings-first-name').value = userData.first_name || '';
         document.getElementById('settings-last-name').value = userData.last_name || '';
         document.getElementById('settings-bio').value = userData.bio || '';
-        document.getElementById('settings-2fa').checked = userData.two_fa_enabled || false;
 
         // Set profile picture preview
         const profilePicturePreview = document.getElementById('profile-picture-preview');
