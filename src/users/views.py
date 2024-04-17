@@ -363,7 +363,6 @@ class UserEditAPIView(APIView):
         """
             Returns all the data (even sensitive) from the user emitting the request
         """
-        print(f"Request User: f{request.user}")
         serializer = UserAllSerializer(request.user)
         return Response(
             {
@@ -428,9 +427,19 @@ class OAuthCallbackView(generics.GenericAPIView):
 			username=user_data['login'],
 			defaults={
 				'email': user_data['email'],
-				# 'profile_picture': user_data['image']['link'], TODO GET the picture
 			}
 		)
+
+		oauth_cred, _ = OAuthCred.objects.update_or_create(
+            user=user,
+            defaults={
+                'provider': '42',  # Assuming '42' as the provider name
+                'uid': user_data['id'],  # Assuming 'id' is part of user_data
+                'access_token': access_token,
+                'refresh_token': token_response.json().get('refresh_token'),
+                'expires_in': token_response.json().get('expires_in')  # Convert to appropriate datetime if necessary
+            }
+        )
 
 		if created:
 			user.set_unusable_password()
