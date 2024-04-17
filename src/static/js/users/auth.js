@@ -87,8 +87,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
 	});
 });
 
-checkAuthentication();
-
 document.getElementById('already-account').addEventListener('click', () => {
 	navigateToSection('login');
 });
