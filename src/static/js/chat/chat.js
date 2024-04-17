@@ -144,6 +144,7 @@ async function enterRoom(room_id, username) {
 
     chatSocket.onerror = (e) => {
 		notification("You are not allowed in this room!", 'cross', 'error');
+		removeChatDisplayAndListeners();
         chatSocket.close();
     }
 
@@ -190,16 +191,20 @@ const chatPopup = document.getElementById("chat-popup");
 function closeChatPopup(event) {
 	if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
 		event.stopPropagation();
-		chatPopup.classList.add("d-none");
-		chatPopup.classList.remove("d-block");
-		unblur_background();
-		document.removeEventListener('click', closeChatPopup);
-		document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
-		document.getElementById("message-input").removeEventListener('keydown', handleSendMessage);
-		document.getElementById('messages').innerHTML = '';
-		clearChatHeader();
+		removeChatDisplayAndListeners();
 		chatSocket.close();
 	}
+}
+
+function removeChatDisplayAndListeners() {
+	chatPopup.classList.add("d-none");
+	chatPopup.classList.remove("d-block");
+	unblur_background();
+	document.removeEventListener('click', closeChatPopup);
+	document.getElementById("send-message-btn").removeEventListener('click', handleSendMessage);
+	document.getElementById("message-input").removeEventListener('keydown', handleSendMessage);
+	document.getElementById('messages').innerHTML = '';
+	clearChatHeader();
 }
 
 function scrollToLastMessages() {
