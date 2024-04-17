@@ -18,206 +18,12 @@ from django.contrib.auth.models import ( AbstractUser )
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from threading import Thread, Lock
-
-from enum import Enum
-
 from .classes.player import Player
-from .classes.objects import Shape, ObjectAbstract, ObjectTerrain, ObjectPaddle, ObjectBall
-from .classes.math_vec2 import vec2
+from .classes.party import Party
 
-def get_time_millis():
-	return int(round(time.time() * 1000))
-
-##
-##	CLASS PARTY
-##
-
-# COLLISIONS CODE
-class Hit(Enum):
-	NO_HIT = 0
-	IN_BOUND = 1
-	OUT_BOUND = 2
-
-def collide_ray_to_box(ray_start, ray_dir, box_pos, box_size) -> tuple[Hit, float]:
-	''' Return: type of collision (NO_HIT, IN_BOUND, OUT_BOUND), t (float)(infinite if no hit) '''
-	t1 = (ray_start - box_pos - (box_size / 2)) / ray_dir # calculate lower bound of intersection
-	t2 = (ray_start - box_pos + (box_size / 2)) / ray_dir # calculate upper bound of intersection
-	
-	# get the min offset percentage to reach the box border
-	tmin = math.max(math.min(t1.x, t2.x), math.min(t1.y, t2.y))
-	tmax = math.min(math.max(t1.x, t2.x), math.max(t1.y, t2.y))
-	
-	# check where the box as been hit
-	if (tmin > tmax):
-		return Hit.NO_HIT, math.inf
-	if (tmin < 0):
-		return Hit.IN_BOUND, tmax
-	return Hit.OUT_BOUND, tmin
-
-def collide_box_to_box(obj1, obj2):
-	
-	pass
-
-def collide_objects(objects: list[ObjectAbstract]):
-	for obj1 in objects:
-		if (obj1.collide):
-			for obj2 in objects:
-				if (obj1 != obj2 and obj2.collide):
-					
-					pass
-				
-
-# PARTY CONSUMER
-class Party():
-	def __init__(self, *args, **kwargs):
-		self.uuid: str						= str(uuid.uuid4())
-		self.name: str						= f"party_default" # To display in the frontend
-		self.players: List[Player]			= []
-		self.max_players: int				= 4
-		self.running: bool					= False
-		self.is_public: bool				= True
-		self.party_channel_name: str		= f"party_{self.uuid}"
-		self.channel_layer					= get_channel_layer()
-		self.objects: List[ObjectAbstract]	= []
-
-		self.S_PER_UPDATE					= 1.0 / 30.0
-
-		self._received_data: dict			= {}
-		self.received_data: dict			= {}
-
-		self.thread: Thread					= None
-		self.thread_error: bool				= False
-
-		# Add a terrain object
-		terrain = ObjectTerrain()
-		self.objects.append(terrain)
-
-		for i in range(10):
-			ball = ObjectBall()
-			self.objects.append(ball)
-
-	def game_start(self) -> bool:
-		if (self.running == False):
-			print(f"####	Party: Starting party {self.uuid}")
-			self.running = True
-			self.thread = Thread(target=self._game_loop)
-			self.thread.start()
-			return True
-		else:
-			print(f"####	Party: Could not start party {self.uuid} (already started)")
-			return False
-
-	def game_stop(self) -> bool:
-		if self.running == True:
-			print(f"####	Party: Stopping party {self.uuid} THREAD ...")
-			self.running = False
-			if (self.thread_error == False):
-				self.thread.join()
-			print(f"####	Party: Party stopped {self.uuid} THREAD !")
-			return True
-		else:
-			print(f"####	Party: Could not stop party {self.uuid} (game not started)")
-			return False
-
-	def game_join(self, player: Player) -> bool:
-		if (self.running == True and 0):
-			print(f"####	Party: Player {player.name} could not join the party {self.uuid} (game already started)")
-			return False
-		if (any(p.id == player.id for p in self.players)):
-			print(f"####	Party: Player {player.name} could not join the party {self.uuid} (player already in the party)")
-			return False
-		if len(self.players) < self.max_players:
-			self.players.append(player)
-			print(f"####	Party: Player {player.name} joined the party {self.uuid}")
-			return True
-		print(f"####	Party: Player {player.name} could not join the party {self.uuid} (party full)")
-		return False
-
-	def game_leave(self, player: Player) -> bool:
-		if (any(p.id == player.id for p in self.players)):
-			print(f"####	Party: Player {player.name} left party {self.uuid}")
-			self.players.remove(player)
-			if (len(self.players) == 0 and self.running == True):
-				print(f"####	Party: Stopping party {self.uuid} (no more players)")
-				self.game_stop()
-			return True
-		print(f"####	Party: Player {player.name} could not leave party {self.uuid} (player not in the party)")
-		return False
-
-	async def _game_receive(self, data):
-		rdata = data.get('player_name', None)
-		if (rdata != None):
-			self._received_data[rdata] = data['keys']
-
-	def _game_loop(self):
-		print(f"####	Party: THREAD STARTED for party {self.uuid} at {time.time()}")
-
-		loop_end_tick = time.time() + self.S_PER_UPDATE
-		loop_offset = 0
-
-		while self.running:
-
-			# Update received data and clear it's buffer
-			self.received_data = self._received_data.copy()
-			
-			# Game loop
-			self.game_loop()
-			
-			# Send update to all players
-			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
-			except Exception as e:
-				print(f"####	Party: ERROR: {e}")
-				
-				self.thread_error = True
-				self.game_stop()
-				
-				return
-
-			# print(f"####	Party: Game loop for party {self.uuid} updated at {time.time()}")
-			# Update loop values
-			loop_offset = loop_end_tick - time.time()
-			loop_end_tick = loop_end_tick + self.S_PER_UPDATE
-
-			# Sleep until next loop to unload CPU
-			if loop_offset > 0:
-				time.sleep(loop_offset)
-
-		self.thread_error = False
-
-	def game_loop(self):
-		# Get current time
-		actual_time = time.time()
-
-		# Update objects
-		collide_objects(self.objects)			
-
-		# Update objects
-		for obj in self.objects:
-			obj.update()
-			
-		# Control objects with received data
-		for obj in self.objects:
-			for rkey, rvalue in self.received_data.items():
-				if (obj.controler == rkey):
-					obj.control(rvalue)
-
-
-	def to_dict(self):
-		return {
-			"uuid": self.uuid,
-			"name": self.name,
-			"players": [player.to_dict() for player in self.players],
-			"max_players": self.max_players,
-			"objects": [obj.to_dict() for obj in self.objects]
-		}
-	
-	def real_time_dict(self):
-		return {
-			"players": [player.to_dict() for player in self.players],
-			"objects": [obj.to_dict() for obj in self.objects]
-		}
+# GAME CLASSES
+from .game_classes.pong_game import PongParty
+from .game_classes.test_game import TestParty
 
 
 ##
@@ -229,7 +35,7 @@ class SmallParty():
 		self.uuid: str						= str(uuid.uuid4())
 		self.name: str						= f"party_default"
 		self.players: List[Player]			= []
-		self.max_players: int				= 4
+		self.max_players: int				= 2
 
 	def to_dict(self):
 		return {
@@ -248,8 +54,8 @@ class PartyManager():
 		self.channel_layer							= get_channel_layer()
 	
 	def create_party(self, name: str) -> Party:
-		party = Party()
-		party.name = f"{name}"
+		party = (PongParty(), TestParty())[random.randint(0, 1)]
+		party.name = party.name + f"_{name}"
 		self.parties[party.uuid] = party
 		print(f"####	PartyManager: Party {party.uuid} created")
 		
@@ -293,9 +99,6 @@ class PartyManager():
 
 			# update fast access dictionnary for player in game (not accessed in real time party loop)
 			self.in_games[player.id] = player
-
-			# Add a temp object to the party
-			party.objects.append(ObjectPaddle(player.name))
 
 			# start_game handle error cases by itself
 			await self.start_game(party_uuid)

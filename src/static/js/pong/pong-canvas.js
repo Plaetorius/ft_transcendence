@@ -126,7 +126,7 @@ pong_websocket.onmessage = function (data) {
 		// console.log("pong_websocket.update at " + Date.now());
 		loaded_party = json_data["party"];
 		server_delta = 0.0;
-		console.log("server_delta REFRESH");
+		server_interval = loaded_party["second_per_frames"];
 	}
 
 	// send keys to server only when we receive information from server
