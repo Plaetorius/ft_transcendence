@@ -20,8 +20,10 @@ User = get_user_model()
 
 from threading import Thread, Lock
 
+from enum import Enum
+
 from .classes.player import Player
-from .classes.objects import Shape, ObjectAbstract, ObjectPaddle, ObjectBall
+from .classes.objects import Shape, ObjectAbstract, ObjectTerrain, ObjectPaddle, ObjectBall
 from .classes.math_vec2 import vec2
 
 def get_time_millis():
@@ -30,6 +32,41 @@ def get_time_millis():
 ##
 ##	CLASS PARTY
 ##
+
+# COLLISIONS CODE
+class Hit(Enum):
+	NO_HIT = 0
+	IN_BOUND = 1
+	OUT_BOUND = 2
+
+def collide_ray_to_box(ray_start, ray_dir, box_pos, box_size) -> tuple[Hit, float]:
+	''' Return: type of collision (NO_HIT, IN_BOUND, OUT_BOUND), t (float)(infinite if no hit) '''
+	t1 = (ray_start - box_pos - (box_size / 2)) / ray_dir # calculate lower bound of intersection
+	t2 = (ray_start - box_pos + (box_size / 2)) / ray_dir # calculate upper bound of intersection
+	
+	# get the min offset percentage to reach the box border
+	tmin = math.max(math.min(t1.x, t2.x), math.min(t1.y, t2.y))
+	tmax = math.min(math.max(t1.x, t2.x), math.max(t1.y, t2.y))
+	
+	# check where the box as been hit
+	if (tmin > tmax):
+		return Hit.NO_HIT, math.inf
+	if (tmin < 0):
+		return Hit.IN_BOUND, tmax
+	return Hit.OUT_BOUND, tmin
+
+def collide_box_to_box(obj1, obj2):
+	
+	pass
+
+def collide_objects(objects: list[ObjectAbstract]):
+	for obj1 in objects:
+		if (obj1.collide):
+			for obj2 in objects:
+				if (obj1 != obj2 and obj2.collide):
+					
+					pass
+				
 
 # PARTY CONSUMER
 class Party():
@@ -44,7 +81,7 @@ class Party():
 		self.channel_layer					= get_channel_layer()
 		self.objects: List[ObjectAbstract]	= []
 
-		self.S_PER_UPDATE					= 1.0 / 60.0
+		self.S_PER_UPDATE					= 1.0 / 30.0
 
 		self._received_data: dict			= {}
 		self.received_data: dict			= {}
@@ -53,10 +90,7 @@ class Party():
 		self.thread_error: bool				= False
 
 		# Add a terrain object
-		terrain = ObjectAbstract()
-		terrain.controler = "terrain"
-		terrain.shape = Shape.TERRAIN
-		terrain.size = vec2(400, 600)
+		terrain = ObjectTerrain()
 		self.objects.append(terrain)
 
 		for i in range(10):
@@ -67,7 +101,7 @@ class Party():
 		if (self.running == False):
 			print(f"####	Party: Starting party {self.uuid}")
 			self.running = True
-			self.thread = Thread(target=self._game_loop, daemon=False)
+			self.thread = Thread(target=self._game_loop)
 			self.thread.start()
 			return True
 		else:
@@ -123,37 +157,32 @@ class Party():
 		loop_offset = 0
 
 		while self.running:
-			loop_current_tick = time.time()
 
-			# Main loop for the game
-			while loop_current_tick >= loop_end_tick:
-
-				# Update received data and clear it's buffer
-				self.received_data = self._received_data
-
-				# Game loop
-				self.game_loop()
-
-				# Send update to all players
-				try:
-					async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
-				except Exception as e:
-					print(f"####	Party: ERROR: {e}")
-					
-					self.thread_error = True
-					self.game_stop()
-					
-					return
-
-				# print(f"####	Party: Game loop for party {self.uuid} updated at {time.time()}")
-				# Update loop values
-				loop_offset = time.time() - loop_end_tick
-				loop_end_tick = loop_end_tick + self.S_PER_UPDATE
+			# Update received data and clear it's buffer
+			self.received_data = self._received_data.copy()
+			
+			# Game loop
+			self.game_loop()
+			
+			# Send update to all players
+			try:
+				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
+			except Exception as e:
+				print(f"####	Party: ERROR: {e}")
 				
+				self.thread_error = True
+				self.game_stop()
+				
+				return
+
+			# print(f"####	Party: Game loop for party {self.uuid} updated at {time.time()}")
+			# Update loop values
+			loop_offset = loop_end_tick - time.time()
+			loop_end_tick = loop_end_tick + self.S_PER_UPDATE
 
 			# Sleep until next loop to unload CPU
-			# if loop_offset > 0:
-			# 	time.sleep(loop_offset * 0.95)
+			if loop_offset > 0:
+				time.sleep(loop_offset)
 
 		self.thread_error = False
 
@@ -161,16 +190,19 @@ class Party():
 		# Get current time
 		actual_time = time.time()
 
+		# Update objects
+		collide_objects(self.objects)			
+
+		# Update objects
+		for obj in self.objects:
+			obj.update()
+			
 		# Control objects with received data
 		for obj in self.objects:
 			for rkey, rvalue in self.received_data.items():
 				if (obj.controler == rkey):
 					obj.control(rvalue)
-			
 
-		# Update objects
-		for obj in self.objects:
-			obj.update()
 
 	def to_dict(self):
 		return {
@@ -178,8 +210,12 @@ class Party():
 			"name": self.name,
 			"players": [player.to_dict() for player in self.players],
 			"max_players": self.max_players,
-			"running": self.running,
-			"is_public": self.is_public,
+			"objects": [obj.to_dict() for obj in self.objects]
+		}
+	
+	def real_time_dict(self):
+		return {
+			"players": [player.to_dict() for player in self.players],
 			"objects": [obj.to_dict() for obj in self.objects]
 		}
 
@@ -307,6 +343,11 @@ class PartyManager():
 		return {
 			"parties": [party.to_dict() for party in self.parties.values()]
 	}
+	
+	def real_time_dict(self):
+		return {
+			"parties": [party.real_time_dict() for party in self.parties.values()]
+	}
 
 
 # PARTY MANAGER SINGLETON
@@ -378,7 +419,7 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		# Send message to all players in the party
 		message = {
 				"type": "update",
-				"party": self.party.to_dict()
+				"party": self.party.real_time_dict()
 			}
 	
 		try:

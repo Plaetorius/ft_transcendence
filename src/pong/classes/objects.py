@@ -32,6 +32,7 @@ class ObjectAbstract:
 		self.vel = vec2(0, 0)
 		self.size = vec2(16, 16)
 		self.rot = 0
+		self.collide = True
 	
 	def control(self, key_values):
 		pass
@@ -49,6 +50,14 @@ class ObjectAbstract:
 			"size": self.size.to_dict(),
 			"rot": self.rot
 		}
+	
+class ObjectTerrain(ObjectAbstract):
+	def __init__(self):
+		super().__init__()
+		self.shape = Shape.TERRAIN
+		self.size = vec2(400, 600)
+		self.controler = None
+		self.collide = False
 
 class ObjectPaddle(ObjectAbstract):
 	def __init__(self, controler: str):
@@ -102,7 +111,7 @@ class ObjectBall(ObjectAbstract):
 		self.shape = Shape.BALL
 		self.size = vec2(10, 10)
 		self.rot = uniform(0, 2 * math.pi)
-		self.vel = vec2(math.sin(self.rot), math.cos(self.rot)) * 5
+		self.vel = vec2(math.sin(self.rot), math.cos(self.rot)) * 10
 
 	def update(self):
 		if (self.pos.x < -200 + 5):

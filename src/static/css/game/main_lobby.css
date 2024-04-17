@@ -37,7 +37,7 @@
 	/* background-image:	url("../../backgrounds/transparent_simple_noise.png"); */
 	/* background-image:	cross-fade(url("../../backgrounds/transparent_simple_noise.png") 50%, url('black.png') 50%); */
 	/* '../../backgrounds/old-paper-background.jpg' */
-	background-color:	#f5e0ab;
+	background-color: #f5e0ab;
 	border: 5px solid black;
 	box-shadow: 0 0 0 7px #fff, 0 0 8px 5px #000;
 
@@ -143,4 +143,12 @@
 	font-size: 1.6rem;
 	font-weight: 700;
 	line-height: 28px;
+}
+
+#ingame_player_list {
+	position: absolute;
+	top: 0.25rem;
+	left: 0.25rem;
+	border: 2px dashed blue;
+
 }

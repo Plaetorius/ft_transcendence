@@ -22,8 +22,6 @@ class GatherPartyAPIView(APIView):
 		# Get the list of parties
 		my_list = g_party_manager.to_dict()['parties']
 
-		print(f"#################################   INFO: GatherPartyAPIView: {my_list}")
-
 		# Return the UUID of the created party
 		return Response({'parties': my_list}, status=status.HTTP_201_CREATED)
 	
