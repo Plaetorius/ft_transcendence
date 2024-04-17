@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from users.authentication import CookieJWTAuthentication
 from .serializers import (
     MessageSerializer,
     MembersSerializer,
@@ -22,6 +23,7 @@ from .models import (
 User = get_user_model()
 
 class RoomId(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
@@ -63,6 +65,7 @@ class RoomId(APIView):
             )
 
 class RoomMessages(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, room_id):
@@ -101,7 +104,8 @@ class RoomMessages(APIView):
         )
 
 class RoomMembers(APIView):
-    permisssion_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, room_id):
         """

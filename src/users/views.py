@@ -72,7 +72,9 @@ class UserProfileView(generics.RetrieveAPIView):
 
 class UserRegistrationAPIView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
-    
+    permission_classes = [AllowAny]
+
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -141,6 +143,7 @@ class UserLoginAPIView(generics.GenericAPIView):
 
 class UserSearchAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username, *args, **kwargs):
@@ -150,6 +153,7 @@ class UserSearchAPIView(generics.RetrieveAPIView):
 
 class UserProfileAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -158,6 +162,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 class UserFriendsAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -170,6 +175,7 @@ class UserFriendsAPIView(APIView):
 
 # TODO cleaner code, reduce boilerplate code
 class UserFriendAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, username):
@@ -249,6 +255,7 @@ class UserFriendAPIView(APIView):
         )
 
 class UserBlockAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, username):
@@ -328,7 +335,8 @@ class UserBlockAPIView(APIView):
         )
 
 class UserListBlockedAPIView(APIView):
-    permissions_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         """
@@ -348,6 +356,7 @@ class UserListBlockedAPIView(APIView):
         )
 
 class UserEditAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -390,7 +399,8 @@ class UserEditAPIView(APIView):
         )
 
 class UserPodiumAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated] 
 
     def get(self, request, *args, **kwargs):
         # Query the top users based on their ELO scores
@@ -428,6 +438,7 @@ class OAuthCallbackView(generics.GenericAPIView):
 
 		refresh = RefreshToken.for_user(user)
 		#TODO implement the front
+        #TODO make a fonction to generate the response
 		res_data = {
 			'refresh': str(refresh),
 			'access': str(refresh.access_token),
