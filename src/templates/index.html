@@ -20,13 +20,14 @@
     <link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
     <link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
     <link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
+	<link rel="icon" type="image/gif" href="{% static 'gifs/vaultboy-sunglasses.gif' %}">
 </head>
 <body>
     <header class="container-fluid px-5 active">
         <div id="main-header" class="row align-items-center justify-content-between">
             <div class="col-2 header-left-section">
                 <a id="header-news" class="d-flex flex-column align-items-center justify-content-center">
-					<img src="../static/icons/web.png" draggable="false">
+					<img src="{% static 'icons/web.png' %}" draggable="false">
 					<p>NEWS</p>
 				</a>
             </div>
@@ -135,7 +136,7 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col">
-							<img src="../static/icons/Fo4_Boston_Bugle.png">
+							<img src="{% static 'icons/Fo4_Boston_Bugle.png' %}" draggable="false">
 						</div>
 					</div>
 				</div>
@@ -157,7 +158,7 @@
 					</div>
 					<div class="col-auto">
 						<button class="profile-action-button open-settings" title="Settings">
-							<img src="../static/icons/settings.png" draggable="false">
+							<img src="{% static 'icons/settings.png' %}" draggable="false">
 						</button>
 					</div>
 				</div>
@@ -304,12 +305,12 @@
 			</div>
 			<div class="col-1 m-0">
 				<button class="" id="send-message-btn">
-					<img src="../static/icons/send.png">
+					<img src="{% static 'icons/send.png' %}">
 				</button>
 			</div>
 			<div class="col-1 m-0">
 				<button class="">
-					<img src="../static/icons/clash.png">
+					<img src="{% static 'icons/clash.png' %}">
 				</button>
 			</div>
 		</div>
@@ -339,12 +340,12 @@
 		</div>
 		<div class="row m-2">
 			<div class="col">
-				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="../static/icons/chat.png" title="Chat" draggable="false"></button>
-				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img src="../static/icons/add-friend.png" title="Add friend" draggable="false"></button>
-				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img src="../static/icons/remove-friend.png" title="Remove friend" draggable="false"></button>
-				<button id="profile-popup-block" class="block" data-username=""><img src="../static/icons/block.png" title="Block user" draggable="false"></button>
-				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="../static/icons/check.png" title="Unblock user" draggable="false"></button>
-				<button id="profile-popup-profile" class="goto-profile" data-username=""><img src="../static/icons/profile.png" title="Profile" draggable="false"></button>
+				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="{% static 'icons/chat.png' %}" title="Chat" draggable="false"></button>
+				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img src="{% static 'icons/add-friend.png' %}" title="Add friend" draggable="false"></button>
+				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img src="{% static 'icons/remove-friend.png' %}" title="Remove friend" draggable="false"></button>
+				<button id="profile-popup-block" class="block" data-username=""><img src="{% static 'icons/block.png' %}" title="Block user" draggable="false"></button>
+				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="{% static 'icons/check.png' %}" title="Unblock user" draggable="false"></button>
+				<button id="profile-popup-profile" class="goto-profile" data-username=""><img src="{% static 'icons/profile.png' %}" title="Profile" draggable="false"></button>
 			</div>
 		</div>
 	</div>
@@ -352,7 +353,7 @@
 	<div id="notification" class="container d-none">
 		<div class="row d-flex align-items-center justify-content-center">
 			<div class="col-3">
-				<img src="../static/icons/bell.png">
+				<img src="{% static 'icons/bell.png' %}">
 			</div>
 			<div class="col-9 my-2">
 
