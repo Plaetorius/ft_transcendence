@@ -4,6 +4,10 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.utils import timezone   
 from .models import User
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.models import AnonymousUser
+
 
 
 class UserNotification(AsyncWebsocketConsumer):
@@ -13,7 +17,11 @@ class UserNotification(AsyncWebsocketConsumer):
         to the client.
     """
     async def connect(self):
+        await self.authenticate_user() # To identify via HTTP-Only Cookies
+
         self.user = self.scope["user"]
+        if isinstance(self.scope['user'], AnonymousUser):
+            await self.close()
         if self.user.is_authenticated:
             self.room_group_name = f'user_notification_{self.user.id}'
             await self.channel_layer.group_add(
@@ -43,3 +51,14 @@ class UserNotification(AsyncWebsocketConsumer):
             self.user.is_online = is_online
             self.user.last_seen = timezone.now()
             self.user.save(update_fields=['is_online', 'last_seen'])
+
+    @database_sync_to_async
+    def authenticate_user(self):
+        token = self.scope["cookies"].get("access_token")
+        if token:
+            try:
+                access_token = AccessToken(token)
+                user_id = access_token["user_id"]
+                self.scope["user"] = User.objects.get(id=user_id)
+            except (InvalidToken, TokenError, User.DoesNotExist):
+                self.scope["user"] = AnonymousUser()

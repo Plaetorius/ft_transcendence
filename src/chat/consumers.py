@@ -7,11 +7,15 @@ from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
 from .models import ChatRoom, Message
 from users.models import BlockedUser
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken
 
 User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        await self.authenticate_user() # To identify via HTTP-Only Cookies
+
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
 
@@ -100,3 +104,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return username, profile_picture
         except User.DoesNotExist:
             return None
+
+    @database_sync_to_async
+    def authenticate_user(self):
+        token = self.scope["cookies"].get("access_token")
+        if token:
+            try:
+                access_token = AccessToken(token)
+                user_id = access_token["user_id"]
+                self.scope["user"] = User.objects.get(id=user_id)
+            except (InvalidToken, TokenError, User.DoesNotExist):
+                self.scope["user"] = AnonymousUser()
