@@ -36,7 +36,6 @@ class CheckSessionView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        print(f"==========================\nRequest User:\n{request.user}")
         username = request.user.get_username()
         return Response({
             'status': 'Authenticated',
