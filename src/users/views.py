@@ -488,3 +488,5 @@ class OAuthCallbackView(generics.GenericAPIView):
 		headers = {'Authorization': f'Bearer {access_token}'}
 		response = requests.get(user_info_url, headers=headers)
 		return response.json()
+
+#TODO view for Match History, returning the matches, the W/L ratio, the rank

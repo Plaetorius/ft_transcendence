@@ -25,6 +25,7 @@ function showProfile() {
 }
 
 function loadMyProfile() {
+	// TODO call when clicking and the header button
     document.getElementById("profile-picture").src = user.profile_picture_url;
 	document.getElementById("header-profile-picture").src = user.profile_picture_url;
     document.getElementById("profile-username").innerHTML = `<span class="online-status online"></span>${user.username}`;
@@ -216,8 +217,21 @@ function handleUnblockClick(username) {
     });
 }
 
-function handleGotoProfileClick(username) {
-	//TODO implement me
-	console.log("GotoProfile clicked for user:", username);
+async function handleGotoProfileClick(username) {
+	let visited_user = await getUser(username);
+	if (!visited_user) {
+		notification("User not found!", "cross", "error");
+		return;
+	}
+    document.getElementById("user-picture").src = visited_user.profile_picture_url;
+    document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
+    document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
+    const dateJoined = new Date(visited_user.date_joined);
+    const formattedDate = [
+        dateJoined.getDate().toString().padStart(2, '0'),
+        (dateJoined.getMonth() + 1).toString().padStart(2, '0'),
+        dateJoined.getFullYear()
+    ].join('/');
+    document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
+	navigateToSection("user");
 }
-

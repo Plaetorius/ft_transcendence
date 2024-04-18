@@ -1,0 +1,60 @@
+#user {
+	padding-left: 20vw;
+	padding-right: 20vw;
+}
+
+#user #user-picture {
+	height: 14vh;
+	width: 14vh;
+	overflow: hidden;
+	object-fit: cover;
+    object-position: center;
+	border-radius: 5%;
+}
+
+#user #user-username {
+	margin-top: 0.6rem;
+	font-size: 1.5rem;
+	font-family: 'Belgrano-Regular';
+}
+
+#user-header span {
+	font-weight: bold;
+}
+
+#user-header p {
+	margin: 0;
+	padding: 0;
+}
+
+#user-header #user-rank {
+	margin-top: -0.5rem;	
+}
+
+#user-header #user-elo {
+	margin-top: -0.3rem;	
+}
+
+#user-header #user-winrate {
+	margin-top: -0.3rem;
+}
+
+#user-header #user-joined {
+	margin-top: -0.3rem;
+}
+
+#user-history {
+	margin-top: 2vh;
+}
+
+#user-history h4 {
+	font-family: 'Belgrano-Regular';
+	font-size: 3rem;
+	text-align: center;
+}
+
+#user span.online-status {
+	height: 2vh;
+	width: 2vh;
+	margin-right: 0.3rem;
+}

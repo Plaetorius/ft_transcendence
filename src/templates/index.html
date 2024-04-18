@@ -1,5 +1,6 @@
 <!-- index.html -->
 <!-- TODO all links with static Django -->
+<!-- TODO Reorganize files (especially CSS) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/general/fonts.css' %}">
     <link rel="stylesheet" href="{% static 'css/general/general.css' %}">
     <link rel="stylesheet" href="{% static 'css/general/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/general/user.css' %}">
     <link rel="stylesheet" href="{% static 'css/general/register.css' %}">
     <link rel="stylesheet" href="{% static 'css/general/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/game/history.css' %}">
@@ -233,7 +235,7 @@
 						</div>
 					</div>
 					<div class="col-auto">
-						<button class="profile-action-button open-settings" title="Settings">
+						<button id="settings" class="profile-action-button open-settings" title="Settings">
 							<img src="{% static 'icons/settings.png' %}" draggable="false">
 						</button>
 					</div>
@@ -297,6 +299,81 @@
 				</div>
 			</div>
 		</section>
+
+		<section id="user" class="">
+			<div class="container-fluid">
+				<div id="user-header" class="row justify-content-between">
+					<div class="col-auto d-flex align-items-center">
+						<img id="user-picture" src="../media/profile_pictures/default.jpg" draggable="false" class="m-3">
+						<div class="ml-3">
+							<h5 id="user-username"></h5>
+							<p id="user-rank"><span>Rank: </span>#1</p>
+							<p id="user-elo"><span>Elo: </span>1000</p>
+							<p id="user-winrate"><span>Winrate: </span>1.0</p>
+							<p id="user-joined"><span>Joined: </span>26/01/2024</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="user-history">
+				<h4>Match History</h4>
+				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+					<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="username" src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+						<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-result">WIN</div>
+							<div class="history-game-time">5:56</div>
+							<div class="history-game-type">Ranked</div>
+							<div class="history-time-since">11hours ago</div>
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-score">3 / 1</div>
+							<div class="history-game-elo">+20 PP</div>
+						</div>
+						<div class="col-2 m-0 d-flex align-items-center justify-content-between flex-wrap">
+
+						</div>
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
+
+					</div>
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+				</div>
+			</div>
+		</section>
+
 
         <section id="register" class="">
             <div class="container-fluid d-flex flex-column align-items-center">
