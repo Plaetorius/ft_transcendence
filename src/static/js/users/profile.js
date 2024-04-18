@@ -218,6 +218,7 @@ function handleUnblockClick(username) {
 }
 
 async function handleGotoProfileClick(username) {
+	// TODO maybe use URL query params to use the history
 	let visited_user = await getUser(username);
 	if (!visited_user) {
 		notification("User not found!", "cross", "error");
