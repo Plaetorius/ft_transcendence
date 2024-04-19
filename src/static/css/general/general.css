@@ -1,6 +1,8 @@
 main {
     margin-top: 22vh;
-    height: 1000vh;
+    min-height: 100vh;
+	height: auto;
+	margin-bottom: 22vh;
 }
 
 section {
