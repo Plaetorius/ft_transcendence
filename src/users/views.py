@@ -93,7 +93,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
                 httponly=True,
                 samesite='Lax',
                 secure=True,
-                max_age=3600*2,
+                max_age=3600*4,
                 path='/',
             )
             return response
@@ -131,7 +131,7 @@ class UserLoginAPIView(generics.GenericAPIView):
             httponly=True,
             samesite='Lax',
             secure=True,
-            max_age=3600*2,
+            max_age=3600*4,
             path='/',
         )
 
@@ -433,13 +433,11 @@ class OAuthCallbackView(generics.GenericAPIView):
                 'uid': user_data['id'], 
                 'access_token': access_token,
                 'refresh_token': token_response.json().get('refresh_token'),
-				#TODO add expire?
             }
         )
 
 
 		refresh = RefreshToken.for_user(user)
-		#TODO implement the front
         #TODO make a fonction to generate the response
 		res_data = {
 			'refresh': str(refresh),
@@ -463,7 +461,7 @@ class OAuthCallbackView(generics.GenericAPIView):
             httponly=True,
             samesite='Lax',
             secure=True,
-            max_age=3600*2,
+            max_age=3600*4,
             path='/',
         )
 		return response
