@@ -20,7 +20,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        # TODO can be optimized if list of members is kept client side on chat room entering
         fields = ('id', 'room', 'content', 'timestamp', 'sender_username', 'sender_pp_url')
 
     def get_sender_username(self, obj):
@@ -30,7 +29,6 @@ class MessageSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if obj.sender.profile_picture and hasattr(obj.sender.profile_picture, 'url'):
             return obj.sender.profile_picture.url
-            # TODO is it best to? return request.build_absolute_uri(obj.sender.profile_picture.url)
         return None
 
 

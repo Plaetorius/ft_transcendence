@@ -78,7 +78,8 @@ function setActiveSection(sectionId, stateObj = {}) {
                 getPodium();
                 break;
             case 'profile':
-                setupSettingsForm(); // TODO also call showProfile
+				showProfile();
+                setupSettingsForm();
                 break;
             case 'user':
                 if (stateObj.username) {
