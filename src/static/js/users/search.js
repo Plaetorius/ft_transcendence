@@ -20,6 +20,7 @@ async function getUser(username) {
 	});
 	if (!response.ok) {
 		notification("User not found", "cross", "error");
+		throw new Error("User not found!");
 	}
 	const userData = await response.json();
 	return userData;	

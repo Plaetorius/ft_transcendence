@@ -10,9 +10,16 @@ if (currentHash) {
     if (parts[0] === 'user') {
         if (parts.length > 1 && parts[1]) {
             initialState.username = decodeURIComponent(parts[1]);
+            loadUserProfile(initialState.username).catch(e => {
+                notification("User not found!", "cross", "error");
+                window.location.hash = '#home';
+				initialSection = 'home';
+				navigateToSection("home");
+            });
         } else {
-            window.location.hash = '#home';
-            initialSection = 'home';
+			window.location.hash = '#home';
+			initialSection = 'home';
+			navigateToSection("home");
         }
     }
 }
@@ -38,12 +45,10 @@ window.addEventListener('popstate', (event) => {
 function navigateToSection(sectionId, stateObj = {}) {
     removeListeners();
 
-    // If no username is provided for the 'user' section, redirect immediately to 'home'
     if (sectionId === 'user' && !stateObj.username) {
-        // Using location.hash for immediate redirect
-        location.hash = '#home';
-        stateObj = {}; // Reset state object for home navigation
-        sectionId = 'home'; // Set section to home
+        window.location.hash = '#home';
+        sectionId = 'home';
+        stateObj = {};
     }
 
     stateObj.section = sectionId;
@@ -56,6 +61,7 @@ function navigateToSection(sectionId, stateObj = {}) {
     setActiveSection(sectionId, stateObj);
     initializeListeners();
 }
+
 
 function setActiveSection(sectionId, stateObj = {}) {
     document.querySelectorAll("main > section").forEach(section => {
@@ -89,9 +95,6 @@ function setActiveSection(sectionId, stateObj = {}) {
     }
 }
 
-
-
-
 function hide_popups() {
 	chatPopup.classList.add("d-none");
 	chatPopup.classList.remove("d-block");
@@ -112,19 +115,24 @@ function removeListeners() {
 }
 
 async function loadUserProfile(username) {
-    let visited_user = await getUser(username);
-    if (!visited_user) {
-        notification("User not found!", "cross", "error");
-        return;
+    try {
+        let visited_user = await getUser(username);
+        if (!visited_user) {
+            throw new Error("User not found");
+        }
+        document.getElementById("user-picture").src = visited_user.profile_picture_url;
+        document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
+        document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
+        const dateJoined = new Date(visited_user.date_joined);
+        const formattedDate = [
+            dateJoined.getDate().toString().padStart(2, '0'),
+            (dateJoined.getMonth() + 1).toString().padStart(2, '0'),
+            dateJoined.getFullYear()
+        ].join('/');
+        document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
+    } catch (error) {
+        notification(error.message, "cross", "error");
+        navigateToSection("home");
     }
-    document.getElementById("user-picture").src = visited_user.profile_picture_url;
-    document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
-    document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
-    const dateJoined = new Date(visited_user.date_joined);
-    const formattedDate = [
-        dateJoined.getDate().toString().padStart(2, '0'),
-        (dateJoined.getMonth() + 1).toString().padStart(2, '0'),
-        dateJoined.getFullYear()
-    ].join('/');
-    document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
 }
+
