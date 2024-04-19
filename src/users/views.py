@@ -31,6 +31,37 @@ import os
 
 User = get_user_model()
 
+def create_token_response(user, status_code):
+    refresh = RefreshToken.for_user(user)
+    access_token = refresh.access_token
+
+    response = Response({
+        'refresh': str(refresh),
+        'access': str(access_token),
+        'username': user.username,
+        'email': user.email,
+    }, status=status_code)
+
+    response.set_cookie(
+        'refresh_token',
+        str(refresh),
+        httponly=True,
+        samesite='Lax',
+        secure=True,
+        max_age=3600*24*14,  # 14 days
+        path='/',
+    )
+    response.set_cookie(
+        'access_token',
+        str(access_token),
+        httponly=True,
+        samesite='Lax',
+        secure=True,
+        max_age=3600*4,  # 4 hours
+        path='/',
+    )
+    return response
+
 class CheckSessionView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -75,28 +106,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-
-            response = Response(stauts=status.HTTP_201_CREATED)
-            response.set_cookie(
-                'refresh_token',
-                str(refresh),
-                httponly=True,
-                samesite='Lax',
-                secure=True,
-                max_age=3600*24*14,
-                path='/',
-            )
-            response.set_cookie(
-                'access_token',
-                str(refresh.access_token),
-                httponly=True,
-                samesite='Lax',
-                secure=True,
-                max_age=3600*4,
-                path='/',
-            )
-            return response
+            return create_token_response(user=user, status_code=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginAPIView(generics.GenericAPIView):
@@ -106,36 +116,8 @@ class UserLoginAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-
-        refresh = RefreshToken.for_user(user)
-        access_token = refresh.access_token
-
-        response = Response({
-            'user': UserSerializer(user).data,
-        }, status=status.HTTP_200_OK)
-
-        response.set_cookie(
-            'refresh_token',
-            str(refresh),
-            httponly=True,
-            samesite='Lax',
-            secure=True,
-            max_age=3600*24*14,
-            path='/',
-        )
-
-        response.set_cookie(
-            'access_token',
-            str(access_token),
-            httponly=True,
-            samesite='Lax',
-            secure=True,
-            max_age=3600*4,
-            path='/',
-        )
-
-        return response
+        user = serializer.validated_data['user']
+        return create_token_response(user=user, status_code=status.HTTP_200_OK)
 
 class UserSearchAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
@@ -168,7 +150,6 @@ class UserFriendsAPIView(APIView):
         return Response(serializer.data)
 
 
-# TODO cleaner code, reduce boilerplate code
 class UserFriendAPIView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -438,7 +419,6 @@ class OAuthCallbackView(generics.GenericAPIView):
 
 
 		refresh = RefreshToken.for_user(user)
-        #TODO make a fonction to generate the response
 		res_data = {
 			'refresh': str(refresh),
 			'access': str(refresh.access_token),
