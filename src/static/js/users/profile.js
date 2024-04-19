@@ -1,3 +1,4 @@
+// TODO do better, this is more a getProfile
 function showProfile() {
     fetch('/users/profile/', {
         method: 'GET',

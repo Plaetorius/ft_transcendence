@@ -79,7 +79,7 @@ function setActiveSection(sectionId, stateObj = {}) {
                 break;
             case 'profile':
 				showProfile();
-                setupSettingsForm();
+				setupSettingsForm();
                 break;
             case 'user':
                 if (stateObj.username) {
