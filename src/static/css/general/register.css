@@ -10,9 +10,10 @@ section#register {
 	background: none;
 	border: none;
 	border-bottom: 0.15rem rgb(97, 69, 18) solid;
+	width: 100%;
 }
 
-#register form button {
+#register form button, #oauth-button {
     margin: 1rem;
     padding: 0.5rem 3rem;
     background: rgb(97, 69, 18);
@@ -20,14 +21,14 @@ section#register {
     color: whitesmoke;
     font-size: 1.5rem;
     border: none;
+    transition: background-color 0.3s ease, letter-spacing 0.3s ease;
 }
 
-#register form button:hover {
-    transition: background-color 0.3s ease;
-    transition: letter-spacing 0.3s ease;
-	background: rgb(139, 100, 26);
+#register form button:hover, #oauth-button:hover {
+    background: rgb(139, 100, 26);
     letter-spacing: 0.1rem;
 }
+
 
 #register input::placeholder {
 	color: rgb(97, 69, 18);
