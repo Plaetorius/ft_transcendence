@@ -61,7 +61,8 @@ async function handleSettingsFormSubmit(e) {
 			throw new Error("Error in form");
 		}
 		const data = await response.json();
-		onPageReload();
+		setupSettingsForm();
+		showProfile();
 		notification('Profile updated!', 'check', 'success');
 	} catch (error) {
 		notification('Error updating your profile!', 'cross', 'error');

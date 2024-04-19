@@ -66,9 +66,10 @@ def send_user_notification(user_id, text_message: str, path_to_icon: str, contex
     )
 
 class UserProfileView(generics.RetrieveAPIView):
-	# TODO maybe protect noooo ????
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+	serializer_class = UserSerializer
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	queryset = User.objects.all()
 
 class UserRegistrationAPIView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
