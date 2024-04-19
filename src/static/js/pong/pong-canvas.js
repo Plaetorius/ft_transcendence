@@ -63,8 +63,9 @@ function initGamePong() {
 
 	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 0.1, 5000);
 	camera.position.x = 0;
-	camera.position.y = 200;
-	camera.position.z = 400;
+	camera.position.y = 600;
+	camera.position.z = -0.001;
+	// camera.position.z = 400;
 
 	camera.lookAt(0, 0, 0);
 
@@ -169,17 +170,17 @@ function updateOrCreateObject(id, position, rotation, size, shape) {
 			position.y = -2.5;
 		}
 		else if (shape === "Shape.PADDLE") {
-			geometry = new THREE.BoxGeometry(120, 10, 10);
+			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
 			material = new THREE.MeshLambertMaterial({ color: "#1684ff" })
 			position.y = 5;
 		}
 		else if (shape === "Shape.BALL") {
-			geometry = new THREE.SphereGeometry(10, 16, 16);
+			geometry = new THREE.SphereGeometry(size.x / 2, 16, 16);
 			material = new THREE.MeshLambertMaterial({ color: "#161184" })
 			position.y = 10;
 		}
 		else {
-			geometry = new THREE.BoxGeometry(10, 10, 10);
+			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
 			material = new THREE.MeshLambertMaterial({ color: "#ff1684" })
 		}
 
@@ -234,8 +235,14 @@ function renderGamePong() {
 	delta += cur_delta;
 	server_delta += cur_delta;
 
-	if (loaded_party != null && server_delta < server_interval) {
+	if (loaded_party != null) {
 		const current_server_offset = server_delta / server_interval;
+		
+		const uuid_to_remove = loaded_party['obj_to_remove'];
+		for (let uuid of uuid_to_remove) {
+			removeObject(uuid);
+		}
+		
 		const obj_array = loaded_party['objects'];
 		for (let obj of obj_array) {
 			const uuid = obj['uuid'];

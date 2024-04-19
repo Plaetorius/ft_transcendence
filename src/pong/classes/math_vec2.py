@@ -35,7 +35,9 @@ class vec2:
 		"""Multiplication of a vector by a scalar."""
 
 		if isinstance(scalar, int) or isinstance(scalar, float):
-			return vec2(self.x*scalar, self.y*scalar)
+			return vec2(self.x * scalar, self.y * scalar)
+		if (isinstance(scalar, vec2)):
+			return vec2(self.x * scalar.x, self.y * scalar.y)
 		raise NotImplementedError('Can only multiply vec2 by a scalar')
 
 	def __rmul__(self, scalar):
@@ -48,7 +50,10 @@ class vec2:
 
 	def __truediv__(self, scalar):
 		"""True division of the vector by a scalar."""
-		return vec2(self.x / scalar, self.y / scalar)
+		if isinstance(scalar, int) or isinstance(scalar, float):
+			return vec2(self.x / scalar, self.y / scalar)
+		if (isinstance(scalar, vec2)):
+			return vec2(self.x / scalar.x, self.y / scalar.y)
 
 	def __mod__(self, scalar):
 		"""One way to implement modulus operation: for each component."""

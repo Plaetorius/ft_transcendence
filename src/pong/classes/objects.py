@@ -18,21 +18,30 @@ class Shape(Enum):
 	BALL = 2
 	BOX = 3
 
+class Collision(Enum):
+	NONE		= 0
+	BOUNCE		= 1
+	STOP		= 2	
+	IMMOVABLE	= 3
+	
+
 #
 # CLASS OBJECT_ABSTRACT
 #
 
 class ObjectAbstract:
 	def __init__(self):
-		self.uuid: uuid = str(uuid.uuid4())
-		self.controler: str = None
+		self.uuid: uuid 	= str(uuid.uuid4())
+		self.controler: str	= None
 		
-		self.shape = Shape.PADDLE
-		self.pos = vec2(0, 0)
-		self.vel = vec2(0, 0)
-		self.size = vec2(16, 16)
-		self.rot = 0
-		self.collide = True
+		self.shape			= Shape.PADDLE
+		self.pos			= vec2(0, 0)
+		self.dir			= vec2(0, 0)
+		self.vel			= vec2(0, 0)
+		self.size			= vec2(16, 16)
+		self.rot			= 0
+		
+		self.collide		= Collision.IMMOVABLE
 	
 	def control(self, key_values):
 		pass
@@ -54,16 +63,17 @@ class ObjectAbstract:
 class ObjectTerrain(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
-		self.shape = Shape.TERRAIN
-		self.size = vec2(400, 600)
-		self.controler = None
-		self.collide = False
+		self.shape		= Shape.TERRAIN
+		self.size		= vec2(400, 600)
+		self.controler	= None
+		self.collide	= Collision.NONE
 
 class ObjectPaddle(ObjectAbstract):
 	def __init__(self, controler: str):
 		super().__init__()
 		self.shape = Shape.PADDLE
-		self.size = vec2(32, 8)
+		self.size = vec2(32, 23)
+		self.collide = Collision.STOP
 		self.controler = controler
 
 	def control(self, key_values):
@@ -92,13 +102,14 @@ class ObjectPaddle(ObjectAbstract):
 		# if (disp > 1.0):
 		# 	direction = direction / disp
 
-		self.vel = direction * 5
+		self.vel = direction * 8
 
-		if (key_values.get('a', False)):
-			self.rot = self.rot + 0.1
+		# if (key_values.get('a', False)):
+		# 	self.rot = self.rot + 0.1
 
-		if (key_values.get('e', False)):
-			self.rot = self.rot - 0.1
+		# if (key_values.get('e', False)):
+		# 	self.rot = self.rot - 0.1
+			
 		pass
 
 	def update(self):
@@ -108,24 +119,15 @@ class ObjectPaddle(ObjectAbstract):
 class ObjectBall(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
-		self.shape = Shape.BALL
-		self.size = vec2(10, 10)
-		self.rot = uniform(0, 2 * math.pi)
-		self.vel = vec2(math.sin(self.rot), math.cos(self.rot)) * 10
+		self.shape		= Shape.BALL
+		self.collide	= Collision.BOUNCE
+		self.size		= vec2(40, 40)
+		self.rot		= uniform(0, 2 * math.pi)
+		self.dir		= vec2(math.sin(self.rot), math.cos(self.rot))
+		self.vel		= self.dir * 8
+		self.pos		= self.pos * 20
 
 	def update(self):
-		if (self.pos.x < -200 + 5):
-			self.pos.x = -200 + 5
-			self.vel.x = -self.vel.x
-		if (self.pos.x > 200 - 5):
-			self.pos.x = 200 - 5
-			self.vel.x = -self.vel.x
-		if (self.pos.y < -300 + 5):
-			self.pos.y = -300 + 5
-			self.vel.y = -self.vel.y
-		if (self.pos.y > 300 - 5):
-			self.pos.y = 300 - 5
-			self.vel.y = -self.vel.y
-
-		self.pos = self.pos + self.vel
+		self.pos		= self.pos + self.vel
+		self.vel		= self.dir * 8
 		pass
