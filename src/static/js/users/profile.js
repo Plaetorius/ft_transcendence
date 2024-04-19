@@ -25,7 +25,6 @@ function showProfile() {
 }
 
 function loadMyProfile() {
-	// TODO call when clicking and the header button
     document.getElementById("profile-picture").src = user.profile_picture_url;
 	document.getElementById("header-profile-picture").src = user.profile_picture_url;
     document.getElementById("profile-username").innerHTML = `<span class="online-status online"></span>${user.username}`;
