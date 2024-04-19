@@ -218,12 +218,11 @@ function handleUnblockClick(username) {
 }
 
 async function handleGotoProfileClick(username) {
-	// TODO maybe use URL query params to use the history
-	let visited_user = await getUser(username);
-	if (!visited_user) {
-		notification("User not found!", "cross", "error");
-		return;
-	}
+    let visited_user = await getUser(username);
+    if (!visited_user) {
+        notification("User not found!", "cross", "error");
+        return;
+    }
     document.getElementById("user-picture").src = visited_user.profile_picture_url;
     document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
     document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
@@ -234,5 +233,8 @@ async function handleGotoProfileClick(username) {
         dateJoined.getFullYear()
     ].join('/');
     document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
-	navigateToSection("user");
+
+    navigateToSection("user");
+    profilePopup.classList.add("d-none");
+    profilePopup.classList.remove("d-block");
 }

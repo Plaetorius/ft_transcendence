@@ -23,7 +23,7 @@ window.addEventListener('popstate', (event) => {
 function navigateToSection(sectionId) {
 	removeListeners();
     setActiveSection(sectionId);
-    history.pushState({ section: sectionId }, '', '#' + sectionId);
+	history.pushState({ section: sectionId }, '', `#${sectionId}`);
 	initializeListeners();
 }
 
