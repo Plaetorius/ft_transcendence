@@ -31,7 +31,6 @@ function unblur_background() {
 async function onPageReload() {
 	const isAuthenticated = await checkAuthentication();
 	if (isAuthenticated) {
-		console.log("call");
 		showProfile();
 		getPodium();
 		setOnline();

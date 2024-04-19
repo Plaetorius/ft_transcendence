@@ -14,7 +14,6 @@ function showProfile() {
     })
     .then(userData => {
         user = userData;
-		console.log(user);
 		document.getElementById("profile-picture").src = user.profile_picture_url;
 		loadMyProfile();
 		loadAndDisplayFriends();

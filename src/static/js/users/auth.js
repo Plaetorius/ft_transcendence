@@ -129,10 +129,8 @@ async function checkAuthentication() {
         }
 
         const data = await response.json();
-        console.log('User is authenticated:', data.user);
         return true;
     } catch (error) {
-        console.error('User is not authenticated:', error);
         header.classList.add('d-none');
         navigateToSection('register');
         return false;
