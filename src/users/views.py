@@ -169,7 +169,6 @@ class UserFriendsAPIView(APIView):
         user_id = request.user.id
         friendships = Friendship.objects.filter(Q(friend1_id=user_id) | Q(friend2_id=user_id))
         serializer = FriendshipDetailSerializer(friendships, many=True, context={'request_user': request.user})
-        print(f"Serializer data: {serializer.data}")
         return Response(serializer.data)
 
 
