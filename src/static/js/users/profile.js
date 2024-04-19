@@ -234,7 +234,7 @@ async function handleGotoProfileClick(username) {
     ].join('/');
     document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
 
-    navigateToSection("user");
+    navigateToSection('user', { username: username });
     profilePopup.classList.add("d-none");
     profilePopup.classList.remove("d-block");
 }

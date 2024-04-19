@@ -1,10 +1,24 @@
 // Default section to activate on page load, if none is specified in the URL
 const defaultSection = 'home';
 const currentHash = window.location.hash.replace('#', '');
-const initialSection = currentHash || defaultSection;
+let initialSection = defaultSection;
+let initialState = {};
+
+if (currentHash) {
+    const parts = currentHash.split('/');
+    initialSection = parts[0];
+    if (parts[0] === 'user') {
+        if (parts.length > 1 && parts[1]) {
+            initialState.username = decodeURIComponent(parts[1]);
+        } else {
+            window.location.hash = '#home';
+            initialSection = 'home';
+        }
+    }
+}
 
 // Set the initial active section based on the current URL hash, if any
-setActiveSection(initialSection);
+setActiveSection(initialSection, initialState);
 
 // Navigation links event handlers
 document.getElementById("header-home").onclick = () => navigateToSection("home");
@@ -16,40 +30,67 @@ document.getElementById("header-profile").onclick = () => navigateToSection("pro
 
 // Listen for popstate event
 window.addEventListener('popstate', (event) => {
-	const section = event.state ? event.state.section : defaultSection;
-	setActiveSection(section);
+    const section = event.state ? event.state.section : defaultSection;
+    const stateObj = event.state || {};
+    setActiveSection(section, stateObj);
 });
 
-function navigateToSection(sectionId) {
-	removeListeners();
-    setActiveSection(sectionId);
-	history.pushState({ section: sectionId }, '', `#${sectionId}`);
-	initializeListeners();
+function navigateToSection(sectionId, stateObj = {}) {
+    removeListeners();
+
+    // If no username is provided for the 'user' section, redirect immediately to 'home'
+    if (sectionId === 'user' && !stateObj.username) {
+        // Using location.hash for immediate redirect
+        location.hash = '#home';
+        stateObj = {}; // Reset state object for home navigation
+        sectionId = 'home'; // Set section to home
+    }
+
+    stateObj.section = sectionId;
+    let url = `#${sectionId}`;
+    if (sectionId === 'user' && stateObj.username) {
+        url += `/${encodeURIComponent(stateObj.username)}`;
+    }
+
+    history.pushState(stateObj, '', url);
+    setActiveSection(sectionId, stateObj);
+    initializeListeners();
 }
 
-function setActiveSection(sectionId) {
+function setActiveSection(sectionId, stateObj = {}) {
     document.querySelectorAll("main > section").forEach(section => {
         section.classList.remove("active");
     });
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.classList.add("active");
-		// Calls to functions to load the section
-		if (sectionId === 'friends') {
-			loadAndDisplayFriends();
-		}
-		else if (sectionId === 'podium') {
-			getPodium();
-		}
-		else if (sectionId === 'profile') {
-			setupSettingsForm();
-		}
+        switch (sectionId) {
+            case 'friends':
+                loadAndDisplayFriends();
+                break;
+            case 'podium':
+                getPodium();
+                break;
+            case 'profile':
+                setupSettingsForm(); // TODO also call showProfile
+                break;
+            case 'user':
+                if (stateObj.username) {
+                    loadUserProfile(stateObj.username); 
+                } else {
+                    navigateToSection('home');
+                }
+                break;
+            default:
+                break;
+        }
     } else {
-		// Fallback to default section if the specified ID is not found
         document.getElementById(defaultSection).classList.add("active");
     }
-	// Actualise listeners no matter the page
 }
+
+
+
 
 function hide_popups() {
 	chatPopup.classList.add("d-none");
@@ -68,4 +109,22 @@ function initializeListeners() {
 function removeListeners() {
     document.removeEventListener('click', openProfileHandler);
 	document.removeEventListener('click', closeProfileHandle);
+}
+
+async function loadUserProfile(username) {
+    let visited_user = await getUser(username);
+    if (!visited_user) {
+        notification("User not found!", "cross", "error");
+        return;
+    }
+    document.getElementById("user-picture").src = visited_user.profile_picture_url;
+    document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
+    document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
+    const dateJoined = new Date(visited_user.date_joined);
+    const formattedDate = [
+        dateJoined.getDate().toString().padStart(2, '0'),
+        (dateJoined.getMonth() + 1).toString().padStart(2, '0'),
+        dateJoined.getFullYear()
+    ].join('/');
+    document.getElementById("user-joined").innerHTML = `<span>Joined: </span>${formattedDate}`;
 }
