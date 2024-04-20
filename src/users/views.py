@@ -331,6 +331,7 @@ class UserListBlockedAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+# Consistency Update not Edit
 class UserEditAPIView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]

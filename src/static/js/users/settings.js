@@ -50,23 +50,20 @@ async function handleSettingsFormSubmit(e) {
 		formData.append('profile_picture', profilePictureInput.files[0]);
 	}
 
-	try {
-		const response = await fetch('/users/edit-user/', {
-			method: 'PATCH',
-			credentials: 'include',
-			body: formData,
-		});
+    const response = await fetch('/users/edit-user/', {
+        method: 'PATCH',
+        credentials: 'include',
+        body: formData,
+    });
 
-		if (!response.ok) {
-			throw new Error("Error in form");
-		}
-		const data = await response.json();
-		setupSettingsForm();
-		showProfile();
-		notification('Profile updated!', 'check', 'success');
-	} catch (error) {
-		notification('Error updating your profile!', 'cross', 'error');
-	}
+    if (!response.ok) {
+        response.json().then(err => handleErrors(err.error));
+        return ;
+    }
+    const data = await response.json();
+    setupSettingsForm();
+    showProfile();
+    notification('Profile updated!', 'check', 'success');
 }
 
 settingsForm.addEventListener('submit', handleSettingsFormSubmit);

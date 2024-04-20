@@ -81,16 +81,21 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture')
 
     def validate_username(self, value):
-        if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
-            raise serializers.ValidationError("This username is already in use.")
+        if self.instance.username != value:
+            if hasattr(self.instance, 'oauth_cred') and self.instance.oauth_cred:
+                raise serializers.ValidationError("You cannot change your username because your account is linked with OAuth.")
+            if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
+                raise serializers.ValidationError("This username is already in use.")
         return value
 
     def validate_email(self, value):
-        oauth_linked = hasattr(self.instance, 'oauth_credentials') and self.instance.oauth_credentials is not None
-        if not oauth_linked and value.lower().endswith("@student.42.fr"):
-            raise serializers.ValidationError("Using '@student.42.fr' emails is not allowed for registration or updates.")
-        if User.objects.exclude(pk=self.instance.pk).filter(email__iexact=value).exists():
-            raise serializers.ValidationError("This email is already in use by another user.")
+        if self.instance.email.lower() != value.lower():
+            if hasattr(self.instance, 'oauth_cred') and self.instance.oauth_cred:
+                raise serializers.ValidationError("You cannot change your email because your account is linked with OAuth.")
+            if value.lower().endswith("@student.42.fr"):
+                raise serializers.ValidationError("Using '@student.42.fr' emails is not allowed for registration or updates.")
+            if User.objects.exclude(pk=self.instance.pk).filter(email__iexact=value).exists():
+                raise serializers.ValidationError("This email is already in use by another user.")
         return value
 
     def update(self, instance, validated_data):
