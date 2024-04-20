@@ -390,7 +390,6 @@ class OAuthCallbackView(generics.GenericAPIView):
         token_response = self.exchange_code_for_token(code)
         access_token = token_response.json().get('access_token')
         if access_token is None:
-            print("Problem with the access token")
             return Response(
                 {
                     "error": "Invalid API Call",
