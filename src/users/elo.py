@@ -12,11 +12,18 @@ def get_k(elo: int) -> int:
         return 20
     return 16
 
-def game_result(winner: User, looser: User, float: result):
-    winner_exp = 1 / (1 + 10 ** (looser.elo - winner.elo) / 400)
-    looser_exp = 1 / (1 + 10 ** (winner.elo - looser.elo) / 400)
-    winner.elo += get_k(winner.elo) * (0 + result - winner_exp) # the 0 is here so it looks nicer
-    looser.elo += get_k(looser.elo) * (1 - result - looser_exp)
-    winner.save()
-    looser.save()
+def game_result(winner: User, looser: User, result: float ):
+	print(f"####	elo: {winner.username} {winner.elo} vs {looser.username} {looser.elo} 0000000000000000000000000000000000000000000000000000000000000000000led")
+	winner.elo += 1
+	looser.elo -= 1
+	print(f"####	elo: {winner.username} {winner.elo} vs {looser.username} {looser.elo} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaled")
+	winner_exp = 1 / (1 + 10 ** (looser.elo - winner.elo) / 400)
+	# looser_exp = 1 / (1 + 10 ** (winner.elo - looser.elo) / 400)
+	looser_exp = 1 - winner_exp
+	winner.elo += get_k(winner.elo) * (0 + result - winner_exp) # the 0 is here so it looks nicer
+	looser.elo += get_k(looser.elo) * (1 - result - looser_exp)
+	print(f"####	elo: {winner.username} {winner.elo} vs {looser.username} {looser.elo} bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbled")
+	winner.save()
+	looser.save()
+	return [winner.elo, looser.elo]
 

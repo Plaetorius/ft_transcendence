@@ -327,12 +327,22 @@ class Party():
 				self.game_stop()
 				return
 			
+			# print(f"####	Party: Looping party {self.uuid} at {time.time()} ...")
+
+			# Remove objects
+			for obj in self.obj_to_remove:
+				if (next((o for o in self.objects if o.uuid == obj.uuid), None) != None):
+					self.objects.remove(obj)
+			
+			# Send update to all players
 			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_update", "obj_to_remove": [obj.uuid for obj in self.obj_to_remove]}) # Send update to all players
+				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
 			except Exception as e:
 				print(f"####	Party: ERROR: {e}")
+				
 				self.thread_error = True
 				self.game_stop()
+				
 				return
 
 			# Send update to all players
@@ -364,13 +374,17 @@ class Party():
 			"players": [player.to_dict() for player in self.players],
 			"max_players": self.max_players,
 			"objects": [obj.to_dict() for obj in self.objects],
+			"obj_to_remove": [obj.uuid for obj in self.obj_to_remove],
 			"second_per_frames": self.S_PER_UPDATE,
 		}
-
+	
 	def real_time_dict(self):
 		msg = {
 			"players": [player.to_dict() for player in self.players],
 			"objects": [obj.to_dict() for obj in self.objects],
+			"obj_to_remove": [obj.uuid for obj in self.obj_to_remove],
 			"second_per_frames": self.S_PER_UPDATE,
+
 		}
+		self.obj_to_remove.clear()
 		return msg

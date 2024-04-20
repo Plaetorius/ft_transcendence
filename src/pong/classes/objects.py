@@ -36,7 +36,7 @@ class ObjectAbstract:
 		self.uuid: uuid 	= str(uuid.uuid4())
 		self.controler: str	= None
 		
-		self.shape			= Shape.PADDLE
+		self.shape			= Shape.BOX
 		self.color: str		= '#76ABAE'
 		
 		self.pos			= vec2(0, 0)
@@ -110,6 +110,12 @@ class ObjectPaddle(ObjectAbstract):
 			direction.x += -val_cos
 			direction.y += +val_sin
 
+		# normalize velocity to value
+		# disp = direction.__abs__()
+		# if (disp > 1.0):
+		# 	direction = direction / disp
+
+		self.vel = direction * 16
 		self.vel = direction * 8
 
 		# if (key_values.get('a', False)):

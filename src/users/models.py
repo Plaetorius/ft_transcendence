@@ -25,10 +25,11 @@ class User(AbstractUser):
     )
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
-    elo = models.IntegerField(default=1000)
+    elo = models.FloatField(default=1000)
     is_online = models.BooleanField(default=False)
     last_seen = models.DateTimeField(auto_now=True) # already in model
     oauth = models.BooleanField(default=False)
+    # history = models.ManyToManyField(MatchHistory, blank=True)
 
 
     def __str__(self):
@@ -36,11 +37,15 @@ class User(AbstractUser):
 
 # Match history Class
 class MatchHistory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    game_type = models.CharField(max_length=100)
-    score = models.IntegerField()
-    # TODO Change to the real Game class
-    date_played = models.DateTimeField(auto_now_add=True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)									# User who played the game
+	openent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='opponent')		# Opponent
+	game_type = models.CharField("RANKED", max_length=100)															# Ranked or not										
+	user_score = models.IntegerField()																				# user score of the game
+	opponent_score = models.IntegerField()																			# opponent score of the game
+	win = models.BooleanField()																						# if the user won							
+	user_elo = models.IntegerField()																				# user elo win/loose this game
+	opponent_elo = models.IntegerField()																			# opponent elo win/loose this game						
+	date_played = models.DateTimeField(auto_now_add=True)															# date of the game
 
 
 # Friendship Class
