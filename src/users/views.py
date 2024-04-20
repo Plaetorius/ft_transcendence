@@ -465,7 +465,7 @@ class OAuthCallbackView(generics.GenericAPIView):
 		return response.json()
 
 #TODO view for Match History, returning the matches, the W/L ratio, the rank
-class UserMatchHistory(APIView):
+class UserMatchHistoryView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 

@@ -235,7 +235,7 @@ class BlockedUserSerializer(serializers.ModelSerializer):
         blocked = User.objects.get(pk=validated_data['blocked_id'])
         return BlockedUser.objects.create(blocker=blocker, blocked=blocked)
 
-class NatchHistoryerializer(serializers.ModelSerializer):
+class MatchHistoryerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
     username = serializers.CharField(validators=[username_validator])
 
