@@ -112,8 +112,7 @@ function oauth_register() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
-    // if (currentUrl.includes('/users/oauth2/callback')) {
-    if (currentUrl.includes('?code=')) {
+    if (currentUrl.includes('/users/oauth2/callback')) {
         window.location.href = 'https://localhost:1026/#home';
     }
 });
@@ -126,7 +125,6 @@ async function checkAuthentication() {
         });
 
         if (!response.ok) {
-            console.log("Not authenticated");
             throw new Error('Not authenticated');
         }
 
