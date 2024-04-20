@@ -469,8 +469,3 @@ class UserMatchHistory(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        user_id = request.user.id
-        matches = MatchHistory.objects.filter(user=user)
-        serializer = FriendshipDetailSerializer(friendships, many=True, context={'request_user': request.user})
-        return Response(serializer.data)
