@@ -10,6 +10,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.validators import RegexValidator
 from django.core.files.storage import default_storage
 from django.core.cache import cache
+import bleach
 import re
 
 
@@ -30,6 +31,10 @@ last_name_validator = RegexValidator(
     message="Last name must only contain letters, spaces, hyphens, or apostrophes, or be empty.",
 )
 
+def sanitize_bio(value):
+    clean_bio = bleach.clean(value, tags=[], strip=True)
+    return clean_bio
+
 def validate_image(file):
     valid_extensions = ['jpg', 'jpeg', 'png']
     extension = file.name.rsplit('.', 1)[1].lower()
@@ -43,10 +48,14 @@ def validate_image(file):
 class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.SerializerMethodField()
     username = serializers.CharField(validators=[username_validator])
+    bio = serializers.CharField(required=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'bio', 'profile_picture', 'profile_picture_url', 'elo', 'is_online', 'date_joined')
+
+    def validate_bio(self, value):
+        return sanitize_bio(value)
 
     def get_profile_picture_url(self, obj):
         if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
@@ -59,10 +68,14 @@ class UserAllSerializer(serializers.ModelSerializer):
     username = serializers.CharField(validators=[username_validator])
     first_name = serializers.CharField(validators=[first_name_validator])
     last_name = serializers.CharField(validators=[last_name_validator])
+    bio = serializers.CharField(required=False)
 
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture', 'profile_picture_url', 'elo')
+
+    def validate_bio(self, value):
+        return sanitize_bio(value)
 
     def get_profile_picture_url(self, obj):
         if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
@@ -75,10 +88,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(validators=[username_validator])
     first_name = serializers.CharField(required=False, default='', allow_blank=True, trim_whitespace=True, validators=[first_name_validator])
     last_name = serializers.CharField(required=False, default='', allow_blank=True, trim_whitespace=True, validators=[last_name_validator])
+    bio = serializers.CharField(required=False)
 
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'profile_picture')
+
+    def validate_bio(self, value):
+        return sanitize_bio(value)
 
     def validate_username(self, value):
         if self.instance.username != value:
