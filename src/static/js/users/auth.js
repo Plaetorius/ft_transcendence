@@ -15,7 +15,7 @@ function getCookie(name) {
 }
 
 function handleErrors(data) {
-    let errorMessage = 'hadError:\n'; //TODO remove had
+    let errorMessage = 'Error:\n';
 
 	for (const [key, value] of Object.entries(data)) {
 		errorMessage += value[0] + " ";
