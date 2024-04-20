@@ -5,8 +5,10 @@ from .player import Player
 from .math_vec2 import vec2
 
 import uuid
+import time
 import math
-from random import uniform
+import random
+from random import uniform, randint
 
 #
 # ENUM SHAPE
@@ -35,6 +37,8 @@ class ObjectAbstract:
 		self.controler: str	= None
 		
 		self.shape			= Shape.PADDLE
+		self.color: str		= '#76ABAE'
+		
 		self.pos			= vec2(0, 0)
 		self.dir			= vec2(0, 0)
 		self.vel			= vec2(0, 0)
@@ -57,13 +61,15 @@ class ObjectAbstract:
 			"pos": self.pos.to_dict(),
 			"vel": self.vel.to_dict(),
 			"size": self.size.to_dict(),
-			"rot": self.rot
+			"rot": self.rot,
+			"color": self.color,
 		}
 	
 class ObjectTerrain(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
 		self.shape		= Shape.TERRAIN
+		self.color		= '#EEEEEE'
 		self.size		= vec2(400, 600)
 		self.controler	= None
 		self.collide	= Collision.NONE
@@ -71,16 +77,23 @@ class ObjectTerrain(ObjectAbstract):
 class ObjectPaddle(ObjectAbstract):
 	def __init__(self, controler: str):
 		super().__init__()
-		self.shape = Shape.PADDLE
-		self.size = vec2(32, 23)
-		self.collide = Collision.STOP
-		self.controler = controler
+		self.shape		= Shape.PADDLE
+		
+		random.seed(controler + str(time.time()))
+		r = lambda: random.randint(75, 175)
+		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
+		
+		self.size		= vec2(32, 23)
+		self.collide	= Collision.STOP
+		self.controler	= controler
+		pass
 
 	def control(self, key_values):
 		val_sin = math.sin(self.rot)
 		val_cos = math.cos(self.rot)
 
 		direction = vec2(0, 0)
+		
 		if (key_values.get('z', False)):
 			direction.x += +val_sin
 			direction.y += +val_cos
@@ -97,11 +110,6 @@ class ObjectPaddle(ObjectAbstract):
 			direction.x += -val_cos
 			direction.y += +val_sin
 
-		# normalize velocity to value
-		# disp = direction.__abs__()
-		# if (disp > 1.0):
-		# 	direction = direction / disp
-
 		self.vel = direction * 8
 
 		# if (key_values.get('a', False)):
@@ -109,7 +117,7 @@ class ObjectPaddle(ObjectAbstract):
 
 		# if (key_values.get('e', False)):
 		# 	self.rot = self.rot - 0.1
-			
+  
 		pass
 
 	def update(self):
@@ -120,6 +128,7 @@ class ObjectBall(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
 		self.shape		= Shape.BALL
+		self.color		= '#31363F'
 		self.collide	= Collision.BOUNCE
 		self.size		= vec2(40, 40)
 		self.rot		= uniform(0, 2 * math.pi)

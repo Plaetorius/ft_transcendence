@@ -63,7 +63,7 @@ function initGamePong() {
 
 	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 0.1, 5000);
 	camera.position.x = 0;
-	camera.position.y = 600;
+	camera.position.y = 500;
 	camera.position.z = -0.001;
 	// camera.position.z = 400;
 
@@ -71,7 +71,7 @@ function initGamePong() {
 
 	// Scene creation
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0xaaaaaa);
+	scene.background = new THREE.Color(0x222831);
 
 	// Lights creation
 	scene.add(new THREE.DirectionalLight(0xffffff, 4));
@@ -159,7 +159,7 @@ function getSceneById(id) {
 	return ret_obj;
 }
 
-function updateOrCreateObject(id, position, rotation, size, shape) {
+function updateOrCreateObject(id, position, rotation, size, shape, color) {
 	let object = getSceneById(id);
 
 	if (object == null) {
@@ -169,22 +169,22 @@ function updateOrCreateObject(id, position, rotation, size, shape) {
 		let material;
 		if (shape === "Shape.TERRAIN") {
 			geometry = new THREE.BoxGeometry(size.x, 5, size.z);
-			material = new THREE.MeshLambertMaterial({ color: "#16ff24" })
+			material = new THREE.MeshLambertMaterial({ color: color });
 			position.y = -2.5;
 		}
 		else if (shape === "Shape.PADDLE") {
 			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
-			material = new THREE.MeshLambertMaterial({ color: "#1684ff" })
+			material = new THREE.MeshLambertMaterial({ color: color });
 			position.y = 5;
 		}
 		else if (shape === "Shape.BALL") {
 			geometry = new THREE.SphereGeometry(size.x / 2, 16, 16);
-			material = new THREE.MeshLambertMaterial({ color: "#161184" })
+			material = new THREE.MeshLambertMaterial({ color: color });
 			position.y = 10;
 		}
 		else {
 			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
-			material = new THREE.MeshLambertMaterial({ color: "#ff1684" })
+			material = new THREE.MeshLambertMaterial({ color: color });
 		}
 
 		let cube = new THREE.Mesh(geometry, material);
@@ -197,7 +197,7 @@ function updateOrCreateObject(id, position, rotation, size, shape) {
 		// console.log("THERE IS OBJECTS: " + position.x + ", " + position.y + ", " + position.z);
 		object.position.set(position.x, object.position.y, position.z);
 		object.rotation.set(0, rotation, 0);
-		// object.material.color.set(color);
+		object.material.color.set(color);
 	}
 }
 
@@ -222,9 +222,7 @@ function setPlayerList() {
 			player_list.appendChild(player_li);
 		}
 	}
-
 }
-
 
 
 function renderGamePong() {
@@ -254,11 +252,12 @@ function renderGamePong() {
 			const size = new THREE.Vector3(obj['size']['x'], FIELD_HEIGTH, obj['size']['y']);
 			const shape = obj['shape'];
 			const velocity = new THREE.Vector3(obj['vel']['x'], FIELD_HEIGTH, obj['vel']['y']);
-
+			const color = obj['color'];
+			
 			pos.x = pos.x + velocity.x * current_server_offset;
 			pos.z = pos.z + velocity.z * current_server_offset;
 
-			updateOrCreateObject(uuid, pos, rot, size, shape, velocity);
+			updateOrCreateObject(uuid, pos, rot, size, shape, color);
 		}
 		setPlayerList();
 	}

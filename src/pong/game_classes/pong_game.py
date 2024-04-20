@@ -17,17 +17,17 @@ class	PongBall(ObjectAbstract):
 	def	__init__(self):
 		super().__init__()
 		self.shape		= Shape.BALL
+		self.color		= '#31363F'
 		self.collide	= Collision.BOUNCE
 		self.pos		= vec2(0, 0)
-		self.size		= vec2(16, 16)
-		self.speed		= 4
+		self.size		= vec2(8, 8)
+		self.speed		= 16.0
 		
 		self.init_rotation()
 
 	def init_rotation(self, rot: float = 0.0):
 		self.rot = rot
 		self.dir = vec2(math.sin(rot), math.cos(rot))
-		self.vel = self.dir * self.speed
 	
 	def	update(self):
 		self.pos = self.pos + self.vel
@@ -56,6 +56,10 @@ class	PongParty(Party):
 		# Custom party settings
 		self.allowed_players: list[str]	= []
 		self.game_state: GameState		= GameState.STOPPED
+		
+		self.is_state_on: bool			= False
+		self.state_timer: float			= 0.0
+		self.next_state: GameState		= GameState.STOPPED
 		
 		# Change world state to STOPPED (lobby)
 		self.update_world_state(GameState.STOPPED)
@@ -98,7 +102,7 @@ class	PongParty(Party):
 		
 		# Create Terrain
 		terrain = ObjectTerrain()
-		terrain.size = vec2(128, 128)
+		terrain.size = vec2(200, 200)
 		self.objects.append(terrain)
 		
 		# Create Terrain borders
@@ -124,7 +128,7 @@ class	PongParty(Party):
 		self.objects.append(box)
 		
 		# Create BABABOULE borders
-		small_border = terrain.size * 0.8
+		small_border = terrain.size * 0.6
   
 		box = ObjectAbstract()
 		box.shape = Shape.BOX
@@ -148,20 +152,18 @@ class	PongParty(Party):
 		self.objects.append(box)
 
 		# Create BABABOULES
-		bababoule = PongBall()
-		random_rot = (0.0, math.pi)[randint(0, 1)] + uniform(-1.5, 1.5) # Random direction
-		bababoule.init_rotation(random_rot) 
-		bababoule.pos.x = terrain.size.x * 0.9 / 2
-		bababoule.pos.y = 0.0
-		bababoule.size = vec2(6, 6)
-		self.objects.append(bababoule)
-		bababoule = PongBall()
-		random_rot = (0.0, math.pi)[randint(0, 1)] + uniform(-1.5, 1.5) # Random direction
-		bababoule.init_rotation(random_rot) 
-		bababoule.pos.x = 0.0
-		bababoule.pos.y = -terrain.size.x * 0.9 / 2
-		bababoule.size = vec2(6, 6)
-		self.objects.append(bababoule)
+		for i in range(6):
+			bababoule = PongBall()
+			bababoule.init_rotation(uniform(-math.pi, math.pi))
+			random_size = uniform(6, 10)
+			bababoule.size = vec2(random_size, random_size)
+			if (randint(0, 1) == 0):
+				bababoule.pos.x = terrain.size.x * 0.9 / 2 * (1 if randint(0, 1) == 0 else -1)
+				bababoule.pos.y = uniform(-0.5, 0.5) * terrain.size.y * 0.9
+			else:
+				bababoule.pos.x = uniform(-0.5, 0.5) * terrain.size.x * 0.9
+				bababoule.pos.y = terrain.size.y * 0.9 / 2 * (1 if randint(0, 1) == 0 else -1)
+			self.objects.append(bababoule)
 		
 		pass
 
@@ -180,6 +182,7 @@ class	PongParty(Party):
 		return True
 
 	def	_game_loop(self) -> bool:
+		
 		return True
 	
 	def	_game_join(self, player: Player) -> bool:
@@ -194,6 +197,14 @@ class	PongParty(Party):
 			if (is_allowed == None):
 				print(f"PONG: Player {player.id} cannot join the game (player not allowed to join)")
 				return False
+
+		# Add paddle if in game lobby
+		self.obj_to_remove.append(player.my_paddle)
+		player.my_paddle = ObjectPaddle(player.name)
+		player.my_paddle.size = vec2(16, 16)
+		player.my_paddle.pos = vec2(0, 0)
+		player.my_paddle.controler = player.name
+		self.objects.append(player.my_paddle)
 
 		return True
 
