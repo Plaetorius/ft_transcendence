@@ -1,5 +1,5 @@
 // TODO do better, this is more a getProfile
-function showProfile() {
+function getProfile() {
     fetch('/users/profile/', {
         method: 'GET',
         headers: {

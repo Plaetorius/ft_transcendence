@@ -62,7 +62,7 @@ async function handleSettingsFormSubmit(e) {
     }
     const data = await response.json();
     setupSettingsForm();
-    showProfile();
+    getProfile();
     notification('Profile updated!', 'check', 'success');
 }
 

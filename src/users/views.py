@@ -74,7 +74,6 @@ class CheckSessionView(APIView):
             'user': username,
         })
 
-# TODO Don't forget to escape bio before rendering it
 # I think that send_user_notification is useless
 def send_user_notification(user_id, text_message: str, path_to_icon: str, context: dict):
     """

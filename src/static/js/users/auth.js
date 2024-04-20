@@ -98,7 +98,7 @@ document.getElementById('no-account').addEventListener('click', () => {
 function authenticated() {
 	header.classList.remove("d-none");
 	setOnline();
-	showProfile();
+	getProfile();
 	navigateToSection('home');
 	notification('Successfully authenticated!', 'check', 'success');
 }
