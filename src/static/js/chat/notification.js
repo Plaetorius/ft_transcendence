@@ -5,6 +5,7 @@ function appendAndRemoveNotification(element_list, message, delay = 3000) {
 	// Create a new list item
 	const listItem = document.createElement('li');
 	listItem.classList.add('notification');
+	listItem.style.z_index = 999;
 	listItem.innerHTML = message;
 
 	// Append the new list item to the list

@@ -150,7 +150,7 @@ class pongTournament(Party):
 		super().__init__()
 		self.name								= "Pong Tournament"
 		self.timerupdate						= 12
-		self.max_players						= 64
+		self.max_players						= 32
 		self.timer								= self.timerupdate
 		self.activateTimer						= False
 		self.gameStarted						= False
@@ -177,9 +177,7 @@ class pongTournament(Party):
 
 	# reset all player paddle before create new match
 	def reset_autPlayer_paddle(self):
-		for player in self.autPlayer:
-			if player.paddle != None:
-				self.obj_to_remove.append(player.paddle)
+		self.obj_to_remove.extend([obj for obj in self.objects if obj.shape == Shape.PADDLE])
 
 
 	# reset all paddle
@@ -225,13 +223,11 @@ class pongTournament(Party):
 						temp_player1.in_game = False
 						self.autPlayer.remove(temp_player1)
 						# reset game
-						self.reset_game()
-						try:
-							async_to_sync (self.channel_layer.group_send)(self.party_channel_name, {"type": "leave_party", "user_id": temp_player1.id}) # kick loser
-						except Exception as e:
-							print(f"#### __create_Matches__ Party: ERROR: {e}")
+						self.game_event_disconnect(temp_player1)
 						# reset all player for reset game
-						self.playersT = []
+						# self.playersT = []
+						# POTENTIQL FIX
+						# self.reset_game()
 		if self.end == False:
 			self.autPlayer = self.playersT.copy()
 		self.reset_paddles()
@@ -281,10 +277,7 @@ class pongTournament(Party):
 					player.matchs.players.remove(joueur)
 					self.autPlayer.remove(joueur)
 					self.obj_to_remove.append(joueur.paddle)
-					try:
-						async_to_sync (self.channel_layer.group_send)(self.party_channel_name, {"type": "leave_party", "user_id": joueur.id}) # kick loser
-					except Exception as e:
-						print(f"#### player_scored Party: ERROR: {e}")
+					self.game_event_disconnect(joueur)
 					player.score = 0
 					player.matchs.winner = player.name
 					self.all_match_end()
@@ -348,6 +341,9 @@ class pongTournament(Party):
 		playerdelet = next((test for test in self.playersT if player.id == test.id), None)
 		if playerdelet != None:
 			self.playersT.remove(playerdelet)
+		if (len(self.playersT) == 0):
+			self.reset_game()
+			
 		return True
 
 	def _game_send_update(self):

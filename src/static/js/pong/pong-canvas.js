@@ -16,6 +16,7 @@ let server_interval = 1 / 30;
 const FIELD_HEIGTH = 10; //y
 
 let loaded_party = null;
+let	removed_obj_list = [];
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 

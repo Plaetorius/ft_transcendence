@@ -336,7 +336,7 @@ class Party():
 			
 			# Send update to all players
 			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
+				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_update", "obj_to_remove": [obj.uuid for obj in self.obj_to_remove]}) # Send update to all players
 			except Exception as e:
 				print(f"####	Party: ERROR: {e}")
 				
@@ -382,7 +382,6 @@ class Party():
 		msg = {
 			"players": [player.to_dict() for player in self.players],
 			"objects": [obj.to_dict() for obj in self.objects],
-			"obj_to_remove": [obj.uuid for obj in self.obj_to_remove],
 			"second_per_frames": self.S_PER_UPDATE,
 
 		}
