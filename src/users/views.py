@@ -381,35 +381,34 @@ class UserPodiumAPIView(APIView):
         return Response(serializer.data)
 
 class OAuthCallbackView(generics.GenericAPIView):
-	serializer_class = UserSerializer
+    serializer_class = UserSerializer
 
-	def get(self, request, *args, **kwargs):
-		code = request.GET.get('code')
-		token_response = self.exchange_code_for_token(code)
-		access_token = token_response.json().get('access_token')
-		if access_token is None:
-			print("Problem with the access token")
-			return Response(
-				{
-                	"error": "Invalid API Call",
-            	},
-            	status=status.HTTP_400_BAD_REQUEST,
-			)
-		user_data = self.get_user_data(access_token)
+    def get(self, request, *args, **kwargs):
+        code = request.GET.get('code')
+        token_response = self.exchange_code_for_token(code)
+        access_token = token_response.json().get('access_token')
+        if access_token is None:
+            print("Problem with the access token")
+            return Response(
+                {
+                    "error": "Invalid API Call",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user_data = self.get_user_data(access_token)
 
-		user, created = User.objects.update_or_create(
-			username=user_data['login'],
-			defaults={
-				'email': user_data['email'],
-			}
-		)
+        user, created = User.objects.update_or_create(
+            username=user_data['login'],
+            defaults={
+                'email': user_data['email'],
+            }
+        )
 
-		if created:
-			print("User created")
-			user.set_unusable_password()
-			user.save()
+        if created:
+            user.set_unusable_password()
+            user.save()
 
-		oauth_cred, _ = OAuthCred.objects.update_or_create(
+        oauth_cred, _ = OAuthCred.objects.update_or_create(
             user=user,
             defaults={
                 'provider': '42', 
@@ -418,16 +417,18 @@ class OAuthCallbackView(generics.GenericAPIView):
                 'refresh_token': token_response.json().get('refresh_token'),
             }
         )
+        user.oauth_cred = oauth_cred
+        user.save()
 
-		refresh = RefreshToken.for_user(user)
-		res_data = {
-			'refresh': str(refresh),
-			'access': str(refresh.access_token),
-			'username': user.username,
-			'email': user.email,
-		}
-		response = redirect('https://localhost:1026/#home')
-		response.set_cookie(
+        refresh = RefreshToken.for_user(user)
+        res_data = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'username': user.username,
+            'email': user.email,
+        }
+        response = redirect('https://localhost:1026/#home')
+        response.set_cookie(
             'refresh_token',
             str(refresh),
             httponly=True,
@@ -436,7 +437,7 @@ class OAuthCallbackView(generics.GenericAPIView):
             max_age=3600*24*14,
             path='/',
         )
-		response.set_cookie(
+        response.set_cookie(
             'access_token',
             str(refresh.access_token),
             httponly=True,
@@ -445,24 +446,24 @@ class OAuthCallbackView(generics.GenericAPIView):
             max_age=3600*4,
             path='/',
         )
-		return response
+        return response
 
-	def exchange_code_for_token(self, code):
-		token_url = 'https://api.intra.42.fr/oauth/token'
-		payload = {
-			'grant_type': 'authorization_code',
-			'client_id': settings.OAUTH_CLIENT_ID,
-			'client_secret': settings.OAUTH_CLIENT_SECRET,
-			'code': code,
-			'redirect_uri': settings.OAUTH_REDIRECT_URI,
-		}
-		return requests.post(token_url, data=payload)
+    def exchange_code_for_token(self, code):
+        token_url = 'https://api.intra.42.fr/oauth/token'
+        payload = {
+            'grant_type': 'authorization_code',
+            'client_id': settings.OAUTH_CLIENT_ID,
+            'client_secret': settings.OAUTH_CLIENT_SECRET,
+            'code': code,
+            'redirect_uri': settings.OAUTH_REDIRECT_URI,
+        }
+        return requests.post(token_url, data=payload)
 
-	def get_user_data(self, access_token):
-		user_info_url = 'https://api.intra.42.fr/v2/me'
-		headers = {'Authorization': f'Bearer {access_token}'}
-		response = requests.get(user_info_url, headers=headers)
-		return response.json()
+    def get_user_data(self, access_token):
+        user_info_url = 'https://api.intra.42.fr/v2/me'
+        headers = {'Authorization': f'Bearer {access_token}'}
+        response = requests.get(user_info_url, headers=headers)
+        return response.json()
 
 #TODO view for Match History, returning the matches, the W/L ratio, the rank
 class UserMatchHistoryView(APIView):
