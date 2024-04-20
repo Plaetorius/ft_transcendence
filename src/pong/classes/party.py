@@ -266,6 +266,17 @@ class Party():
 		if (rdata != None):
 			self._received_data[rdata] = data['keys']
 
+	def game_disconnect(self, player: Player) -> bool:
+		try:
+			print(f"####	Party: Disconnecting player {player.name} from party {self.uuid} ...")
+			async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_disconnect", "player_id": player.id})
+			print(f"####	Party: Player {player.name} disconnected from party {self.uuid}")
+			return True
+		except Exception as e:
+			print(f"####	Party: Could not disconnect player {player.name} from party {self.uuid} ({e})")
+			return False
+		
+
 	def game_loop(self):
 		print(f"####	Party: THREAD STARTED for party {self.uuid} at {time.time()}")
 
@@ -295,22 +306,20 @@ class Party():
 				self.game_stop()
 				return
 			
-			# print(f"####	Party: Looping party {self.uuid} at {time.time()} ...")
-
-			# Remove objects
-			for obj in self.obj_to_remove:
-				self.objects.remove(obj)
-			
-			# Send update to all players
 			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "update_party"}) # Send update to all players
+				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_update", "obj_to_remove": [obj.uuid for obj in self.obj_to_remove]}) # Send update to all players
 			except Exception as e:
 				print(f"####	Party: ERROR: {e}")
-				
 				self.thread_error = True
 				self.game_stop()
-				
 				return
+
+			# Send update to all players
+			for obj in self.obj_to_remove:
+				ob = next((o for o in self.objects if o.uuid == obj.uuid), None)
+				if (ob != None):
+					self.objects.remove(ob)
+			self.obj_to_remove.clear()
 
 			# Update loop values
 			loop_offset = loop_end_tick - time.time()
@@ -331,17 +340,13 @@ class Party():
 			"players": [player.to_dict() for player in self.players],
 			"max_players": self.max_players,
 			"objects": [obj.to_dict() for obj in self.objects],
-			"obj_to_remove": [obj.uuid for obj in self.obj_to_remove],
 			"second_per_frames": self.S_PER_UPDATE,
 		}
-	
+
 	def real_time_dict(self):
 		msg = {
 			"players": [player.to_dict() for player in self.players],
 			"objects": [obj.to_dict() for obj in self.objects],
-			"obj_to_remove": [obj.uuid for obj in self.obj_to_remove],
 			"second_per_frames": self.S_PER_UPDATE,
-
 		}
-		self.obj_to_remove.clear()
 		return msg

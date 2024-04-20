@@ -119,6 +119,8 @@ function animateGamePong() {
 	requestAnimationFrame(animateGamePong);
 }
 
+let removed_obj_list = [];
+
 // WEBSOCKET RECEIVE
 pong_websocket.onmessage = function (data) {
 	const json_data = JSON.parse(data.data);
@@ -136,6 +138,7 @@ pong_websocket.onmessage = function (data) {
 			type: "update",
 			keys: pressed,
 			player_name: user.username,
+			removed_obj: removed_obj_list,
 			date: Date.now()
 		};
 		pong_websocket.send(JSON.stringify(msg));
@@ -235,13 +238,13 @@ function renderGamePong() {
 	delta += cur_delta;
 	server_delta += cur_delta;
 
-	if (loaded_party != null) {
+	if (loaded_party != null && loaded_party['obj_to_remove'] != null) {
 		const current_server_offset = server_delta / server_interval;
-		
-		const uuid_to_remove = loaded_party['obj_to_remove'];
+		let uuid_to_remove = loaded_party['obj_to_remove'];
 		for (let uuid of uuid_to_remove) {
 			removeObject(uuid);
 		}
+		removed_obj_list = uuid_to_remove;
 		
 		const obj_array = loaded_party['objects'];
 		for (let obj of obj_array) {

@@ -4,6 +4,8 @@ from ..classes.player import ( Player )
 from ..classes.objects import ( Shape, ObjectAbstract, ObjectBall, ObjectTerrain, ObjectPaddle)
 from ..classes.math_vec2 import ( vec2 )
 
+from asgiref.sync import async_to_sync
+
 import random
 import uuid
 import time
@@ -66,11 +68,14 @@ class	TestParty(Party):
 
 	def	_game_loop(self) -> bool:
 		# print(f"####	Party: Looping party {self.uuid} at {time.time()} ...")
+  
 		if (self.server_tick % 20 == 0):
-			self.objects.append(self.object_ball)
-		elif (self.server_tick % 20 == 10):
 			self.obj_to_remove.append(self.object_ball)
+			self.object_ball = ObjectBall()
+			self.objects.append(self.object_ball)
 		
+		# if (self.server_tick > 100):
+		# 	self.game_disconnect(self.players[0])
 		return True
 	
 	def	_game_join(self, player: Player) -> bool:

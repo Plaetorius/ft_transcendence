@@ -18,6 +18,7 @@ class	PongBall(ObjectAbstract):
 		super().__init__()
 		self.shape		= Shape.BALL
 		self.collide	= Collision.BOUNCE
+		self.pos		= vec2(0, 0)
 		self.size		= vec2(16, 16)
 		self.speed		= 4
 		
