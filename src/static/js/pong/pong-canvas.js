@@ -13,7 +13,7 @@ let server_delta = 0.0;
 let interval = 1 / 60;
 let server_interval = 1 / 30;
 
-const FIELD_HEIGTH = 10; 	//y
+const FIELD_HEIGTH = 10; //y
 
 let loaded_party = null;
 
@@ -36,7 +36,7 @@ function initGamePong() {
 	container = document.getElementById('game-canvas');
 	container.style.display = "flex";
 	container.style.flexDirection = "row";
-	
+
 	let player_list = document.createElement('ul');
 	player_list.id = "ingame_player_list";
 	player_list.classList.add("ingame_player_list");
@@ -56,7 +56,7 @@ function initGamePong() {
 
 	// var canvas = renderer.domElement,
 	// 	context = canvas.getContext('2d');
-		
+
 	// context.moveTo(100, 150);
 	// context.lineTo(350, 50);
 	// context.stroke();
@@ -104,11 +104,11 @@ function initGamePong() {
 
 let pressed = {};
 
-window.addEventListener('keydown', function (event) {
+window.addEventListener('keydown', function(event) {
 	pressed[event.key.toLowerCase()] = true;
 });
 
-window.addEventListener('keyup', function (event) {
+window.addEventListener('keyup', function(event) {
 	delete pressed[event.key.toLowerCase()];
 });
 
@@ -119,10 +119,8 @@ function animateGamePong() {
 	requestAnimationFrame(animateGamePong);
 }
 
-let removed_obj_list = [];
-
 // WEBSOCKET RECEIVE
-pong_websocket.onmessage = function (data) {
+pong_websocket.onmessage = function(data) {
 	const json_data = JSON.parse(data.data);
 
 	if (json_data["type"] === "update") {
@@ -138,7 +136,6 @@ pong_websocket.onmessage = function (data) {
 			type: "update",
 			keys: pressed,
 			player_name: user.username,
-			removed_obj: removed_obj_list,
 			date: Date.now()
 		};
 		pong_websocket.send(JSON.stringify(msg));
@@ -148,7 +145,7 @@ pong_websocket.onmessage = function (data) {
 
 function getSceneById(id) {
 	let ret_obj = null;
-	scene.traverse(function (object) {
+	scene.traverse(function(object) {
 		if (object.userId != undefined) {
 			if (object.userId === id) {
 				ret_obj = object;
@@ -171,18 +168,15 @@ function updateOrCreateObject(id, position, rotation, size, shape) {
 			geometry = new THREE.BoxGeometry(size.x, 5, size.z);
 			material = new THREE.MeshLambertMaterial({ color: "#16ff24" })
 			position.y = -2.5;
-		}
-		else if (shape === "Shape.PADDLE") {
+		} else if (shape === "Shape.PADDLE") {
 			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
 			material = new THREE.MeshLambertMaterial({ color: "#1684ff" })
 			position.y = 5;
-		}
-		else if (shape === "Shape.BALL") {
+		} else if (shape === "Shape.BALL") {
 			geometry = new THREE.SphereGeometry(size.x / 2, 16, 16);
 			material = new THREE.MeshLambertMaterial({ color: "#161184" })
 			position.y = 10;
-		}
-		else {
+		} else {
 			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
 			material = new THREE.MeshLambertMaterial({ color: "#ff1684" })
 		}
@@ -238,14 +232,14 @@ function renderGamePong() {
 	delta += cur_delta;
 	server_delta += cur_delta;
 
-	if (loaded_party != null && loaded_party['obj_to_remove'] != null) {
+	if (loaded_party != null) {
 		const current_server_offset = server_delta / server_interval;
-		let uuid_to_remove = loaded_party['obj_to_remove'];
+
+		const uuid_to_remove = loaded_party['obj_to_remove'];
 		for (let uuid of uuid_to_remove) {
 			removeObject(uuid);
 		}
-		removed_obj_list = uuid_to_remove;
-		
+
 		const obj_array = loaded_party['objects'];
 		for (let obj of obj_array) {
 			const uuid = obj['uuid'];
@@ -257,6 +251,13 @@ function renderGamePong() {
 
 			pos.x = pos.x + velocity.x * current_server_offset;
 			pos.z = pos.z + velocity.z * current_server_offset;
+
+			if (obj['controler'] === user.username) {
+				camera.position.x = pos.x - Math.sin(rot) * 300;
+				camera.position.z = pos.z - Math.cos(rot) * 300;
+				camera.position.y = 200;
+				camera.lookAt(pos.x, 100, pos.z);
+			}
 
 			updateOrCreateObject(uuid, pos, rot, size, shape, velocity);
 		}

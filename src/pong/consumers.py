@@ -23,7 +23,7 @@ from .classes.party import Party
 
 # GAME CLASSES
 from .game_classes.pong_game import PongParty
-from .game_classes.test_game import TestParty
+from .game_classes.pong_tournament import pongTournament
 
 
 ##
@@ -52,9 +52,12 @@ class PartyManager():
 		self.small_parties: dict[str, SmallParty]	= {}
 		self.in_games: dict[str, Party]				= {}
 		self.channel_layer							= get_channel_layer()
-	
-	def create_party(self, name: str) -> Party:
-		party = (PongParty(), TestParty())[random.randint(0, 1)]
+		self.create_party("bot", pongTournament())
+
+	def create_party(self, name: str, party_type = None) -> Party:
+		if party_type == None:
+			party_type = PongParty()
+		party = party_type
 		party.name = party.name + f"_{name}"
 		self.parties[party.uuid] = party
 		print(f"####	PartyManager: Party {party.uuid} created")
@@ -69,9 +72,6 @@ class PartyManager():
 	async def delete_party(self, party_uuid: str) -> bool:
 		if party_uuid in self.parties:
 			self.parties[party_uuid].game_stop()
-			
-			for player in self.parties[party_uuid].players:
-				self.parties[party_uuid].game_disconnect(player)
 
 			del self.parties[party_uuid]
 			del self.small_parties[party_uuid]
@@ -110,9 +110,10 @@ class PartyManager():
 
 		return False
 
-	async def leave_party(self, party_uuid: str, player: Player) -> bool:
+	async def leave_party(self, party_uuid: str, pl: Player) -> bool:
 		# Check if the player is not in a game
-		if (self.in_games.get(player.id, None) == None):
+		player = self.in_games.get(pl.id, None)
+		if (player == None):
 			print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
 			return False
 
@@ -128,6 +129,10 @@ class PartyManager():
 		if (success == True):
 			small_party.players.remove(player)
 			del self.in_games[player.id]
+			try:
+				await self.parties[party_uuid].channel_layer.group_send(self.parties[party_uuid].party_channel_name, {"type": "leave_party", "user_id": player.id}) # kick loser
+			except Exception as e:
+				print(f"####	Party: ERROR: {e}")
 			return True
 		
 		print(f"####	PartyManager: Player {player.name} could not leave party {party_uuid} (party not found)")
@@ -167,9 +172,6 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		super().__init__(*args, **kwargs)
 
 	async def connect(self):
-		# Accept connection
-		await self.accept()
-		
 		# Init channel values
 		self.party_uuid: str			= self.scope['url_route']['kwargs']['party_uuid']
 		self.party: Party				= None
@@ -177,23 +179,21 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		self.party_channel_name: str	= f"party_{self.party_uuid}"
 		self.player: Player				= None
 		
-		self.obj_to_remove: list		= []
-		
 		# Check if party exists and if player can join
 		if (self.party_uuid not in g_party_manager.parties):
 			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (party not found)")
-			await self.close()
+			await self.close(code=99900)
 			return
 	
 		if (g_party_manager.in_games.get(self.user.id, None) != None):
 			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (player already in a game)")
-			await self.close()
+			await self.close(code=99902)
 			return
 		
 		# Check if player can join the party and join it
 		self.player = Player(self.user.username, self.user.id)
 		if (await g_party_manager.join_party(self.party_uuid, self.player) == False):
-			await self.close()
+			await self.close(code=99901)
 			return
 		
 		self.party = g_party_manager.parties[self.party_uuid]
@@ -201,9 +201,13 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		# If everything is ok, connect to the party
 		print(f"####	PartyConsumer: Connect to channel {self.party_channel_name} (party:{self.party_uuid})")
 		await self.channel_layer.group_add(self.party_channel_name, self.channel_name)
+		
+		# Accept connection
+		await self.accept()
 
 
 	async def disconnect(self, close_code):
+		print(f"####	PartyConsumer: ERROR CODE: {close_code}")
 		await self.channel_layer.group_discard(self.party_channel_name, self.channel_name)
 
 		if (self.player == None):
@@ -213,44 +217,28 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	# Receive message from WebSocket
 	async def receive(self, text_data):
-		if (self.player == None):
-			return
-		
+		# print(f"####	PartyConsumer: message received: {text_data}")
 		text_data_json = json.loads(text_data)
 		
-		if (text_data_json.get('removed_obj', False)):
-			front_removed_list = text_data_json['removed_obj']
-			self.obj_to_remove = [ obj for obj in self.obj_to_remove if obj not in front_removed_list]
 		try:
 			await self.party._game_receive(text_data_json)
 		except Exception as e:
 			print(f"####	PartyConsumer: ERROR: {e}")
 
-	
-	async def party_disconnect(self, event):
-		if (self.player == None):
-			return
-		if (event['player_id'] == self.player.id):
-			print(f"####	PartyConsumer: Player {self.player.name} disconnected from party {self.party_uuid}")
+	async def leave_party(self, event):
+		print(f"event: {event}")
+		if (event['user_id'] == self.user.id):
 			await self.close()
+			return
 
+	async def update_party(self, event):
 
-	# Send message to all players in the party
-	async def party_update(self, event):
-		
 		# Send message to all players in the party
 		message = {
 				"type": "update",
 				"party": self.party.real_time_dict()
 			}
 	
-		# Add the obj to the remove buffer
-		if (event.get('obj_to_remove', None) != None):
-			self.obj_to_remove.extend(event['obj_to_remove'])
-		
-		# Add obj_to_remove to the message
-		message["party"]['obj_to_remove'] = self.obj_to_remove
-
 		try:
 			await self.send(text_data=json.dumps(message))
 		except Exception as e:
