@@ -32,10 +32,10 @@ async function onPageReload() {
 	const isAuthenticated = await checkAuthentication();
 	if (isAuthenticated) {
 		getProfile();
+		loadAndDisplayFriends();
 		getPodium();
 		setOnline();
 		setupSettingsForm();
-		actualiseFriendsSection();
 	} else {
 		header.classList.add('d-none');
 		navigateToSection('register');

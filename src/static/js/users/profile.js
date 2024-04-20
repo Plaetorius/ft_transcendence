@@ -1,4 +1,3 @@
-// TODO do better, this is more a getProfile
 function getProfile() {
     fetch('/users/profile/', {
         method: 'GET',
@@ -17,7 +16,6 @@ function getProfile() {
         user = userData;
 		document.getElementById("profile-picture").src = user.profile_picture_url;
 		loadMyProfile();
-		loadAndDisplayFriends();
     })
     .catch(error => {
 		notification(error, 'cross', 'error');
