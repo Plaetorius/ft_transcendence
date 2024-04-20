@@ -5,7 +5,7 @@ from django.views import View
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from .models import User, Friendship, BlockedUser, OAuthCred
+from .models import User, Friendship, BlockedUser, OAuthCred, MatchHistory
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from users.authentication import CookieJWTAuthentication
@@ -464,3 +464,12 @@ class OAuthCallbackView(generics.GenericAPIView):
 		return response.json()
 
 #TODO view for Match History, returning the matches, the W/L ratio, the rank
+class UserMatchHistory(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user_id = request.user.id
+        matches = MatchHistory.objects.filter(user=user)
+        serializer = FriendshipDetailSerializer(friendships, many=True, context={'request_user': request.user})
+        return Response(serializer.data)

@@ -42,4 +42,7 @@ prune-volumes:
 exec:
 	docker-compose exec $(service) $(cmd)
 
-.PHONY: build up up-detached down stop logs prune prune-all prune-volumes exec
+start:
+	docker-compose up --build
+
+.PHONY: build up up-detached down stop logs prune prune-all prune-volumes exec start

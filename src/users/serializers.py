@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from django.templatetags.static import static
 from django.conf import settings
-from .models import User, Friendship, BlockedUser
+from .models import User, Friendship, BlockedUser, MatchHistory
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
@@ -234,3 +234,11 @@ class BlockedUserSerializer(serializers.ModelSerializer):
         blocker = User.objects.get(pk=validated_data['blocker_id'])
         blocked = User.objects.get(pk=validated_data['blocked_id'])
         return BlockedUser.objects.create(blocker=blocker, blocked=blocked)
+
+class NatchHistoryerializer(serializers.ModelSerializer):
+    profile_picture_url = serializers.SerializerMethodField()
+    username = serializers.CharField(validators=[username_validator])
+
+    class Meta:
+        model = MatchHistory
+        fields = ('id', 'username', 'bio', 'profile_picture', 'profile_picture_url', 'elo', 'is_online', 'date_joined')
