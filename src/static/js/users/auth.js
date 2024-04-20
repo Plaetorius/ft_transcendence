@@ -106,14 +106,16 @@ function authenticated() {
 document.getElementById("oauth-button").addEventListener("click", oauth_register);
 
 function oauth_register() {
-	const authUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-74b16c2e5ea3a21411f68f94d3baa9360412380b7ee6088672f7028ffcac8652&redirect_uri=https%3A%2F%2Flocalhost%3A1026%2Fusers%2Foauth2%2Fcallback&response_type=code"
+    const encodedCallBackUrl = encodeURI(base_url + '/users/oauth2/callback');
+    const client_id = "u-s4t2ud-74b16c2e5ea3a21411f68f94d3baa9360412380b7ee6088672f7028ffcac8652";
+    const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${client_id}&redirect_uri=${encodedCallBackUrl}&response_type=code`;
     window.location.href = authUrl;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
     if (currentUrl.includes('/users/oauth2/callback')) {
-        window.location.href = 'https://localhost:1026/#home';
+        window.location.href = base_url + '/#home';
     }
 });
 

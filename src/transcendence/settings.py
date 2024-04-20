@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+
 #TODO set debug to False in .env
+#TODO set allowed hosts in .env
+#TODO set API 42 
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,6 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+BASE_URL = os.getenv('BASE_URL', 'http://localhost:1026')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
@@ -182,9 +186,7 @@ SIMPLE_JWT = {
 
 # CORS SETUP
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-    'https://localhost:1026',
-]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-Csrftoken']

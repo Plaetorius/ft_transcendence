@@ -16,6 +16,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.core.files.base import ContentFile
 from django.utils.crypto import get_random_string
+from transcendence.settings import BASE_URL
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
@@ -428,7 +429,7 @@ class OAuthCallbackView(generics.GenericAPIView):
             'username': user.username,
             'email': user.email,
         }
-        response = redirect('https://localhost:1026/#home')
+        response = redirect(f'{BASE_URL}/#home')
         response.set_cookie(
             'refresh_token',
             str(refresh),

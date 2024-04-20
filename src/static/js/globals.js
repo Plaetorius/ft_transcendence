@@ -6,3 +6,4 @@ const pages = document.getElementById("pages");
 let activeSection = document.querySelector("section.active");
 let lastScroll = 0;
 let user = undefined;
+const base_url = window.location.origin;
