@@ -97,7 +97,6 @@ def collide_box_to_box(obj1: ObjectAbstract, obj2: ObjectAbstract):
 			obj1.dir.x = normal_diff.x * 1.0
 		obj1.dir = obj1.dir / obj1.dir.__abs__()
 
-
 # TO FINE TUNE
 def collide_sort_objects(objects: list[ObjectAbstract], obj1: ObjectAbstract):
 	list_copy = objects.copy()
@@ -130,10 +129,13 @@ class Party():
 		self.max_players: int				= 4
 		self.running: bool					= False
 		self.is_public: bool				= True
-		self.party_channel_name: str		= f"party_{self.uuid}"
-		self.channel_layer					= get_channel_layer()
+
 		self.objects: List[ObjectAbstract]	= []
 		self.obj_to_remove: List[ObjectAbstract]	= []
+
+		self.party_channel_name: str		= f"party_{self.uuid}"
+		self.channel_layer					= get_channel_layer()
+		
 
 		self.S_PER_UPDATE					= 1.0 / 30.0
 		
@@ -144,6 +146,7 @@ class Party():
 
 		self.thread: Thread					= None
 		self.thread_error: bool				= False
+		self.event_list: list[str]			= []
 		
 		pass
 
@@ -266,16 +269,34 @@ class Party():
 		if (rdata != None):
 			self._received_data[rdata] = data['keys']
 
-	def game_disconnect(self, player: Player) -> bool:
-		try:
-			print(f"####	Party: Disconnecting player {player.name} from party {self.uuid} ...")
-			async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_disconnect", "player_id": player.id})
-			print(f"####	Party: Player {player.name} disconnected from party {self.uuid}")
-			return True
-		except Exception as e:
-			print(f"####	Party: Could not disconnect player {player.name} from party {self.uuid} ({e})")
-			return False
-		
+
+	def game_event_disconnect(self, player: Player) -> bool:
+		print(f"####	Party: Event: Player {player.name} disconnecting from party {self.uuid}")
+		self.event_list.append({"type": "party_disconnect", "player_id": player.id})
+
+	def game_event_message(self, message: str, time: float,  players: list[Player] = None) -> bool:
+
+		# Send message to all players in the party if players is None
+		if (players == None):
+			players = self.players
+
+		print(f"####	Party: Event: Sending message {message}")
+		print(f"####	Party: Event: Sending players {[player.id for player in players]}")
+
+		print(f"####	Party: Event: Sending message {message} to players {[player.id for player in players]} in party {self.uuid}")
+		self.event_list.append({"type": "party_title", "text": message, "time": time, "players": [player.id for player in players]})
+
+	def game_run_event(self):
+		for event in self.event_list:
+			print(f"####	Party: Sending event to party {self.uuid}")
+			print(f"####	Party: Sending event to party {self.party_channel_name}")
+			print(f"####	Party: Sending event to party {event}")
+
+			try:
+				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, event)
+			except Exception as e:
+				print(f"####	Party: Event: ERROR: Could not send event {event} {e}")
+		self.event_list.clear()
 
 	def game_loop(self):
 		print(f"####	Party: THREAD STARTED for party {self.uuid} at {time.time()}")
@@ -320,6 +341,9 @@ class Party():
 				if (ob != None):
 					self.objects.remove(ob)
 			self.obj_to_remove.clear()
+
+			# Run events
+			self.game_run_event()
 
 			# Update loop values
 			loop_offset = loop_end_tick - time.time()

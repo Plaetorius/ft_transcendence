@@ -9,6 +9,10 @@ from random import uniform, randint
 
 import random, math, json, uuid, time
 
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 	#####################
 	#  CLASS PONG BALL  #
 	#####################
@@ -55,6 +59,7 @@ class	PongParty(Party):
 		
 		# Custom party settings
 		self.allowed_players: list[str]	= []
+		self.already_joined: dict[str]	= []
 		self.game_state: GameState		= GameState.STOPPED
 		
 		self.is_state_on: bool			= False
@@ -175,7 +180,6 @@ class	PongParty(Party):
 			self.create_game_world()
 
 	def	_game_start(self) -> bool:
-		
 		return True
 
 	def	_game_stop(self) -> bool:
@@ -183,6 +187,8 @@ class	PongParty(Party):
 
 	def	_game_loop(self) -> bool:
 		
+		if (self.server_tick % 20 == 0):
+			self.game_event_message("Game loop", 1.0)
 		return True
 	
 	def	_game_join(self, player: Player) -> bool:
@@ -190,21 +196,23 @@ class	PongParty(Party):
 		# Check if player is already in the game
 		is_allowed = next((p for p in self.allowed_players if p == player.id), None)
 		
+		# Send a message to the party channel
+		self.game_event_message(f"Player {player.id} joined the game", 4.0)
+
 		if (self.game_state == GameState.STOPPED):
 			print(f"PONG: Player {player.id} joined the game")
 		else:
 			# Kick player if game is running and player is not allowed to joins
 			if (is_allowed == None):
-				print(f"PONG: Player {player.id} cannot join the game (player not allowed to join)")
+				print(f"PONG: Player '{player.name}' cannot join the game (player not allowed to join)")
 				return False
 
-		# Add paddle if in game lobby
-		self.obj_to_remove.append(player.my_paddle)
-		player.my_paddle = ObjectPaddle(player.name)
-		player.my_paddle.size = vec2(16, 16)
-		player.my_paddle.pos = vec2(0, 0)
-		player.my_paddle.controler = player.name
-		self.objects.append(player.my_paddle)
+		if (not (player.name in self.already_joined)):
+			player.my_paddle = ObjectPaddle(player.name)
+			player.my_paddle.size = vec2(16, 16)
+			player.my_paddle.pos = vec2(0, 0)
+			player.my_paddle.controler = player.name
+			self.objects.append(player.my_paddle)
 
 		return True
 

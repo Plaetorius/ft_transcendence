@@ -392,8 +392,9 @@ async function loadGames() {
 		loadGamesLobby();
 	} else {
 		const lobbyContainer = document.getElementById('pong-game');
+		let gameScript = document.getElementById('game-script');
 		lobbyContainer.innerHTML = '';
-		notification('Already in a game', null, null);
+		// notification('Already in a game', null, null);
 
 		const gameContainer = document.createElement('div');
 		gameContainer.setAttribute('id', 'game-canvas');
@@ -401,7 +402,13 @@ async function loadGames() {
 		gameContainer.setAttribute('height', '700');
 		lobbyContainer.appendChild(gameContainer);
 
-		const gameScript = document.createElement('script');
+		console.log('Game script:', gameScript);
+		if (gameScript != null) {
+			console.log('Removing existing game script');
+			gameScript.remove();
+		}
+		gameScript = document.createElement('script');
+		gameScript.setAttribute('id', 'game-script');
 		gameScript.setAttribute('type', 'module');
 		gameScript.setAttribute('src', '../static/js/pong/pong-canvas.js');
 		lobbyContainer.appendChild(gameScript);

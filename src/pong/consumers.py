@@ -227,14 +227,6 @@ class PartyConsumer(AsyncWebsocketConsumer):
 			print(f"####	PartyConsumer: ERROR: {e}")
 
 	
-	async def party_disconnect(self, event):
-		if (self.player == None):
-			return
-		if (event['player_id'] == self.player.id):
-			print(f"####	PartyConsumer: Player {self.player.name} disconnected from party {self.party_uuid}")
-			await self.close()
-
-
 	# Send message to all players in the party
 	async def party_update(self, event):
 		
@@ -256,6 +248,32 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		except Exception as e:
 			print(f"####	PartyConsumer: ERROR: {e}")
 	
+	async def party_title(self, event):
+
+		print(f"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF	PartyConsumer: Player {self.player.name} not allowed to see the message")
+		# Kick player not allowed to see the message
+		if (not self.player.id in event['players']):
+			print(f"#############################################################	PartyConsumer: Player {self.player.name} not allowed to see the message")
+			return
+		
+		message = {
+			'type': 'title',
+			'text': event['text'],
+			'time': event['time'],
+		}
+
+		try:
+			await self.send(text_data=json.dumps(message))
+		except Exception as e:
+			print(f"####	PartyConsumer: ERROR: {e}")
+
+	async def party_disconnect(self, event):
+		if (self.player == None):
+			return
+		if (event['player_id'] == self.player.id):
+			print(f"####	PartyConsumer: Player {self.player.name} disconnected from party {self.party_uuid}")
+			await self.close()
+
 	@database_sync_to_async
 	def get_user(self, field: str) -> User:
 		return User.objects.get(username=field)

@@ -36,7 +36,7 @@ function initGamePong() {
 	container = document.getElementById('game-canvas');
 	container.style.display = "flex";
 	container.style.flexDirection = "row";
-	
+
 	let player_list = document.createElement('ul');
 	player_list.id = "ingame_player_list";
 	player_list.classList.add("ingame_player_list");
@@ -56,7 +56,7 @@ function initGamePong() {
 
 	// var canvas = renderer.domElement,
 	// 	context = canvas.getContext('2d');
-		
+
 	// context.moveTo(100, 150);
 	// context.lineTo(350, 50);
 	// context.stroke();
@@ -130,18 +130,23 @@ pong_websocket.onmessage = function (data) {
 		loaded_party = json_data["party"];
 		server_delta = 0.0;
 		server_interval = loaded_party["second_per_frames"];
+
+		// send keys to server only when we receive information from server
+		if (pong_websocket.readyState == 1) {
+			let msg = {
+				type: "update",
+				keys: pressed,
+				player_name: user.username,
+				removed_obj: removed_obj_list,
+				date: Date.now()
+			};
+			pong_websocket.send(JSON.stringify(msg));
+		}
+
 	}
 
-	// send keys to server only when we receive information from server
-	if (pong_websocket.readyState == 1) {
-		let msg = {
-			type: "update",
-			keys: pressed,
-			player_name: user.username,
-			removed_obj: removed_obj_list,
-			date: Date.now()
-		};
-		pong_websocket.send(JSON.stringify(msg));
+	if (json_data["type"] === "title") {
+		notification(json_data["text"], null, null);
 	}
 
 };
@@ -243,7 +248,7 @@ function renderGamePong() {
 			removeObject(uuid);
 		}
 		removed_obj_list = uuid_to_remove;
-		
+
 		const obj_array = loaded_party['objects'];
 		for (let obj of obj_array) {
 			const uuid = obj['uuid'];
@@ -253,7 +258,7 @@ function renderGamePong() {
 			const shape = obj['shape'];
 			const velocity = new THREE.Vector3(obj['vel']['x'], FIELD_HEIGTH, obj['vel']['y']);
 			const color = obj['color'];
-			
+
 			pos.x = pos.x + velocity.x * current_server_offset;
 			pos.z = pos.z + velocity.z * current_server_offset;
 

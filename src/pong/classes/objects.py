@@ -94,7 +94,7 @@ class ObjectPaddle(ObjectAbstract):
 
 		direction = vec2(0, 0)
 		
-		if (key_values.get('z', False)):
+		if (key_values.get('w', False)):
 			direction.x += +val_sin
 			direction.y += +val_cos
 
@@ -102,7 +102,7 @@ class ObjectPaddle(ObjectAbstract):
 			direction.x += -val_sin
 			direction.y += -val_cos
 		
-		if (key_values.get('q', False)):
+		if (key_values.get('a', False)):
 			direction.x += +val_cos
 			direction.y += -val_sin
 		
