@@ -2,10 +2,11 @@
 <!-- TODO Reorganize files (especially CSS) -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcendence</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transcendence</title>
 	{% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/general/header.css' %}">
@@ -22,8 +23,11 @@
     <link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
     <link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
     <link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/buttons.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/main_lobby.css' %}">
 	<link rel="icon" type="image/gif" href="{% static 'gifs/vaultboy-sunglasses.gif' %}">
 </head>
+
 <body>
     <header class="container-fluid px-5 active">
         <div id="main-header" class="row align-items-center justify-content-between">
@@ -32,11 +36,11 @@
 					<img src="{% static 'icons/web.png' %}" draggable="false">
 					<p>NEWS</p>
 				</a>
-            </div>
-            <div class="col-8 header-middle-section">
-                <h1 id="newspaperTitle">Transcendence</h1>
-            </div>
-            <div class="col-2 header-right-section">
+			</div>
+			<div class="col-8 header-middle-section">
+				<h1 id="newspaperTitle">Transcendence</h1>
+			</div>
+			<div class="col-2 header-right-section">
 				<a id="header-profile" class="d-flex flex-column align-items-center justify-content-center">
 					<img id="header-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false">
 					<p>PROFILE</p>
@@ -156,9 +160,10 @@
 			<div class="container-fluid">
 				<div id="games-header" class="row">
 					<div class="col d-flex flex-column justify-content-center align-items-center">
-						<h1>Games</h1>
 					</div>
 				</div>
+			</div>
+			<div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
 			</div>
 		</section>
 
@@ -244,9 +249,11 @@
 			<div id="profile-history">
 				<h4>Match History</h4>
 				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-					<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+					<div
+						class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
 						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-							<img class="history-profile-picture open-profile" data-username="username" src="../media/profile_pictures/default.jpg" draggable="false">
+							<img class="history-profile-picture open-profile" data-username="username"
+								src="../media/profile_pictures/default.jpg" draggable="false">
 						</div>
 						<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
@@ -265,16 +272,18 @@
 
 						</div>
 						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-							<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+							<img class="history-profile-picture open-profile" data-username="tgernez"
+								src="../media/profile_pictures/default.jpg" draggable="false">
 						</div>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
 				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
 					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
 					</div>
 					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
@@ -366,8 +375,33 @@
 					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
 
 					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
 					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
 						<img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
+
+					</div>
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
 					</div>
 				</div>
 			</div>
@@ -411,23 +445,23 @@
             </div>
         </section>
 
-        <section id="login" class="">
-            <div class="container-fluid d-flex flex-column align-items-center">
-                <div class="row">
-                    <div class="col">
-                        <h1>Login</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <form id="loginForm">
-                            <div>
-                                <input type="text" id="loginUsername" placeholder="Username...">
-                            </div>
-                            <div>
+		<section id="login" class="">
+			<div class="container-fluid d-flex flex-column align-items-center">
+				<div class="row">
+					<div class="col">
+						<h1>Login</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<form id="loginForm">
+							<div>
+								<input type="text" id="loginUsername" placeholder="Username...">
+							</div>
+							<div>
 								<input type="password" id="loginPassword" placeholder="Password...">
-                            </div>
-                            <div class="d-flex justify-content-center">
+							</div>
+							<div class="d-flex justify-content-center">
 								<button type="submit">Login</button>
                             </div>
                         </form>
@@ -499,6 +533,12 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="container">
+		<ul id="list-notifications" style="overflow: auto; max-height: 500px; display: flex; flex-direction: column-reverse; position: fixed; bottom: 0; right: 0; text-align: center;">
+			<!-- List items will be appended here -->
+		</ul>
+	</div>
 
 	<div id="notification" class="container d-none">
 		<div class="row d-flex align-items-center justify-content-center">
@@ -527,7 +567,8 @@
 				<form id="settings-form">
 					<div><input id="settings-username" placeholder="Username..." name="username" type="text"></div>
 					<div><input id="settings-email" placeholder="Email..." name="email" type="email"></div>
-					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text"></div>
+					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text">
+					</div>
 					<div><input id="settings-last-name" placeholder="Last name..." name="last_name" type="text"></div>
 					<div><textarea id="settings-bio" placeholder="Bio..." name="bio"></textarea></div>
 					<div>
@@ -546,10 +587,13 @@
 	<script src="{% static 'js/users/settings.js' %}"></script>
 	<script src="{% static 'js/users/block.js' %}"></script>
 	<script src="{% static 'js/users/search.js' %}"></script>
+	<script src="{% static 'js/pong/pong-game.js' %}"></script>
 	<script src="{% static 'js/general/navigation.js' %}"></script>
 	<script src="{% static 'js/users/auth.js' %}"></script>
 	<script src="{% static 'js/index.js' %}"></script>
 	<script src="{% static 'jquery/jquery.js' %}"></script>
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
 </body>
+
 </html>

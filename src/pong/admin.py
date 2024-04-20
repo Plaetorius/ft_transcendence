@@ -1,4 +1,7 @@
 # pong/admin.py
-from django.contrib import admin
-
 # Register your models here.
+
+from django.contrib import admin
+#from .consumers import ( PongConsumer )
+
+#admin.site.register(PongConsumer)

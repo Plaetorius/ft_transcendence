@@ -62,7 +62,7 @@ function navigateToSection(sectionId, stateObj = {}) {
     initializeListeners();
 }
 
-
+// TODO Add game
 function setActiveSection(sectionId, stateObj = {}) {
     document.querySelectorAll("main > section").forEach(section => {
         section.classList.remove("active");
