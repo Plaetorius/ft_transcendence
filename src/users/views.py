@@ -388,6 +388,7 @@ class OAuthCallbackView(generics.GenericAPIView):
 		token_response = self.exchange_code_for_token(code)
 		access_token = token_response.json().get('access_token')
 		if access_token is None:
+			print("Problem with the access token")
 			return Response(
 				{
                 	"error": "Invalid API Call",
@@ -404,6 +405,7 @@ class OAuthCallbackView(generics.GenericAPIView):
 		)
 
 		if created:
+			print("User created")
 			user.set_unusable_password()
 			user.save()
 
@@ -417,7 +419,6 @@ class OAuthCallbackView(generics.GenericAPIView):
             }
         )
 
-
 		refresh = RefreshToken.for_user(user)
 		res_data = {
 			'refresh': str(refresh),
@@ -425,7 +426,7 @@ class OAuthCallbackView(generics.GenericAPIView):
 			'username': user.username,
 			'email': user.email,
 		}
-		response = redirect('https://localhost/#home')
+		response = redirect('https://localhost:1026/#home')
 		response.set_cookie(
             'refresh_token',
             str(refresh),

@@ -106,14 +106,15 @@ function authenticated() {
 document.getElementById("oauth-button").addEventListener("click", oauth_register);
 
 function oauth_register() {
-	const authUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-4cf77c385e4067e3dc3de603d034c7e441b48ba5f16b3d4e77063066fb464532&redirect_uri=https%3A%2F%2Flocalhost%2Fusers%2Foauth2%2Fcallback&response_type=code"
+	const authUrl = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-74b16c2e5ea3a21411f68f94d3baa9360412380b7ee6088672f7028ffcac8652&redirect_uri=https%3A%2F%2Flocalhost%3A1026%2Fusers%2Foauth2%2Fcallback&response_type=code"
     window.location.href = authUrl;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
-    if (currentUrl.includes('/users/oauth2/callback')) {
-        window.location.href = 'https://localhost/#home';
+    // if (currentUrl.includes('/users/oauth2/callback')) {
+    if (currentUrl.includes('?code=')) {
+        window.location.href = 'https://localhost:1026/#home';
     }
 });
 
@@ -125,6 +126,7 @@ async function checkAuthentication() {
         });
 
         if (!response.ok) {
+            console.log("Not authenticated");
             throw new Error('Not authenticated');
         }
 
