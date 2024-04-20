@@ -72,20 +72,18 @@ function loadAndDisplayFriends() {
     });
 }
 
-function getFriends() {
-	return fetch(`/users/friends/${user.username}`, {
+async function getFriends() {
+	const response = await fetch(`/users/friends/${user.username}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		credentials: 'include',
-	})
-	.then(response => {
-		if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-		}
-		return response.json();
 	});
+	if (!response.ok) {
+		return response.json().then(err => Promise.reject(err));
+	}
+	return await response.json();
 }
 
 function addFriend(username) {
