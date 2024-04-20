@@ -62,7 +62,6 @@ function navigateToSection(sectionId, stateObj = {}) {
     initializeListeners();
 }
 
-// TODO Add game
 function setActiveSection(sectionId, stateObj = {}) {
     document.querySelectorAll("main > section").forEach(section => {
         section.classList.remove("active");
@@ -76,6 +75,9 @@ function setActiveSection(sectionId, stateObj = {}) {
                 break;
             case 'podium':
                 getPodium();
+                break;
+            case 'games':
+                loadGames();
                 break;
             case 'profile':
 				getProfile();
