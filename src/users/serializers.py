@@ -84,6 +84,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if self.instance.username != value:
             if hasattr(self.instance, 'oauth_cred') and self.instance.oauth_cred:
                 raise serializers.ValidationError("You cannot change your username because your account is linked with OAuth.")
+            if value == "default":
+                raise serializers.ValidationError("Username 'default' is reserved.")
             if User.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
                 raise serializers.ValidationError("This username is already in use.")
         return value
@@ -108,7 +110,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         if 'profile_picture' in validated_data:
             if instance.profile_picture and hasattr(instance.profile_picture, 'url'):
-                if not instance.profile_picture.name.endswith("default.png"):
+                if not instance.profile_picture.name.endswith("default.jpg"):
                     try:
                         picture_path = instance.profile_picture.path
                         if default_storage.exists(picture_path):
@@ -137,6 +139,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return value
     
     def validate_username(self, value):
+        if (value == "default"):
+            raise ValidationError("Username 'default' is reserved.")
         if User.objects.filter(username=value).exists():
             raise ValidationError("This username is already in use.")
         return value
