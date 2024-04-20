@@ -6,6 +6,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.models import AnonymousUser
 
 import json
 import uuid
@@ -172,11 +175,18 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		# Init channel values
 		self.party_uuid: str			= self.scope['url_route']['kwargs']['party_uuid']
 		self.party: Party				= None
-		self.user						= await self.get_user(self.scope['user'].username)
+		# self.user						= await self.get_user(self.scope['user'].username)
 		self.party_channel_name: str	= f"party_{self.party_uuid}"
 		self.player: Player				= None
 		self.obj_to_remove: list[str]	= []
 		
+		await self.authenticate_user() # To identify via HTTP-Only Cookies
+
+		self.user = self.scope["user"]
+		if isinstance(self.scope['user'], AnonymousUser):
+			await self.close()
+			return
+
 		# Check if party exists and if player can join
 		if (self.party_uuid not in g_party_manager.parties):
 			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (party not found)")
@@ -274,3 +284,14 @@ class PartyConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def get_user(self, field: str) -> User:
 		return User.objects.get(username=field)
+
+	@database_sync_to_async
+	def authenticate_user(self):
+		token = self.scope["cookies"].get("access_token")
+		if token:
+			try:
+				access_token = AccessToken(token)
+				user_id = access_token["user_id"]
+				self.scope["user"] = User.objects.get(id=user_id)
+			except (InvalidToken, TokenError, User.DoesNotExist):
+				self.scope["user"] = AnonymousUser()

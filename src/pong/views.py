@@ -3,14 +3,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
 
 from .classes.player import Player
 from .consumers import Party
+
+from users.views import CookieJWTAuthentication
 
 from .consumers import g_party_manager
 
 
 class CreatePartyAPIView(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+
 	def get(self, request, *args, **kwargs):
 		# Create a new party
 		party = g_party_manager.create_party(f"{request.user.username}'s party")
@@ -18,6 +25,9 @@ class CreatePartyAPIView(APIView):
 		return Response({'party_uuid': party.uuid}, status=status.HTTP_201_CREATED)
 
 class GatherPartyAPIView(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+
 	def get(self, request, *args, **kwargs):
 		# Get the list of parties
 		my_list = g_party_manager.to_dict()['parties']
@@ -26,6 +36,9 @@ class GatherPartyAPIView(APIView):
 		return Response({'parties': my_list}, status=status.HTTP_201_CREATED)
 	
 class GatherPartyByIdAPIView(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+
 	def get(self, request, *args, **kwargs):
 		# Get the list of parties
 		party_uuid = kwargs['party_uuid']

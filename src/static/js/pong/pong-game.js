@@ -1,5 +1,4 @@
 // Import the notification function
-const gtoken = localStorage.getItem('accessToken');
 let pong_websocket = null;
 let party_uuid = "Party uuid";
 let party_joined = "";
@@ -39,8 +38,8 @@ async function fetchPongCreation() {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${gtoken}`,
-			}
+			},
+			credentials: 'include',
 		});
 
 		if (!response.ok) {
@@ -61,8 +60,8 @@ async function getPartyList() {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${gtoken}`,
-			}
+			},
+			credentials: 'include',
 		});
 
 		if (!response.ok) {
@@ -83,8 +82,8 @@ async function getPartyById(_party_uuid) {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${gtoken}`,
-			}
+			},
+			credentials: 'include',
 		});
 
 		if (!response.ok) {
@@ -181,7 +180,7 @@ async function createPartyList() {
 
 			party_card.onclick = function () {
 				// Implement the logic to connect to the chosen party
-				pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party['uuid']}/?token=${gtoken}`);
+				pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party['uuid']}/`);
 				pong_websocket.onopen = async function (event) {
 					notification(`Joined game:${party['uuid']}`, null, null);
 					console.log("Pong WebSocket connection established.");
@@ -329,7 +328,7 @@ async function loadGamesLobby() {
 		connectButton.onclick = function () {
 			const chosenPartyUuid = partyUuidInput.value;
 			// Implement the logic to connect to the chosen party
-			pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${chosenPartyUuid}/?token=${gtoken}`);
+			pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${chosenPartyUuid}/`);
 			pong_websocket.onopen = function (event) {
 				notification(`Joined game:${chosenPartyUuid}`, null, null);
 				console.log("Pong WebSocket connection established.");
