@@ -139,7 +139,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return value
     
     def validate_username(self, value):
-        if (value == "default"):
+        if value == "default":
             raise ValidationError("Username 'default' is reserved.")
         if User.objects.filter(username=value).exists():
             raise ValidationError("This username is already in use.")
