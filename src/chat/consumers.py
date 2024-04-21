@@ -60,8 +60,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         safe_message = escape(message)
 
-        # Save the message once here.
-        await self.save_message(self.scope['user'].id, self.room_id, safe_message)
+        if (safe_message != "/clash"):
+            # Save the message once here.
+            await self.save_message(self.scope['user'].id, self.room_id, safe_message)
 
         # Then broadcast it to the group.
         await self.channel_layer.group_send(
