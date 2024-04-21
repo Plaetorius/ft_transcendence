@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Collect static files
+echo "Collecting static files..."
+python src/manage.py collectstatic --noinput
+
 # Apply database migrations
 echo "Applying database migrations..."
 python src/manage.py makemigrations --noinput
