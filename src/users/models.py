@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.utils.deconstruct import deconstructible
-from django.utils.timezone import now
+from datetime import timedelta
 import os
 
 # User class, implementing AbstractUser for greater flex
@@ -61,9 +61,9 @@ class OAuthCred(models.Model):
 # Match history Class
 class MatchHistory(models.Model):
     players = models.ManyToManyField(User, through='PlayerMatchHistory')
-    game_type = models.ForeignKey(GameType, on_delete=models.CASCADE)
-    duration = models.DurationField()
-    date_played = models.DateTimeField(default=now)
+    game_type = models.CharField(max_length=50)
+    duration = models.DurationField(default=timedelta(0))
+    date_played = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.game_type.name} on {self.date_played.strftime('%Y-%m-%d %H:%M')}"
