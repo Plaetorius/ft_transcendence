@@ -100,9 +100,11 @@ function createDomInvitation(sender, uid) {
     acceptBtn.innerHTML = 'Clash!';
     acceptBtn.classList.add('accept-invitation');
     acceptBtn.setAttribute('data-username', sender.username);
-    acceptBtn.setAttribute('data-uid', uid);
-
-
+    acceptBtn.onclick = () => { 
+        closeChatPopup(undefined);
+        navigateToSection('games');
+        pongJoinGame(uid);
+    };
 
     profileDiv.appendChild(imgElem);
 
@@ -243,6 +245,11 @@ const chatPopup = document.getElementById("chat-popup");
 
 // Close for Chats
 function closeChatPopup(event) {
+    if (event === undefined) {
+        removeChatDisplayAndListeners();
+		chatSocket.close();
+        return ;
+    }
 	if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
 		event.stopPropagation();
 		removeChatDisplayAndListeners();
