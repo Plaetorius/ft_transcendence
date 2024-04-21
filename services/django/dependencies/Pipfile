@@ -15,6 +15,7 @@ djangorestframework_simplejwt = "*"
 requests = "*"
 django-cors-headers = "*"
 bleach = "*"
+whitenoise = "*"
 
 [dev-packages]
 
