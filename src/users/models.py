@@ -45,6 +45,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"User: {self.username} Id: {self.id}"
+    
+    def win_rate(self):
+        total_matches = self.playermatchhistory_set.count()
+        if total_matches == 0:
+            return 0
+        wins = sum(1 for match in self.playermatchhistory_set.all() if match.score == match.match.highest_score())
+        return (wins / total_matches) * 100
 
 # OAuth Credentials Class
 class OAuthCred(models.Model):
@@ -67,6 +74,10 @@ class MatchHistory(models.Model):
 
     def __str__(self):
         return f"{self.game_type} on {self.date_played.strftime('%Y-%m-%d %H:%M')}"
+
+    def highest_score(self):
+            return self.playermatchhistory_set.aggregate(Max('score'))['score__max']
+
 
 class PlayerMatchHistory(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE)

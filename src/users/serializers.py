@@ -277,3 +277,18 @@ class MatchHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = MatchHistory
         fields = ('game_type', 'duration', 'date_played', 'players')
+
+class PlayerRankSerializer(serializers.ModelSerializer):
+    win_rate = serializers.SerializerMethodField()
+    rank = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'elo', 'win_rate', 'rank')
+
+    def get_win_rate(self, obj):
+        return obj.win_rate()
+
+    def get_rank(self, obj):
+        users_with_higher_elo = User.objects.filter(elo__gt=obj.elo).count()
+        return users_with_higher_elo + 1
