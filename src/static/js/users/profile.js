@@ -16,6 +16,7 @@ function getProfile() {
         user = userData;
 		document.getElementById("profile-picture").src = user.profile_picture_url;
 		loadMyProfile();
+        actualiseFriendsSection();
     })
     .catch(error => {
 		notification(error, 'cross', 'error');
