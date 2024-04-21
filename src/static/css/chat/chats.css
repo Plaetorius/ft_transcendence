@@ -132,7 +132,7 @@
 #chat-popup .invitation {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 10px;
     padding: 10px;
     border: 2px solid #ccc;

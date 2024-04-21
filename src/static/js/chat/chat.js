@@ -69,15 +69,19 @@ async function fetchBlockedUsers() {
     }
 }
 
-document.getElementById('clash-button').addEventListener('click', () => { 
+document.getElementById('clash-button').addEventListener('click', createClash);
+
+async function createClash() {
+    const clash_uid = await fetchPongCreation(); 
     if (chatSocket.readyState === WebSocket.OPEN) {
         chatSocket.send(JSON.stringify({
-            message: '/clash',
+            message: `/clash ${clash_uid}`,
         }));
     }
-});
+}
 
-function createDomInvitation(sender) {
+
+function createDomInvitation(sender, uid) {
     let invitationDiv = document.createElement('div');
     let profileDiv = document.createElement('div');
     let imgElem = document.createElement('img');
@@ -96,6 +100,8 @@ function createDomInvitation(sender) {
     acceptBtn.innerHTML = 'Clash!';
     acceptBtn.classList.add('accept-invitation');
     acceptBtn.setAttribute('data-username', sender.username);
+    acceptBtn.setAttribute('data-uid', uid);
+
 
 
     profileDiv.appendChild(imgElem);
@@ -196,7 +202,8 @@ async function enterRoom(room_id, username) {
         const message = data.message;
         const sender = data.sender;
         if (message.startsWith('/clash')) {
-            createDomInvitation(sender);
+            const uid = message.split(' ')[1];
+            createDomInvitation(sender, uid);
             return ;
         }
         createDomMessage(message, sender);

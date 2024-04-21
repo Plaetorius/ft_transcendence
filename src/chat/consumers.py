@@ -60,7 +60,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         safe_message = escape(message)
 
-        if (safe_message != "/clash"):
+        if not safe_message.startswith("/clash"):
             # Save the message once here.
             await self.save_message(self.scope['user'].id, self.room_id, safe_message)
 
