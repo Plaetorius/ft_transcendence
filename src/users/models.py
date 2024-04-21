@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.utils.deconstruct import deconstructible
+from django.utils.timezone import now
 import os
 
 # User class, implementing AbstractUser for greater flex
@@ -59,16 +60,22 @@ class OAuthCred(models.Model):
 
 # Match history Class
 class MatchHistory(models.Model):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)									# User who played the game
-	openent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='opponent')		# Opponent
-	game_type = models.CharField("RANKED", max_length=100)															# Ranked or not										
-	user_score = models.IntegerField()																				# user score of the game
-	opponent_score = models.IntegerField()																			# opponent score of the game
-	win = models.BooleanField()																						# if the user won							
-	user_elo = models.IntegerField()																				# user elo win/loose this game
-	opponent_elo = models.IntegerField()																			# opponent elo win/loose this game						
-	date_played = models.DateTimeField(auto_now_add=True)															# date of the game
+    players = models.ManyToManyField(User, through='PlayerMatchHistory')
+    game_type = models.ForeignKey(GameType, on_delete=models.CASCADE)
+    duration = models.DurationField()
+    date_played = models.DateTimeField(default=now)
 
+    def __str__(self):
+        return f"{self.game_type.name} on {self.date_played.strftime('%Y-%m-%d %H:%M')}"
+
+class PlayerMatchHistory(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    match = models.ForeignKey(MatchHistory, on_delete=models.CASCADE)
+    score = models.IntegerField()
+    elo_change = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.player.username} scored {self.score} with an ELO change of {self.elo_change}"
 
 # Friendship Class
 class Friendship(models.Model):
