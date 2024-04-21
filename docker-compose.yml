@@ -40,7 +40,6 @@ services:
     depends_on:
       - web
 
-
 volumes:
   postgres_data:
     driver: local
