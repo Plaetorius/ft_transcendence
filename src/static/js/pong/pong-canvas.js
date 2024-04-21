@@ -1,9 +1,13 @@
-import * as THREE from '../../three.js-master/build/three.module.js';
+import * as THREE from 'three';
+// import { EffectComposer, RenderPass, ShaderPass, SobelOperatorShader, FontLoader, TextGeometry } from 'addons/Addons.js';
 // import { pong_websocket } from './pong-game.js';
 
+
 let container;
-let camera, scene, renderer;
+let camera, scene, renderer, composer, skybox, font_loader;
 let group;
+
+let glob_font = null;
 
 let clock = new THREE.Clock();
 let delta = 0.0;
@@ -13,10 +17,17 @@ let server_delta = 0.0;
 let interval = 1 / 60;
 let server_interval = 1 / 30;
 
+let sky_geometry = new THREE.SphereGeometry(2, 16, 16);
+sky_geometry.scale(-1, 1, 1); // Inversion des normales pour l'intérieur de la sphère
+
+// Chargement des textures
+const textureLoader = new THREE.TextureLoader();
+let texture_sky = textureLoader.load('static/pong_images/sky.jpg'); // Face avant
+
 const FIELD_HEIGTH = 10; //y
 
 let loaded_party = null;
-let	removed_obj_list = [];
+let removed_obj_list = [];
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
@@ -25,8 +36,9 @@ function wait_for_base_party() {
 		setTimeout(wait_for_base_party, 50); //wait 50 millisecnds then recheck
 		return;
 	}
-	//real actionaaaaaa
+	//real actionaaaaaa 
 }
+
 
 initGamePong();
 wait_for_base_party();
@@ -56,6 +68,7 @@ function initGamePong() {
 	renderer.setSize(canvas_width, canvas_height);
 	container.appendChild(renderer.domElement);
 
+
 	// var canvas = renderer.domElement,
 	// 	context = canvas.getContext('2d');
 
@@ -72,6 +85,16 @@ function initGamePong() {
 
 	camera.lookAt(0, 0, 0);
 
+	skybox = new THREE.Mesh(sky_geometry, new THREE.MeshBasicMaterial({ map: texture_sky }));
+	skybox.renderOrder = 0;
+	skybox.material.depthTest = false;
+	skybox.material.depthWrite = false;
+
+	// font_loader = new FontLoader();
+	// font_loader.load('static/fonts/pong_font.json', function (font) {
+	// 	glob_font = font;
+	// });
+
 	// Scene creation
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0x222831);
@@ -79,6 +102,25 @@ function initGamePong() {
 	// Lights creation
 	scene.add(new THREE.DirectionalLight(0xffffff, 4));
 	scene.add(new THREE.AmbientLight(0xffffff));
+	scene.add(skybox);
+
+	// composer = new EffectComposer(renderer);
+
+	// // Ajoute un RenderPass à l'EffectComposer
+	// const renderPass = new RenderPass(scene, camera);
+	// composer.addPass(renderPass);
+
+	// Ajoute un FilmPass à l'EffectComposer
+	// const filmPass = new FilmPass(0.5, 0.5, 1000, false);
+	// const filmPass = new GlitchPass();
+	// // const stensilPass = new MaskPass(scene, camera);
+	// const shaderMaterial = new THREE.ShaderMaterial(SobelOperatorShader)
+	// const shaderPass = new ShaderPass(shaderMaterial, "tDiffuse")
+	// shaderMaterial.uniforms.resolution.value.x = window.innerWidth
+	// shaderMaterial.uniforms.resolution.value.y = window.innerHeight
+
+	// // composer.addPass(filmPass);
+	// composer.addPass(shaderPass);
 
 	// Cubes meshes creation
 	group = new THREE.Group();
@@ -107,11 +149,11 @@ function initGamePong() {
 
 let pressed = {};
 
-window.addEventListener('keydown', function(event) {
+window.addEventListener('keydown', function (event) {
 	pressed[event.key.toLowerCase()] = true;
 });
 
-window.addEventListener('keyup', function(event) {
+window.addEventListener('keyup', function (event) {
 	delete pressed[event.key.toLowerCase()];
 });
 
@@ -123,7 +165,7 @@ function animateGamePong() {
 }
 
 // WEBSOCKET RECEIVE
-pong_websocket.onmessage = function(data) {
+pong_websocket.onmessage = function (data) {
 	const json_data = JSON.parse(data.data);
 
 	if (json_data["type"] === "update") {
@@ -155,7 +197,7 @@ pong_websocket.onmessage = function(data) {
 
 function getSceneById(id) {
 	let ret_obj = null;
-	scene.traverse(function(object) {
+	scene.traverse(function (object) {
 		if (object.userId != undefined) {
 			if (object.userId === id) {
 				ret_obj = object;
@@ -166,7 +208,7 @@ function getSceneById(id) {
 	return ret_obj;
 }
 
-function updateOrCreateObject(id, position, rotation, size, shape, color) {
+function updateOrCreateObject(id, position, rotation, size, shape, color, text = "oeoe") {
 	let object = getSceneById(id);
 
 	if (object == null) {
@@ -186,7 +228,26 @@ function updateOrCreateObject(id, position, rotation, size, shape, color) {
 			geometry = new THREE.SphereGeometry(size.x / 2, 16, 16);
 			material = new THREE.MeshLambertMaterial({ color: color });
 			position.y = 10;
-		} else {
+		} /*else if (shape === "Shape.TEXT") {
+			if (glob_font == null) {
+				return;
+			}
+			console.log("TEXT: " + text);
+			console.log(glob_font);
+			geometry = new TextGeometry(text, {
+				font: glob_font,
+				size: size.x,
+				height: 0.5,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.03,
+				bevelSize: 0.02,
+				bevelOffset: 0,
+				bevelSegments: 5
+			});
+			material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+			position.y = size.y;
+		} */else {
 			geometry = new THREE.BoxGeometry(size.x, 10, size.z);
 			material = new THREE.MeshLambertMaterial({ color: color });
 		}
@@ -195,13 +256,38 @@ function updateOrCreateObject(id, position, rotation, size, shape, color) {
 		cube.position.set(position.x, position.y, position.z);
 		cube.rotation.set(0, rotation, 0);
 		cube.userId = id;
+		cube.userText = text;
 		scene.add(cube);
-	} else {
+	}else {
 		// Update existing object
 		// console.log("THERE IS OBJECTS: " + position.x + ", " + position.y + ", " + position.z);
 		object.position.set(position.x, object.position.y, position.z);
 		object.rotation.set(0, rotation, 0);
 		object.material.color.set(color);
+		// if (shape === "Shape.TEXT") {
+		// 	if (text != object.userText) {
+		// 		object.geometry = new TextGeometry(text, {
+		// 			font: glob_font,
+		// 			size: size.x,
+		// 			height: 0.5,
+		// 			curveSegments: 12,
+		// 			bevelEnabled: true,
+		// 			bevelThickness: 0.03,
+		// 			bevelSize: 0.02,
+		// 			bevelOffset: 0,
+		// 			bevelSegments: 5
+		// 		});
+		// 		object.geometry.computeBoundingBox();
+		// 		let boundingBox = object.geometry.boundingBox;
+		// 		let textWidth = boundingBox.max.x - boundingBox.min.x;
+		// 		let centerX = -textWidth / 2;
+		// 		object.geometry.translate( centerX, 0, 0 );
+		// 		object.position.x = pos.x
+		// 		object.userText = text;
+			// }
+			// object.position.y = size.y;
+			object.lookAt(camera.position);
+		// }
 	}
 }
 
@@ -231,6 +317,7 @@ function setPlayerList() {
 
 function renderGamePong() {
 
+	// requestAnimationFrame(renderGamePong);
 	const timer = performance.now();
 	group.rotation.x = timer * 0.0002;
 	group.rotation.y = timer * 0.0001;
@@ -264,6 +351,10 @@ function renderGamePong() {
 			const shape = obj['shape'];
 			const velocity = new THREE.Vector3(obj['vel']['x'], FIELD_HEIGTH, obj['vel']['y']);
 			const color = obj['color'];
+			let text = "oeoe";
+			if (obj['text'] != undefined) {
+				text = obj['text'];
+			}
 
 			pos.x = pos.x + velocity.x * current_server_offset;
 			pos.z = pos.z + velocity.z * current_server_offset;
@@ -275,11 +366,12 @@ function renderGamePong() {
 				camera.lookAt(pos.x, 100, pos.z);
 			}
 
-			updateOrCreateObject(uuid, pos, rot, size, shape, color);
+			updateOrCreateObject(uuid, pos, rot, size, shape, color, text);
 		}
 		setPlayerList();
 	}
-
+	skybox.position.copy(camera.position);
+	//composer.render();
 	renderer.render(scene, camera);
 
 	delta = delta % interval;

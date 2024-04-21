@@ -281,10 +281,24 @@ class Party():
 
 		self.event_list.append({"type": "party_title", "img": img, "text": message, "time": time, "players": [player.id for player in players]})
 
+	
+	def game_event_global_message(self, message: str, time: float) -> bool:
+
+		self.event_list.append(
+		{
+        	    'type': 'user.notification',
+        	    'text_message': "A new tournament started !",
+        	    'path_to_icon': None,
+        	    'context': None,
+        	})
+
 	def game_run_event(self):
 		for event in self.event_list:
 			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, event)
+				if event['type'] != "user.notification":
+					async_to_sync(self.channel_layer.group_send)(self.party_channel_name, event)
+				else:
+					async_to_sync(self.channel_layer.group_send)("global_notification", event)
 			except Exception as e:
 				print(f"####	Party: Event: ERROR: Could not send event {event} {e}")
 		self.event_list.clear()

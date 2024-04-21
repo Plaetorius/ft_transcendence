@@ -118,6 +118,10 @@ class PartyManager():
 		player = self.in_games.get(pl.id, None)
 		
 		if (player == None):
+<<<<<<< HEAD
+=======
+			# print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
+>>>>>>> origin/val-notif
 			return False
 
 		# Check if the party exists
@@ -257,8 +261,11 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	async def party_title(self, event):
 
+<<<<<<< HEAD
 		print("###	Received title message")
 
+=======
+>>>>>>> origin/val-notif
 		# Kick player not allowed to see the message
 		if (not self.player.id in event['players']):
 			print("###	TITLE MESSAGE: Player not allowed to see the message")

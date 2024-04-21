@@ -19,6 +19,7 @@ class Shape(Enum):
 	PADDLE = 1
 	BALL = 2
 	BOX = 3
+	TEXT = 4
 
 class Collision(Enum):
 	NONE		= 0
@@ -134,3 +135,12 @@ class ObjectBall(ObjectAbstract):
 		self.pos		= self.pos + self.vel
 		self.vel		= self.dir * 8
 		pass
+
+class ObjectText(ObjectAbstract):
+	def __init__(self):
+		super().__init__()
+		self.shape		= Shape.TEXT
+		self.color		= '#EEEEEE'
+		self.size		= vec2(10, 0)
+		self.controler	= None
+		self.collide	= Collision.NONE
