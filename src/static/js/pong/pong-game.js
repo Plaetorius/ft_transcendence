@@ -61,8 +61,7 @@ function pongJoinGame(party_uuid) {
         console.log("Pong WebSocket connection established.");
 
         party_joined = party_uuid;
-        loadGames();
-
+        setTimeout(loadGames, 1000);
     };
     pong_websocket.onmessage = async function (event) {
         // Update UI to display the received message
