@@ -87,7 +87,7 @@ function setActiveSection(sectionId, stateObj = {}) {
             case 'user':
                 if (stateObj.username) {
                     loadUserProfile(stateObj.username); 
-                    getPlayerMatchHistory(stateObj.username);
+                    getPlayerMatchHistory(stateObj.username, 'user-history');
                 } else {
                     navigateToSection('home');
                 }

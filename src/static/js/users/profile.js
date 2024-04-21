@@ -17,7 +17,7 @@ function getProfile() {
 		document.getElementById("profile-picture").src = user.profile_picture_url;
 		loadMyProfile();
         actualiseFriendsSection();
-        getPlayerMatchHistory(user.username);
+        getPlayerMatchHistory(user.username, 'profile-history');
     })
     .catch(error => {
 		notification(error, 'cross', 'error');
@@ -238,7 +238,7 @@ async function handleGotoProfileClick(username) {
     profilePopup.classList.remove("d-block");
 }
 
-function getPlayerMatchHistory(username) {
+function getPlayerMatchHistory(username, containerId) {
     fetch(`/users/match-history/${username}`, {
         method: 'GET',
         headers: {
@@ -253,7 +253,7 @@ function getPlayerMatchHistory(username) {
         return response.json();
     })
     .then(matchHistory => {
-        loadMatchHistory(matchHistory, username);
+        loadMatchHistory(matchHistory, username, containerId);
     })
     .catch(error => {
         notification(error, 'cross', 'error');
@@ -262,11 +262,11 @@ function getPlayerMatchHistory(username) {
 
 let isLoadingHistory = false;
 
-async function loadMatchHistory(matchHistory, username) {
+async function loadMatchHistory(matchHistory, username, containerId) {
     if (isLoadingHistory) return; 
     isLoadingHistory = true; 
 
-    const profileContainer = document.getElementById('profile-history'); 
+    const profileContainer = document.getElementById(containerId); 
     profileContainer.innerHTML = '';
 
     matchHistory.sort((a, b) => new Date(b.date_played) - new Date(a.date_played));
