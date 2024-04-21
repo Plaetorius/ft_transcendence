@@ -2,8 +2,8 @@
 
 # Apply database migrations
 echo "Applying database migrations..."
-python src/manage.py makemigrations
-python src/manage.py migrate
+python src/manage.py makemigrations --noinput
+python src/manage.py migrate --noinput
 
 # Start server
 echo "Starting server..."
