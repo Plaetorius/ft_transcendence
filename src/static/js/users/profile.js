@@ -18,6 +18,7 @@ function getProfile() {
 		loadMyProfile();
         actualiseFriendsSection();
         getPlayerMatchHistory(user.username, 'profile-history');
+        getPlayerRank(user.username, 'profile');
     })
     .catch(error => {
 		notification(error, 'cross', 'error');
@@ -338,4 +339,38 @@ function calculateTimeSince(datePlayed) {
         // Less than an hour ago, show minutes
         return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
     }
+}
+
+function getPlayerRank(username, containerId) {
+    fetch(`/users/rank/${username}/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('User not found');
+        }
+        return response.json();
+    })
+    .then(stats => {
+        loadPlayerRank(stats, containerId);
+    })
+    .catch(error => {
+        notification(error, 'cross', 'error');
+    });
+}
+
+let loadingRank = false;
+
+function loadPlayerRank(stats, containerId) {
+    if (loadingRank) return;
+    loadingRank = true;
+
+    document.getElementById(`${containerId}-rank`).innerHTML = `<span>Rank: </span>#${stats.rank}`;
+    document.getElementById(`${containerId}-winrate`).innerHTML = `<span>Winrate: </span>${stats.win_rate}%`;
+    loadingRank = false;
+
 }
