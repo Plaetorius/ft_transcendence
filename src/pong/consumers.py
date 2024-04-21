@@ -116,8 +116,8 @@ class PartyManager():
 	async def leave_party(self, party_uuid: str, pl: Player) -> bool:
 		# Check if the player is not in a game
 		player = self.in_games.get(pl.id, None)
+		
 		if (player == None):
-			print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
 			return False
 
 		# Check if the party exists
@@ -190,18 +190,18 @@ class PartyConsumer(AsyncWebsocketConsumer):
 		# Check if party exists and if player can join
 		if (self.party_uuid not in g_party_manager.parties):
 			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (party not found)")
-			await self.close(code=99900)
+			await self.close()
 			return
 	
 		if (g_party_manager.in_games.get(self.user.id, None) != None):
 			print(f"####	PartyConsumer: Could not connect to party:{self.party_uuid} (player already in a game)")
-			await self.close(code=99902)
+			await self.close()
 			return
 		
 		# Check if player can join the party and join it
 		self.player = Player(self.user.username, self.user.id)
 		if (await g_party_manager.join_party(self.party_uuid, self.player) == False):
-			await self.close(code=99901)
+			await self.close()
 			return
 		
 		self.party = g_party_manager.parties[self.party_uuid]
@@ -257,17 +257,22 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	async def party_title(self, event):
 
-		print(f"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF	PartyConsumer: Player {self.player.name} not allowed to see the message")
+		print("###	Received title message")
+
 		# Kick player not allowed to see the message
 		if (not self.player.id in event['players']):
-			print(f"#############################################################	PartyConsumer: Player {self.player.name} not allowed to see the message")
+			print("###	TITLE MESSAGE: Player not allowed to see the message")
 			return
 		
 		message = {
 			'type': 'title',
 			'text': event['text'],
+			'img': event['img'],
 			'time': event['time'],
 		}
+
+		print("Sending title message")
+		print(message)
 
 		try:
 			await self.send(text_data=json.dumps(message))

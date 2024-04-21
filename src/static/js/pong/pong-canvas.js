@@ -143,11 +143,12 @@ pong_websocket.onmessage = function(data) {
 			};
 			pong_websocket.send(JSON.stringify(msg));
 		}
-
+		
 	}
-
-	if (json_data["type"] === "title") {
-		notification(json_data["text"], null, null);
+	if (json_data['type'] === "title") {
+		console.log("Title: " + json_data.text + " at " + json_data.time + " with img: " + json_data.img);
+		notification(json_data.text, null, json_data.img, json_data.time);
+		
 	}
 
 };
@@ -247,6 +248,12 @@ function renderGamePong() {
 			removeObject(uuid);
 		}
 		removed_obj_list = uuid_to_remove;
+
+		camera.position.x = 0;
+		camera.position.y = 500;
+		camera.position.z = -0.001;
+
+		camera.lookAt(0, 0, 0);
 
 		const obj_array = loaded_party['objects'];
 		for (let obj of obj_array) {

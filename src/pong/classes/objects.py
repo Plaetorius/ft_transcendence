@@ -110,19 +110,7 @@ class ObjectPaddle(ObjectAbstract):
 			direction.x += -val_cos
 			direction.y += +val_sin
 
-		# normalize velocity to value
-		# disp = direction.__abs__()
-		# if (disp > 1.0):
-		# 	direction = direction / disp
-
-		self.vel = direction * 16
 		self.vel = direction * 8
-
-		# if (key_values.get('a', False)):
-		# 	self.rot = self.rot + 0.1
-
-		# if (key_values.get('e', False)):
-		# 	self.rot = self.rot - 0.1
   
 		pass
 
@@ -134,7 +122,7 @@ class ObjectBall(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
 		self.shape		= Shape.BALL
-		self.color		= '#31363F'
+		self.color		= '#0066b1'
 		self.collide	= Collision.BOUNCE
 		self.size		= vec2(40, 40)
 		self.rot		= uniform(0, 2 * math.pi)

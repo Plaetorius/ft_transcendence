@@ -100,6 +100,37 @@ async function getPartyById(_party_uuid) {
 }
 
 
+function pongJoinGame(party_uuid) {
+	pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party_uuid}/`);
+	pong_websocket.onopen = function (event) {
+		notification(`Joined game:${party_uuid.substring(0, 5)}`, null, '');
+		console.log("Pong WebSocket connection established.");
+
+		party_joined = party_uuid;
+		loadGames();
+	};
+	pong_websocket.onmessage = async function (event) {
+		// Update UI to display the received message
+	};
+	pong_websocket.onerror = function (event) {
+		notification(`Failed to join game:${party_uuid}`, null, 'error');
+		console.error("Pong WebSocket error:", event);
+		console.log("error code is: ", event.code);
+		console.log("error message is: ", event.message);
+	};
+	pong_websocket.onclose = function (event) {
+		console.log("Pong WebSocket connection closed.");
+		console.log("close code is: ", event.code);
+		console.log("close reason is: ", event.reason);
+
+		party_joined = "";
+		pong_websocket = null;
+		loadGames();
+	
+	};
+}
+
+
 async function updateCard(party_card, _party_uuid) {
 	const _party = await getPartyById(_party_uuid);
 	if (!_party)
@@ -180,30 +211,7 @@ async function createPartyList() {
 
 			party_card.onclick = function () {
 				// Implement the logic to connect to the chosen party
-				pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party['uuid']}/`);
-				pong_websocket.onopen = async function (event) {
-					notification(`Joined game:${party['uuid']}`, null, null);
-					console.log("Pong WebSocket connection established.");
-					// updateCard(party_card, party['uuid']);
-					party_joined = party['uuid'];
-					loadGames();
-				};
-				pong_websocket.onmessage = async function (event) {
-					// Update UI to display the received message
-
-				};
-				pong_websocket.onerror = function (event) {
-					notification(`Failed to join game:${party['uuid']}`, null, null);
-					console.error("Pong WebSocket error:", event);
-				};
-				pong_websocket.onclose = function (event) {
-					if (event.error)
-						notification(`Left game:${party['uuid']}`, null, null);
-					// updateCard(party_card, party['uuid']);
-					console.log("Pong WebSocket connection closed.");
-					party_joined = "";
-					loadGames();
-				};
+				pongJoinGame(party['uuid']);
 			}
 
 			party_list.appendChild(party_card);
@@ -327,31 +335,9 @@ async function loadGamesLobby() {
 		connectButton.innerHTML = 'Connect';
 		connectButton.onclick = function () {
 			const chosenPartyUuid = partyUuidInput.value;
+
 			// Implement the logic to connect to the chosen party
-			pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${chosenPartyUuid}/`);
-			pong_websocket.onopen = function (event) {
-				notification(`Joined game:${chosenPartyUuid}`, null, null);
-				console.log("Pong WebSocket connection established.");
-				createPartyList();
-			};
-			pong_websocket.onmessage = async function (event) {
-				// Update UI to display the received message
-				// BITE
-			};
-			pong_websocket.onerror = function (event) {
-				notification(`Failed to join game:${chosenPartyUuid}`, null, null);
-				console.error("Pong WebSocket error:", event);
-				console.log("error code is: ", event.code);
-				console.log("error message is: ", event.message);
-			};
-			pong_websocket.onclose = function (event) {
-				if (event.error)
-					notification(`Left game:${chosenPartyUuid}`, null, null);
-				console.log("Pong WebSocket connection closed.");
-				console.log("close code is: ", event.code);
-				console.log("close reason is: ", event.reason);
-				createPartyList();
-			};
+			pongJoinGame(chosenPartyUuid);
 		};
 
 

@@ -4,7 +4,8 @@
 	right: 0vw;
 	width: 40vh;
 	/* height: 10vh; */
-	z-index: 105; /* 5 higher than popups */
+	z-index: 105;
+	/* 5 higher than popups */
 	background-color: white;
 	border: 5px black solid;
 	background-image: url("../../backgrounds/old-paper-background.jpg");
@@ -34,7 +35,7 @@
 }
 
 #notification.success img {
-    filter: invert(41%) sepia(93%) saturate(1352%) hue-rotate(84deg) brightness(92%) contrast(88%);
+	filter: invert(41%) sepia(93%) saturate(1352%) hue-rotate(84deg) brightness(92%) contrast(88%);
 	-webkit-filter: invert(41%) sepia(93%) saturate(1352%) hue-rotate(84deg) brightness(92%) contrast(88%);
 }
 
@@ -48,4 +49,93 @@
 #notification.error img {
 	filter: invert(15%) sepia(100%) saturate(7500%) hue-rotate(-5deg) brightness(100%) contrast(105%);
 	-webkit-filter: invert(15%) sepia(100%) saturate(7500%) hue-rotate(-5deg) brightness(100%) contrast(105%);
+}
+
+
+/* ALAN NOTIF */
+
+.notif-container {
+	width: 300px;
+
+	pointer-events: none;
+
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	
+	position: fixed;
+	bottom: 0;
+	right: 0;
+
+	gap: 10px;
+
+	z-index: 9000;
+}
+
+.notif-container.show:not(:first-child) {
+	margin-bottom: 10px;
+}
+
+.notif-container .notif-item {
+	background-color: #f0f0f0;
+	
+	border-radius: 10px 0 0 10px;
+
+	margin-bottom: 5px;
+	min-width: 100px;
+	max-width: 300px;
+	height: 50px;
+	/* Height of the list items */
+
+	background-image: url("../../backgrounds/old-paper-background.jpg");
+	background-position: right;
+	background-size: 110%;
+
+	-webkit-filter: blur(0.6px);
+	filter: blur(0.6px);
+
+	font-family: "Streetwear", sans-serif;
+
+	font-size: 16px;
+	font-weight: 2;
+	line-height: 56px;
+	
+	text-decoration: none;
+	text-align: left;
+	text-shadow: #f0f0f0 1px 1px 1px;
+
+	padding-left: 15px;
+
+	white-space: nowrap; /* Prevent text from wrapping */
+	overflow: hidden; /* Hide overflow content */
+	text-overflow: clip; /* Clip overflow content */
+
+	opacity: 0;
+	transform: translateX(300px);
+	transition: all 0.6s ease-in;
+}
+
+.notif-container .notif-item.show {
+	opacity: 1;
+	transform: translateX(0);
+	transition: all 0.2s ease-out;
+}
+
+
+.notif-container .notif-item.boom {
+	background-image: url("../../backgrounds/vault_boy_boom_cropped.png");
+	
+}
+
+.notif-container .notif-item.success {
+	background-image: url("../../backgrounds/vault_boy_thumb_cropped.png");
+	color: rgb(8, 26, 0);
+	/* text-shadow: #888 1px 1px 1px; */
+
+}
+
+.notif-container .notif-item.error {
+	background-image: url("../../backgrounds/vault_boy_broken_cropped.png");
+	color: rgb(26, 8, 0);
+	/* text-shadow: #888 1px 1px 1px; */
 }
