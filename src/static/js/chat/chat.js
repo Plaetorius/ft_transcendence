@@ -1,5 +1,3 @@
-// TODO Add PONG invites system
-
 function getChatRoom(username) {
 	const cookie = getCookie('csrftoken');
 	fetch(`chat/room-id/${username}`, {

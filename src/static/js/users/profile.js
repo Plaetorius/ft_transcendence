@@ -212,7 +212,7 @@ function handleUnblockClick(username) {
     }).catch(error => {
         // Log the backend error message if it exists, otherwise log a default error message
         // Handle failure, perhaps show a message to the user
-        notificationSocket(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+        notification(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
     });
 }
 
