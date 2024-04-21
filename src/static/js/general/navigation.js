@@ -81,13 +81,11 @@ function setActiveSection(sectionId, stateObj = {}) {
                 break;
             case 'profile':
 				getProfile();
-                setupSettingsForm();
+				setupSettingsForm();
                 break;
             case 'user':
                 if (stateObj.username) {
                     loadUserProfile(stateObj.username); 
-                    getPlayerMatchHistory(stateObj.username, 'user-history');
-                    getPlayerRank(stateObj.username, 'user');
                 } else {
                     navigateToSection('home');
                 }

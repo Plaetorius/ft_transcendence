@@ -28,6 +28,8 @@ class UserNotification(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name,
             )
+            await self.channel_layer.group_add("global_notification", self.channel_name)
+            
             await self.accept()
             await self.update_user_status(True)
 
@@ -44,7 +46,8 @@ class UserNotification(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         await self.update_user_status(False)
-    
+        await self.channel_layer.group_discard("global_notification", self.channel_name)
+
     @database_sync_to_async
     def update_user_status(self, is_online):
         if self.user.is_authenticated:

@@ -58,7 +58,6 @@ async function handleSettingsFormSubmit(e) {
 
     if (!response.ok) {
         response.json().then(err => handleErrors(err.error));
-        setupSettingsForm();
         return ;
     }
     const data = await response.json();

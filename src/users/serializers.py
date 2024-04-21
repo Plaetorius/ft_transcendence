@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from django.templatetags.static import static
 from django.conf import settings
-from .models import User, Friendship, BlockedUser, MatchHistory, PlayerMatchHistory
+from .models import User, Friendship, BlockedUser
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
@@ -260,35 +260,3 @@ class BlockedUserSerializer(serializers.ModelSerializer):
         blocker = User.objects.get(pk=validated_data['blocker_id'])
         blocked = User.objects.get(pk=validated_data['blocked_id'])
         return BlockedUser.objects.create(blocker=blocker, blocked=blocked)
-
-class PlayerMatchHistorySerializer(serializers.ModelSerializer):
-    username = serializers.ReadOnlyField(source='player.username')
-    
-    class Meta:
-        model = PlayerMatchHistory
-        fields = ('username', 'score', 'elo_change')
-
-class MatchHistorySerializer(serializers.ModelSerializer):
-    players = PlayerMatchHistorySerializer(source='playermatchhistory_set', many=True)
-    game_type = serializers.CharField()
-    duration = serializers.DurationField()
-    date_played = serializers.DateTimeField()
-
-    class Meta:
-        model = MatchHistory
-        fields = ('game_type', 'duration', 'date_played', 'players')
-
-class PlayerRankSerializer(serializers.ModelSerializer):
-    win_rate = serializers.SerializerMethodField()
-    rank = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('username', 'elo', 'win_rate', 'rank')
-
-    def get_win_rate(self, obj):
-        return obj.win_rate()
-
-    def get_rank(self, obj):
-        users_with_higher_elo = User.objects.filter(elo__gt=obj.elo).count()
-        return users_with_higher_elo + 1

@@ -26,8 +26,6 @@ from .serializers import (
     UserAllSerializer,
     UserUpdateSerializer,
 	FriendshipDetailSerializer,
-    MatchHistorySerializer,
-    PlayerRankSerializer,
 )
 import requests
 import os
@@ -467,20 +465,8 @@ class OAuthCallbackView(generics.GenericAPIView):
         response = requests.get(user_info_url, headers=headers)
         return response.json()
 
-class PlayerMatchHistoryView(generics.ListAPIView):
-    authentication_classes = [CookieJWTAuthentication]
-    permission_classes = [IsAuthenticated] 
-    serializer_class = MatchHistorySerializer
-
-    def get_queryset(self):
-        username = self.kwargs.get('username')
-        return MatchHistory.objects.filter(players__username=username)
-
-class UserRankView(APIView):
+#TODO view for Match History, returning the matches, the W/L ratio, the rank
+class UserMatchHistoryView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, username, format=None):
-        user = User.objects.get(username=username)
-        serializer = PlayerRankSerializer(user)
-        return Response(serializer.data)

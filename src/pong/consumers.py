@@ -117,7 +117,7 @@ class PartyManager():
 		# Check if the player is not in a game
 		player = self.in_games.get(pl.id, None)
 		if (player == None):
-			print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
+			# print(f"####	PartyManager: Player {player.name} cannot leave a game (player not in a game)")
 			return False
 
 		# Check if the party exists
@@ -257,7 +257,6 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	async def party_title(self, event):
 
-		print(f"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF	PartyConsumer: Player {self.player.name} not allowed to see the message")
 		# Kick player not allowed to see the message
 		if (not self.player.id in event['players']):
 			print(f"#############################################################	PartyConsumer: Player {self.player.name} not allowed to see the message")
