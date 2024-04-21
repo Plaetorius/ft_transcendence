@@ -69,6 +69,14 @@ async function fetchBlockedUsers() {
     }
 }
 
+document.getElementById('clash-button').addEventListener('click', () => { 
+    if (chatSocket.readyState === WebSocket.OPEN) {
+        chatSocket.send(JSON.stringify({
+            message: '/clash',
+        }));
+    }
+});
+
 function createDomInvitation(sender) {
     let invitationDiv = document.createElement('div');
     let profileDiv = document.createElement('div');
@@ -76,7 +84,6 @@ function createDomInvitation(sender) {
     let invitationContentDiv = document.createElement('div');
     let pElem = document.createElement('p');
     let acceptBtn = document.createElement('button');
-    let declineBtn = document.createElement('button');
 
     invitationDiv.classList.add('invitation', 'd-flex');
     imgElem.src = `${sender.profile_picture}`;
@@ -84,22 +91,18 @@ function createDomInvitation(sender) {
     imgElem.setAttribute('data-username', sender.username);
     imgElem.draggable = false;
 
-    pElem.innerHTML = `You have received a chat invitation from ${sender.username}`;
+    pElem.innerHTML = `${sender.username} created a game!`;
 
-    acceptBtn.innerHTML = 'Accept';
+    acceptBtn.innerHTML = 'Clash!';
     acceptBtn.classList.add('accept-invitation');
     acceptBtn.setAttribute('data-username', sender.username);
 
-    declineBtn.innerHTML = 'Decline';
-    declineBtn.classList.add('decline-invitation');
-    declineBtn.setAttribute('data-username', sender.username);
 
     profileDiv.appendChild(imgElem);
 
     invitationContentDiv.className = 'invitation-content';
     invitationContentDiv.appendChild(pElem);
     invitationContentDiv.appendChild(acceptBtn);
-    invitationContentDiv.appendChild(declineBtn);
 
     invitationDiv.appendChild(profileDiv);
     invitationDiv.appendChild(invitationContentDiv);
@@ -192,6 +195,10 @@ async function enterRoom(room_id, username) {
         const data = JSON.parse(e.data);
         const message = data.message;
         const sender = data.sender;
+        if (message.startsWith('/clash')) {
+            createDomInvitation(sender);
+            return ;
+        }
         createDomMessage(message, sender);
     };
 
