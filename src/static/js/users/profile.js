@@ -252,15 +252,82 @@ function getPlayerMatchHistory(username) {
         return response.json();
     })
     .then(matchHistory => {
-        loadMatchHistory(matchHistory);
+        loadMatchHistory(matchHistory, username);
     })
     .catch(error => {
         notification(error, 'cross', 'error');
     });
 }
 
-function loadMatchHistory(matchHistory) {
-    console.log(matchHistory);
+async function loadMatchHistory(matchHistory, username) {
+    const profileContainer = document.getElementById('profile-history');  // Ensure this element exists in your HTML
+
+    for (const match of matchHistory) {
+        const currentPlayer = match.players.find(player => player.username === username);
+        const opponent = match.players.find(player => player.username !== username);
+
+        const currentPlayerWin = currentPlayer.score > opponent.score;
+        const resultClass = currentPlayerWin ? 'history-win' : 'history-loss';
+        const resultText = currentPlayerWin ? 'WIN' : 'LOSS';
+
+        // Get additional user data
+        const currentPlayerData = await getUser(currentPlayer.username);
+        const opponentData = await getUser(opponent.username);
+
+        // Format the Elo change text
+        const eloChangeText = (currentPlayer.elo_change > 0 ? `+${currentPlayer.elo_change}` : currentPlayer.elo_change) + ' elo';
+
+        // Create match HTML block
+        const matchDiv = document.createElement('div');
+        matchDiv.className = `container-fluid w-100 d-flex justify-content-center flex-wrap`;
+        matchDiv.innerHTML = `
+            <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row ${resultClass}">
+                <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+                    <img class="history-profile-picture open-profile" data-username="${currentPlayer.username}"
+                         src="${currentPlayerData.profile_picture_url}" draggable="false">
+                </div>
+                <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+                    <div class="history-game-result">${resultText}</div>
+                    <div class="history-game-time">${match.duration}</div>
+                    <div class="history-game-type">${match.game_type}</div>
+                    <div class="history-time-since">${calculateTimeSince(match.date_played)}</div>
+                </div>
+                <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+                    <div class="history-game-score">${currentPlayer.score} / ${opponent.score}</div>
+                    <div class="history-game-elo">${eloChangeText}</div>
+                </div>
+                <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+                    <img class="history-profile-picture open-profile" data-username="${opponent.username}"
+                         src="${opponentData.profile_picture_url}" draggable="false">
+                </div>
+            </div>
+        `;
+
+        // Append to the main container
+        profileContainer.appendChild(matchDiv);
+    }
+}
+
+function calculateTimeSince(datePlayed) {
+    const date = new Date(datePlayed);
+    const now = new Date();
+    const diffMs = now - date;  // difference in milliseconds
+    const diffMin = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays >= 1) {
+        // More than 24 hours ago, show the date
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+    } else if (diffHours >= 1) {
+        // Less than 24 hours but more than an hour ago, show hours
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else {
+        // Less than an hour ago, show minutes
+        return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
+    }
 }
 
 getPlayerMatchHistory("tgernez");
