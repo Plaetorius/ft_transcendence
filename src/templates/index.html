@@ -4,515 +4,570 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcendence</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/fonts.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/user.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/register.css' %}">
-    <link rel="stylesheet" href="{% static 'css/general/login.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/history.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/podium.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/buttons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/game/main_lobby.css' %}">
-    <link rel="icon" type="image/gif" href="{% static 'gifs/vaultboy-sunglasses.gif' %}">
-    <script type="importmap">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transcendence</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/header.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/home.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/fonts.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/general.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/profile.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/user.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/register.css' %}">
+	<link rel="stylesheet" href="{% static 'css/general/login.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/history.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/podium.css' %}">
+	<link rel="stylesheet" href="{% static 'css/users/profile.css' %}">
+	<link rel="stylesheet" href="{% static 'css/users/friends.css' %}">
+	<link rel="stylesheet" href="{% static 'css/chat/chats.css' %}">
+	<link rel="stylesheet" href="{% static 'css/chat/notifications.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/buttons.css' %}">
+	<link rel="stylesheet" href="{% static 'css/game/main_lobby.css' %}">
+	<link rel="icon" type="image/gif" href="{% static 'gifs/vaultboy-sunglasses.gif' %}">
+	<script type="importmap">
         { "imports": { "three": "/static/three.js-master/build/three.module.js", "addons/": "/static/three.js-master/examples/jsm/" } }
     </script>
 </head>
 
 <body>
-    <header class="container-fluid px-5 active">
-        <div id="main-header" class="row align-items-center justify-content-between">
-            <div class="col-2 header-left-section">
-                <a id="header-news" class="d-flex flex-column align-items-center justify-content-center">
-                    <img src="{% static 'icons/web.png' %}" draggable="false">
-                    <p>NEWS</p>
-                </a>
-            </div>
-            <div class="col-8 header-middle-section">
-                <h1 id="newspaperTitle">Transcendence</h1>
-            </div>
-            <div class="col-2 header-right-section">
-                <a id="header-profile" class="d-flex flex-column align-items-center justify-content-center">
-                    <img id="header-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false">
-                    <p>PROFILE</p>
-                </a>
-            </div>
-        </div>
-        <div id="sub-header" class="row align-items-center justify-content-between">
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-home">HOME</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-games">GAMES</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-friends">FRIENDS</a>
-            </div>
-            <div class="col-3 d-flex align-items-center justify-content-center">
-                <a id="header-podium">PODIUM</a>
-            </div>
-        </div>
-    </header>
-    <nav>
-    </nav>
-    <main>
-        <section id="home">
-            <div class="container-fluid d-inline-flex justify-content-center m-0 p-0 content">
-                <div class="columns row justify-content-around my-0 mx-3 p-0">
-                    <div class="col">
-                        <div class="head">
-                            <span class="headline hl3">The Pong Game</span>
-                            <p>
-                                <span class="headline hl4">by Nolan BUSHNELL & Allan ALCORN</span>
-                            </p>
-                        </div>
-                        <p>
-                            In the early 1970s, a revolutionary game captured the imagination of the public, marking the dawn of the video game era. This game was Pong, a simple yet captivating table tennis simulation where players control paddles to hit a ball back and forth across
-                            a central dividing line on a screen. The mechanics of Pong are straightforward: two paddles, controlled by players or one player and the machine, volley a small dot, mimicking the basic elements of tennis. As the game progresses,
-                            the ball speeds up, challenging the players' reflexes and precision.
-                        </p>
-                        <figure class="figure">
-                            <img class="media" src="{% static 'gifs/pong.gif' %}" alt="">
-                            <figcaption class="figcaption">Not the pong game, but a cute cat. We love cats.</figcaption>
-                        </figure>
-                        <p>
-                            Despite its simplicity, Pong became an arcade sensation, offering a form of entertainment that was entirely new at the time. Its cabinet, adorned with bright, inviting graphics, stood as a beacon in dimly lit arcades, drawing players into a world where
-                            technology and recreation met. The influence of Pong extended beyond the arcade, fostering a burgeoning video game industry and becoming a cultural icon. It not only entertained but also sparked a technological revolution,
-                            illustrating the potential of digital technology in creating immersive, interactive experiences. As players stood before the Pong machine, paddles in hand, they were not just participants in a game but pioneers in a new form
-                            of digital interaction that would grow to become a global phenomenon.
-                        </p>
-                    </div>
-                    <div class="col">
-                        <div class="head">
-                            <span class="headline hl5">The Fallout Universe</span>
-                            <p>
-                                <span class="headline hl6">Vault-Tec Approved</span>
-                            </p>
-                        </div>
-                        <p>
-                            As you emerge from the safety of an underground Vault, your eyes are met with a horizon marred by the skeletal frames of once-thriving cities, now reduced to rubble under the harsh glare of a nuclear sun. The air carries a palpable tension, tinged with
-                            the ever-present threat of radiation, roaming bands of raiders, and the grotesque mutations that the nuclear fallout has spawned. Each step outside the Vault is a step into a relentless struggle for survival, where scavenging
-                            for food, water, and supplies becomes a daily challenge. The world around you is a perverse mosaic of 1950s American culture frozen in time, juxtaposed with the stark realities of a society undone by its own hubris. </p>
-                        <figure class="figure">
-                            <img class="media" src="{% static 'gifs/vaultboy-sunglasses.gif' %}" alt="">
-                            <figcaption class="figcaption">Vaultboy getting a BLASTING suntan.</figcaption>
-                        </figure>
-                        <p>
-                            Echoes of the past haunt the present, from the faded billboards promising a brighter future to the derelict robots still aimlessly following their last orders. Amidst this chaos, communities attempt to rebuild, their fragile societies a testament to human
-                            resilience. Your journey through the Fallout universe is not just about survival, but about making choices that will shape the new world, wrestling with the moral dilemmas of a society trying to redefine right and wrong in
-                            the shadow of its own destruction. </p>
-                    </div>
-                    <div class="col">
-                        <div class="head">
-                            <span class="headline hl1">Transcendence</span>
-                            <p><span class="headline hl2">Go beyond your limits</span></p>
-                        </div>
-                        <p>
-                            This is the final project—something fresh, a departure from C/C++, where we anticipate a ton of fun from start to finish. Right...?
-                        </p>
-                        <figure class="figure">
-                            <img class="media" src="{% static 'gifs/fallout-throw-computer.gif' %}" alt="Animated gif of someone frantically throwing a computer, depicting frustration">
-                            <figcaption class="figcaption">Our group, around three times a day.</figcaption>
-                        </figure>
-                        <p>
-                            Of all the challenges we faced, web design demanded the most effort. <span class="citation">"CSS, my beloved"</span> UI and UX are at the heart of our development philosophy. We strive to provide the user with the finest graphics
-                            and interfaces, the culmination of our years -wait, lemme say that again- <b>YEARS</b> of experience in web development funneled into this single project.
-                        </p>
-                        <p>
-                            Don't believe us? Ah, the greatest geniuses were often misunderstood. Mozart, Van Gogh, Galilei, and Tesla were once viewed as madmen, yet today, their names are universally revered. We walk on a similar path, crafting a legacy that will echo through
-                            time. Maybe. I don't know. Can you repeat the question?
-                        </p>
-                    </div>
-                    <div class="col">
-                        <div class="head">
-                            <span class="headline hl3">Ranking & elo</span>
-                            <p><span class="headline hl4">Because we never have enough ego.</span></p>
-                        </div>
-                        <p>
-                            Have you ever dreamed of besting your friends and boasting about a superior elo on a Pong website? Look no further than our <b>ranking & elo system</b>!
-                        </p>
-                        <p>
-                            Each public game you win lets you climb the elo ladder. Why settle for friendships when you can claim the top rank and ultimate bragging rights?
-                        </p>
-                        <figure class="figure">
-                            <img class="media" src="{% static 'gifs/fallout76-nuke.gif' %}" alt="Animated nuke explosion">
-                            <figcaption class="figcaption">Always treat your rivals with respect and love.</figcaption>
-                        </figure>
-                        <p>
-                            Besides sitting atop our <b>grand podium</b>, being rank #1 won't fetch you tangible rewards. We cherish our players, but let's not get too carried away. A medal, you ask? Perhaps, in spirit!
-                        </p>
-                    </div>
-                    <div class="col">
-                        <div class="head">
-                            <span class="headline hl1">What to expect next?</span>
-                            <p><span class="headline hl4">The Untold Truth</span></p>
-                        </div>
-                        <p>
-                            "Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise situation. Moi, si je devais résumer ma vie aujourd'hui avec vous, je dirais que c'est d'abord des rencontres. Des gens qui m'ont tendu la main, peut-être à un moment où je ne pouvais
-                            pas, où j'étais seul chez moi. Et c'est assez curieux de se dire que les hasards, les rencontres forgent une destinée... Parce que quand on a le goût de la chose, quand on a le goût de la chose bien faite, le beau geste, parfois
-                            on ne trouve pas l'interlocuteur en face je dirais, le miroir qui vous aide à avancer. Alors ça n'est pas mon cas, comme je disais là, puisque moi au contraire, j'ai pu ; et je dis merci à la vie, je lui dis merci, je chante
-                            la vie, je danse la vie... je ne suis qu'amour ! Et finalement, quand des gens me disent « Mais comment fais-tu pour avoir cette humanité ? », je leur réponds très simplement que c'est ce goût de l'amour, ce goût donc qui m'a
-                            poussé aujourd'hui à entreprendre une construction mécanique... mais demain qui sait ? Peut-être simplement à me mettre au service de la communauté, à faire le don, le don de soi."
-                        </p>
-                        <p>
-                            Dang, it makes me cry every single time... French Philosophy is so poetic...
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+	<header class="container-fluid px-5 active">
+		<div id="main-header" class="row align-items-center justify-content-between">
+			<div class="col-2 header-left-section">
+				<a id="header-news" class="d-flex flex-column align-items-center justify-content-center">
+					<img src="{% static 'icons/web.png' %}" draggable="false">
+					<p>NEWS</p>
+				</a>
+			</div>
+			<div class="col-8 header-middle-section">
+				<h1 id="newspaperTitle">Transcendence</h1>
+			</div>
+			<div class="col-2 header-right-section">
+				<a id="header-profile" class="d-flex flex-column align-items-center justify-content-center">
+					<img id="header-profile-picture" src="../media/profile_pictures/default.jpg" draggable="false">
+					<p>PROFILE</p>
+				</a>
+			</div>
+		</div>
+		<div id="sub-header" class="row align-items-center justify-content-between">
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-home">HOME</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-games">GAMES</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-friends">FRIENDS</a>
+			</div>
+			<div class="col-3 d-flex align-items-center justify-content-center">
+				<a id="header-podium">PODIUM</a>
+			</div>
+		</div>
+	</header>
+	<nav>
+	</nav>
+	<main>
+		<section id="home">
+			<div class="container-fluid d-inline-flex justify-content-center m-0 p-0 content">
+				<div class="columns row justify-content-around my-0 mx-3 p-0">
+					<div class="col">
+						<div class="head">
+							<span class="headline hl3">The Pong Game</span>
+							<p>
+								<span class="headline hl4">by Nolan BUSHNELL & Allan ALCORN</span>
+							</p>
+						</div>
+						<p>
+							In the early 1970s, a revolutionary game captured the imagination of the public, marking the
+							dawn of the video game era. This game was Pong, a simple yet captivating table tennis
+							simulation where players control paddles to hit a ball back and forth across
+							a central dividing line on a screen. The mechanics of Pong are straightforward: two paddles,
+							controlled by players or one player and the machine, volley a small dot, mimicking the basic
+							elements of tennis. As the game progresses,
+							the ball speeds up, challenging the players' reflexes and precision.
+						</p>
+						<figure class="figure">
+							<img class="media" src="{% static 'gifs/pong.gif' %}" alt="">
+							<figcaption class="figcaption">Not the pong game, but a cute cat. We love cats.</figcaption>
+						</figure>
+						<p>
+							Despite its simplicity, Pong became an arcade sensation, offering a form of entertainment
+							that was entirely new at the time. Its cabinet, adorned with bright, inviting graphics,
+							stood as a beacon in dimly lit arcades, drawing players into a world where
+							technology and recreation met. The influence of Pong extended beyond the arcade, fostering a
+							burgeoning video game industry and becoming a cultural icon. It not only entertained but
+							also sparked a technological revolution,
+							illustrating the potential of digital technology in creating immersive, interactive
+							experiences. As players stood before the Pong machine, paddles in hand, they were not just
+							participants in a game but pioneers in a new form
+							of digital interaction that would grow to become a global phenomenon.
+						</p>
+					</div>
+					<div class="col">
+						<div class="head">
+							<span class="headline hl5">The Fallout Universe</span>
+							<p>
+								<span class="headline hl6">Vault-Tec Approved</span>
+							</p>
+						</div>
+						<p>
+							As you emerge from the safety of an underground Vault, your eyes are met with a horizon
+							marred by the skeletal frames of once-thriving cities, now reduced to rubble under the harsh
+							glare of a nuclear sun. The air carries a palpable tension, tinged with
+							the ever-present threat of radiation, roaming bands of raiders, and the grotesque mutations
+							that the nuclear fallout has spawned. Each step outside the Vault is a step into a
+							relentless struggle for survival, where scavenging
+							for food, water, and supplies becomes a daily challenge. The world around you is a perverse
+							mosaic of 1950s American culture frozen in time, juxtaposed with the stark realities of a
+							society undone by its own hubris. </p>
+						<figure class="figure">
+							<img class="media" src="{% static 'gifs/vaultboy-sunglasses.gif' %}" alt="">
+							<figcaption class="figcaption">Vaultboy getting a BLASTING suntan.</figcaption>
+						</figure>
+						<p>
+							Echoes of the past haunt the present, from the faded billboards promising a brighter future
+							to the derelict robots still aimlessly following their last orders. Amidst this chaos,
+							communities attempt to rebuild, their fragile societies a testament to human
+							resilience. Your journey through the Fallout universe is not just about survival, but about
+							making choices that will shape the new world, wrestling with the moral dilemmas of a society
+							trying to redefine right and wrong in
+							the shadow of its own destruction. </p>
+					</div>
+					<div class="col">
+						<div class="head">
+							<span class="headline hl1">Transcendence</span>
+							<p><span class="headline hl2">Go beyond your limits</span></p>
+						</div>
+						<p>
+							This is the final project—something fresh, a departure from C/C++, where we anticipate a ton
+							of fun from start to finish. Right...?
+						</p>
+						<figure class="figure">
+							<img class="media" src="{% static 'gifs/fallout-throw-computer.gif' %}"
+								alt="Animated gif of someone frantically throwing a computer, depicting frustration">
+							<figcaption class="figcaption">Our group, around three times a day.</figcaption>
+						</figure>
+						<p>
+							Of all the challenges we faced, web design demanded the most effort. <span
+								class="citation">"CSS, my beloved"</span> UI and UX are at the heart of our development
+							philosophy. We strive to provide the user with the finest graphics
+							and interfaces, the culmination of our years -wait, lemme say that again- <b>YEARS</b> of
+							experience in web development funneled into this single project.
+						</p>
+						<p>
+							Don't believe us? Ah, the greatest geniuses were often misunderstood. Mozart, Van Gogh,
+							Galilei, and Tesla were once viewed as madmen, yet today, their names are universally
+							revered. We walk on a similar path, crafting a legacy that will echo through
+							time. Maybe. I don't know. Can you repeat the question?
+						</p>
+					</div>
+					<div class="col">
+						<div class="head">
+							<span class="headline hl3">Ranking & elo</span>
+							<p><span class="headline hl4">Because we never have enough ego.</span></p>
+						</div>
+						<p>
+							Have you ever dreamed of besting your friends and boasting about a superior elo on a Pong
+							website? Look no further than our <b>ranking & elo system</b>!
+						</p>
+						<p>
+							Each public game you win lets you climb the elo ladder. Why settle for friendships when you
+							can claim the top rank and ultimate bragging rights?
+						</p>
+						<figure class="figure">
+							<img class="media" src="{% static 'gifs/fallout76-nuke.gif' %}"
+								alt="Animated nuke explosion">
+							<figcaption class="figcaption">Always treat your rivals with respect and love.</figcaption>
+						</figure>
+						<p>
+							Besides sitting atop our <b>grand podium</b>, being rank #1 won't fetch you tangible
+							rewards. We cherish our players, but let's not get too carried away. A medal, you ask?
+							Perhaps, in spirit!
+						</p>
+					</div>
+					<div class="col">
+						<div class="head">
+							<span class="headline hl1">What to expect next?</span>
+							<p><span class="headline hl4">The Untold Truth</span></p>
+						</div>
+						<p>
+							"Vous savez, moi je ne crois pas qu'il y ait de bonne ou de mauvaise situation. Moi, si je
+							devais résumer ma vie aujourd'hui avec vous, je dirais que c'est d'abord des rencontres. Des
+							gens qui m'ont tendu la main, peut-être à un moment où je ne pouvais
+							pas, où j'étais seul chez moi. Et c'est assez curieux de se dire que les hasards, les
+							rencontres forgent une destinée... Parce que quand on a le goût de la chose, quand on a le
+							goût de la chose bien faite, le beau geste, parfois
+							on ne trouve pas l'interlocuteur en face je dirais, le miroir qui vous aide à avancer. Alors
+							ça n'est pas mon cas, comme je disais là, puisque moi au contraire, j'ai pu ; et je dis
+							merci à la vie, je lui dis merci, je chante
+							la vie, je danse la vie... je ne suis qu'amour ! Et finalement, quand des gens me disent «
+							Mais comment fais-tu pour avoir cette humanité ? », je leur réponds très simplement que
+							c'est ce goût de l'amour, ce goût donc qui m'a
+							poussé aujourd'hui à entreprendre une construction mécanique... mais demain qui sait ?
+							Peut-être simplement à me mettre au service de la communauté, à faire le don, le don de
+							soi."
+						</p>
+						<p>
+							Dang, it makes me cry every single time... French Philosophy is so poetic...
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <section id="games" class="">
-            <div class="container-fluid">
-                <div id="games-header" class="row">
-                    <div class="col d-flex flex-column justify-content-center align-items-center">
-                    </div>
-                </div>
-            </div>
-            <div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
-            </div>
-        </section>
+		<section id="games" class="">
+			<div class="container-fluid">
+				<div id="games-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+					</div>
+				</div>
+			</div>
+			<div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
+			</div>
+		</section>
 
-        <section id="friends" class="">
-            <div class="container-fluid">
-                <div id="friends-header" class="row">
-                    <div class="col d-flex flex-column justify-content-center align-items-center">
-                        <h1>Friends</h1>
-                        <form id="userSearchForm">
-                            <input id="searchUsername" placeholder="Username...">
-                            <button type="submit">&#128269;</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="friendships" class="container-fluid friendships mt-2 d-flex flex-column align-items-center">
-            </div>
-        </section>
+		<section id="friends" class="">
+			<div class="container-fluid">
+				<div id="friends-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Friends</h1>
+						<form id="userSearchForm">
+							<input id="searchUsername" placeholder="Username...">
+							<button type="submit">&#128269;</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div id="friendships" class="container-fluid friendships mt-2 d-flex flex-column align-items-center">
+			</div>
+		</section>
 
-        <section id="podium" class="">
-            <div class="container-fluid">
-                <div id="podium-header" class="row">
-                    <div class="col d-flex flex-column justify-content-center align-items-center">
-                        <h1>Podium</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row d-flex justify-content-center align-items-end podium-segments">
-                    <div id="second-place" class="col-4 d-flex justify-content-center podium-segment">
-                    </div>
-                    <div id="first-place" class="col-4 d-flex justify-content-center podium-segment">
-                    </div>
-                    <div id="third-place" class="col-4 d-flex justify-content-center podium-segment">
-                    </div>
-                </div>
-            </div>
+		<section id="podium" class="">
+			<div class="container-fluid">
+				<div id="podium-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>Podium</h1>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="row d-flex justify-content-center align-items-end podium-segments">
+					<div id="second-place" class="col-4 d-flex justify-content-center podium-segment">
+					</div>
+					<div id="first-place" class="col-4 d-flex justify-content-center podium-segment">
+					</div>
+					<div id="third-place" class="col-4 d-flex justify-content-center podium-segment">
+					</div>
+				</div>
+			</div>
 
-            <h2>Ranking</h2>
-            <div id="podium-list" class="container-fluid w-75">
-                <!-- Other people here -->
-            </div>
-        </section>
+			<h2>Ranking</h2>
+			<div id="podium-list" class="container-fluid w-75">
+				<!-- Other people here -->
+			</div>
+		</section>
 
-        <section id="news" class="">
-            <div class="container-fluid">
-                <div id="news-header" class="row">
-                    <div class="col d-flex flex-column justify-content-center align-items-center">
-                        <h1>News</h1>
-                    </div>
-                </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
-                            <img src="{% static 'images/Fo4_Boston_Bugle.png' %}" draggable="false">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+		<section id="news" class="">
+			<div class="container-fluid">
+				<div id="news-header" class="row">
+					<div class="col d-flex flex-column justify-content-center align-items-center">
+						<h1>News</h1>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col">
+							<img src="{% static 'images/Fo4_Boston_Bugle.png' %}" draggable="false">
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <section id="profile" class="">
-            <div class="container-fluid">
-                <div id="profile-header" class="row justify-content-between">
-                    <div class="col-auto d-flex align-items-center">
-                        <img id="profile-picture" src="../media/profile_pictures/default.jpg" draggable="false" class="m-3">
-                        <div class="ml-3">
-                            <h5 id="profile-username"></h5>
-                            <p id="profile-rank"><span>Rank: </span>#1</p>
-                            <p id="profile-elo"><span>Elo: </span>1000</p>
-                            <p id="profile-winrate"><span>Winrate: </span>1.0</p>
-                            <p id="profile-joined"><span>Joined: </span>26/01/2024</p>
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <button id="settings" class="profile-action-button open-settings" title="Settings">
+		<section id="profile" class="">
+			<div class="container-fluid">
+				<div id="profile-header" class="row justify-content-between">
+					<div class="col-auto d-flex align-items-center">
+						<img id="profile-picture" src="../media/profile_pictures/default.jpg" draggable="false"
+							class="m-3">
+						<div class="ml-3">
+							<h5 id="profile-username"></h5>
+							<p id="profile-rank"><span>Rank: </span>#1</p>
+							<p id="profile-elo"><span>Elo: </span>1000</p>
+							<p id="profile-winrate"><span>Winrate: </span>1.0</p>
+							<p id="profile-joined"><span>Joined: </span>26/01/2024</p>
+						</div>
+					</div>
+					<div class="col-auto">
+						<button id="settings" class="profile-action-button open-settings" title="Settings">
 							<img src="{% static 'icons/settings.png' %}" draggable="false">
 						</button>
-                    </div>
-                </div>
-            </div>
+					</div>
+				</div>
+			</div>
 
-            <div id="profile-history">
-                <h4>Match History</h4>
-                <div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-                    <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
-                        <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                            <img class="history-profile-picture open-profile" data-username="username" src="../media/profile_pictures/default.jpg" draggable="false">
-                        </div>
-                        <div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+			<div id="profile-history">
+				<h4>Match History</h4>
+				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+					<div
+						class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="username"
+								src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+						<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
-                        </div>
-                        <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                            <div class="history-game-result">WIN</div>
-                            <div class="history-game-time">5:56</div>
-                            <div class="history-game-type">Ranked</div>
-                            <div class="history-time-since">11hours ago</div>
-                        </div>
-                        <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                            <div class="history-game-score">3 / 1</div>
-                            <div class="history-game-elo">+20 PP</div>
-                        </div>
-                        <div class="col-2 m-0 d-flex align-items-center justify-content-between flex-wrap">
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-result">WIN</div>
+							<div class="history-game-time">5:56</div>
+							<div class="history-game-type">Ranked</div>
+							<div class="history-time-since">11hours ago</div>
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-score">3 / 1</div>
+							<div class="history-game-elo">+20 PP</div>
+						</div>
+						<div class="col-2 m-0 d-flex align-items-center justify-content-between flex-wrap">
 
-                        </div>
-                        <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                            <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                        </div>
-                    </div>
-                </div>
-            </div>
+						</div>
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="tgernez"
+								src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-                <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
-                    <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                        <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                    </div>
-                    <div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-result">LOSS</div>
-                        <div class="history-game-time">5:56</div>
-                        <div class="history-game-type">Ranked</div>
-                        <div class="history-time-since">11hours ago</div>
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-score">3 / 1</div>
-                        <div class="history-game-elo">+20 PP</div>
-                    </div>
-                    <div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                    <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                        <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                    </div>
-                </div>
-            </div>
-        </section>
+					</div>
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <section id="user" class="">
-            <div class="container-fluid">
-                <div id="user-header" class="row justify-content-between">
-                    <div class="col-auto d-flex align-items-center">
-                        <img id="user-picture" src="../media/profile_pictures/default.jpg" draggable="false" class="m-3">
-                        <div class="ml-3">
-                            <h5 id="user-username"></h5>
-                            <p id="user-rank"><span>Rank: </span>#1</p>
-                            <p id="user-elo"><span>Elo: </span>1000</p>
-                            <p id="user-winrate"><span>Winrate: </span>1.0</p>
-                            <p id="user-joined"><span>Joined: </span>26/01/2024</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<section id="user" class="">
+			<div class="container-fluid">
+				<div id="user-header" class="row justify-content-between">
+					<div class="col-auto d-flex align-items-center">
+						<img id="user-picture" src="../media/profile_pictures/default.jpg" draggable="false"
+							class="m-3">
+						<div class="ml-3">
+							<h5 id="user-username"></h5>
+							<p id="user-rank"><span>Rank: </span>#1</p>
+							<p id="user-elo"><span>Elo: </span>1000</p>
+							<p id="user-winrate"><span>Winrate: </span>1.0</p>
+							<p id="user-joined"><span>Joined: </span>26/01/2024</p>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div id="user-history">
-                <h4>Match History</h4>
-                <div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-                    <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
-                        <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                            <img class="history-profile-picture open-profile" data-username="username" src="../media/profile_pictures/default.jpg" draggable="false">
-                        </div>
-                        <div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+			<div id="user-history">
+				<h4>Match History</h4>
+				<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+					<div
+						class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-win">
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="username"
+								src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+						<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
-                        </div>
-                        <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                            <div class="history-game-result">WIN</div>
-                            <div class="history-game-time">5:56</div>
-                            <div class="history-game-type">Ranked</div>
-                            <div class="history-time-since">11hours ago</div>
-                        </div>
-                        <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                            <div class="history-game-score">3 / 1</div>
-                            <div class="history-game-elo">+20 PP</div>
-                        </div>
-                        <div class="col-2 m-0 d-flex align-items-center justify-content-between flex-wrap">
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-result">WIN</div>
+							<div class="history-game-time">5:56</div>
+							<div class="history-game-type">Ranked</div>
+							<div class="history-time-since">11hours ago</div>
+						</div>
+						<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+							<div class="history-game-score">3 / 1</div>
+							<div class="history-game-elo">+20 PP</div>
+						</div>
+						<div class="col-2 m-0 d-flex align-items-center justify-content-between flex-wrap">
 
-                        </div>
-                        <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                            <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                        </div>
-                    </div>
-                </div>
-            </div>
+						</div>
+						<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+							<img class="history-profile-picture open-profile" data-username="tgernez"
+								src="../media/profile_pictures/default.jpg" draggable="false">
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-                <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
-                    <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                        <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                    </div>
-                    <div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-result">LOSS</div>
-                        <div class="history-game-time">5:56</div>
-                        <div class="history-game-type">Ranked</div>
-                        <div class="history-time-since">11hours ago</div>
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-score">3 / 1</div>
-                        <div class="history-game-elo">+20 PP</div>
-                    </div>
-                    <div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                </div>
-            </div>
+					</div>
+				</div>
+			</div>
 
-            <div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
-                <div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
-                    <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                        <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                    </div>
-                    <div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
+			<div class="container-fluid w-100 d-flex justify-content-center flex-wrap">
+				<div class="row d-inline-flex w-75 mx-0 my-1 py-2 px-0 justify-content-around history-row history-loss">
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+					<div class="col-2  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-result">LOSS</div>
-                        <div class="history-game-time">5:56</div>
-                        <div class="history-game-type">Ranked</div>
-                        <div class="history-time-since">11hours ago</div>
-                    </div>
-                    <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
-                        <div class="history-game-score">3 / 1</div>
-                        <div class="history-game-elo">+20 PP</div>
-                    </div>
-                    <div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-result">LOSS</div>
+						<div class="history-game-time">5:56</div>
+						<div class="history-game-type">Ranked</div>
+						<div class="history-time-since">11hours ago</div>
+					</div>
+					<div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
+						<div class="history-game-score">3 / 1</div>
+						<div class="history-game-elo">+20 PP</div>
+					</div>
+					<div class="col-2 m-0  d-flex align-items-center justify-content-between flex-wrap">
 
-                    </div>
-                    <div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
-                        <img class="history-profile-picture open-profile" data-username="tgernez" src="../media/profile_pictures/default.jpg" draggable="false">
-                    </div>
-                </div>
-            </div>
-        </section>
+					</div>
+					<div class="col-2 d-flex justify-content-center mx-0 my-2 p-0">
+						<img class="history-profile-picture open-profile" data-username="tgernez"
+							src="../media/profile_pictures/default.jpg" draggable="false">
+					</div>
+				</div>
+			</div>
+		</section>
 
 
-        <section id="register" class="">
-            <div class="container-fluid d-flex flex-column align-items-center">
-                <div class="row">
-                    <div class="col">
-                        <h1>Register</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <form id="registerForm">
-                            <div>
-                                <input type="text" id="registerUsername" placeholder="Username...">
-                            </div>
-                            <div>
-                                <input type="email" id="registerEmail" placeholder="Email...">
-                            </div>
-                            <div>
-                                <input type="password" id="registerPassword1" placeholder="Password...">
-                            </div>
-                            <div>
-                                <input type="password" id="registerPassword2" placeholder="Confirm password...">
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <button type="submit">Register</button>
-                            </div>
-                        </form>
-                        <div>
-                            <button id="oauth-button" class="d-flex justify-content-center">Login with 42</button>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <button id="already-account">Already have an account?</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+		<section id="register" class="">
+			<div class="container-fluid d-flex flex-column align-items-center">
+				<div class="row">
+					<div class="col">
+						<h1>Register</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<form id="registerForm">
+							<div>
+								<input type="text" id="registerUsername" placeholder="Username...">
+							</div>
+							<div>
+								<input type="email" id="registerEmail" placeholder="Email...">
+							</div>
+							<div>
+								<input type="password" id="registerPassword1" placeholder="Password...">
+							</div>
+							<div>
+								<input type="password" id="registerPassword2" placeholder="Confirm password...">
+							</div>
+							<div class="d-flex justify-content-center">
+								<button type="submit">Register</button>
+							</div>
+						</form>
+						<div>
+							<button id="oauth-button" class="d-flex justify-content-center">Login with 42</button>
+						</div>
+						<div class="d-flex justify-content-center">
+							<button id="already-account">Already have an account?</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <section id="login" class="">
-            <div class="container-fluid d-flex flex-column align-items-center">
-                <div class="row">
-                    <div class="col">
-                        <h1>Login</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <form id="loginForm">
-                            <div>
-                                <input type="text" id="loginUsername" placeholder="Username...">
-                            </div>
-                            <div>
-                                <input type="password" id="loginPassword" placeholder="Password...">
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <button type="submit">Login</button>
-                            </div>
-                        </form>
-                        <div class="d-flex justify-content-center">
-                            <button id="no-account">Don't have an account?</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+		<section id="login" class="">
+			<div class="container-fluid d-flex flex-column align-items-center">
+				<div class="row">
+					<div class="col">
+						<h1>Login</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<form id="loginForm">
+							<div>
+								<input type="text" id="loginUsername" placeholder="Username...">
+							</div>
+							<div>
+								<input type="password" id="loginPassword" placeholder="Password...">
+							</div>
+							<div class="d-flex justify-content-center">
+								<button type="submit">Login</button>
+							</div>
+						</form>
+						<div class="d-flex justify-content-center">
+							<button id="no-account">Don't have an account?</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 
-    <div id="chat-popup" class="container d-none popup">
-        <div class="row title">
-            <div class="col">
-                <h5><span class="online-status"></span></h5>
-            </div>
-        </div>
-        <div class="chat-messages" id="messages">
-            <!-- Messages here -->
-        </div>
-        <div class="chat-input w-100 row d-flex">
-            <div class="col-10">
-                <input id="message-input" type="text" class="form-control w-100" placeholder="Type a message...">
-            </div>
-            <div class="col-1 m-0">
-                <button class="" id="send-message-btn">
+	<div id="chat-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h5><span class="online-status"></span></h5>
+			</div>
+		</div>
+		<div class="chat-messages" id="messages">
+			<!-- Messages here -->
+		</div>
+		<div class="chat-input w-100 row d-flex">
+			<div class="col-10">
+				<input id="message-input" type="text" class="form-control w-100" placeholder="Type a message...">
+			</div>
+			<div class="col-1 m-0">
+				<button class="" id="send-message-btn">
 					<img src="{% static 'icons/send.png' %}">
 				</button>
-            </div>
-            <div class="col-1 m-0">
-                <button class="">
+			</div>
+			<div class="col-1 m-0">
+				<button class="">
 					<img src="{% static 'icons/clash.png' %}">
 				</button>
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="profile-popup" class="container d-none popup">
 		<div class="row title">
 			<div class="col">
@@ -537,75 +592,86 @@
 		</div>
 		<div class="row m-2">
 			<div class="col">
-				<button id="profile-popup-chat" class="open-chat" data-username=""><img src="{% static 'icons/chat.png' %}" title="Chat" draggable="false"></button>
-				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img src="{% static 'icons/add-friend.png' %}" title="Add friend" draggable="false"></button>
-				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img src="{% static 'icons/remove-friend.png' %}" title="Remove friend" draggable="false"></button>
-				<button id="profile-popup-block" class="block" data-username=""><img src="{% static 'icons/block.png' %}" title="Block user" draggable="false"></button>
-				<button id="profile-popup-unblock" class="unblock" data-username=""><img src="{% static 'icons/check.png' %}" title="Unblock user" draggable="false"></button>
-				<button id="profile-popup-profile" class="goto-profile" data-username=""><img src="{% static 'icons/profile.png' %}" title="Profile" draggable="false"></button>
+				<button id="profile-popup-chat" class="open-chat" data-username=""><img
+						src="{% static 'icons/chat.png' %}" title="Chat" draggable="false"></button>
+				<button id="profile-popup-add-friend" class="add-friend" data-username=""><img
+						src="{% static 'icons/add-friend.png' %}" title="Add friend" draggable="false"></button>
+				<button id="profile-popup-remove-friend" class="remove-friend" data-username=""><img
+						src="{% static 'icons/remove-friend.png' %}" title="Remove friend" draggable="false"></button>
+				<button id="profile-popup-block" class="block" data-username=""><img
+						src="{% static 'icons/block.png' %}" title="Block user" draggable="false"></button>
+				<button id="profile-popup-unblock" class="unblock" data-username=""><img
+						src="{% static 'icons/check.png' %}" title="Unblock user" draggable="false"></button>
+				<button id="profile-popup-profile" class="goto-profile" data-username=""><img
+						src="{% static 'icons/profile.png' %}" title="Profile" draggable="false"></button>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="container">
 		<ul id="list-notifications" class="notif-container">
 			<!-- List items will be appended here -->
 		</ul>
 	</div>
 
-    <div id="notification" class="container d-none">
-        <div class="row d-flex align-items-center justify-content-center">
-            <div class="col-3">
-                <img src="{% static 'icons/bell.png' %}">
-            </div>
-            <div class="col-9 my-2">
+	<div id="notification" class="container d-none">
+		<div class="row d-flex align-items-center justify-content-center">
+			<div class="col-3">
+				<img src="{% static 'icons/bell.png' %}">
+			</div>
+			<div class="col-9 my-2">
 
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 
-    <div id="settings-popup" class="container d-none popup">
-        <div class="row title">
-            <div class="col">
-                <h5>Settings</h5>
-            </div>
-        </div>
-        <div class="row w-100 d-flex justify-content-start">
-            <div class="col m-0">
-                <p>Click to change photo</p>
-                <input type="file" id="profile-picture-input" hidden accept="image/*" name="profile_picture">
-                <img src="" draggable="false" class="settings-picture" id="profile-picture-preview">
-            </div>
-            <div class="col m-0 p-0">
-                <form id="settings-form">
-                    <div><input id="settings-username" placeholder="Username..." name="username" type="text"></div>
-                    <div><input id="settings-email" placeholder="Email..." name="email" type="email"></div>
-                    <div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text">
-                    </div>
-                    <div><input id="settings-last-name" placeholder="Last name..." name="last_name" type="text"></div>
-                    <div><textarea id="settings-bio" placeholder="Bio..." name="bio"></textarea></div>
-                    <div>
-                        <button type="submit">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script src="{% static 'js/globals.js' %}"></script>
-    <script src="{% static 'js/chat/chat.js' %}"></script>
-    <script src="{% static 'js/chat/notification.js' %}"></script>
-    <script src="{% static 'js/users/podium.js' %}"></script>
-    <script src="{% static 'js/users/friends.js' %}"></script>
-    <script src="{% static 'js/users/profile.js' %}"></script>
-    <script src="{% static 'js/users/settings.js' %}"></script>
-    <script src="{% static 'js/users/block.js' %}"></script>
-    <script src="{% static 'js/users/search.js' %}"></script>
-    <script src="{% static 'js/pong/pong-game.js' %}"></script>
-    <script src="{% static 'js/general/navigation.js' %}"></script>
-    <script src="{% static 'js/users/auth.js' %}"></script>
-    <script src="{% static 'js/index.js' %}"></script>
-    <script src="{% static 'jquery/jquery.js' %}"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<div id="settings-popup" class="container d-none popup">
+		<div class="row title">
+			<div class="col">
+				<h5>Settings</h5>
+			</div>
+		</div>
+		<div class="row w-100 d-flex justify-content-start">
+			<div class="col m-0">
+				<p>Click to change photo</p>
+				<input type="file" id="profile-picture-input" hidden accept="image/*" name="profile_picture">
+				<img src="" draggable="false" class="settings-picture" id="profile-picture-preview">
+			</div>
+			<div class="col m-0 p-0">
+				<form id="settings-form">
+					<div><input id="settings-username" placeholder="Username..." name="username" type="text"></div>
+					<div><input id="settings-email" placeholder="Email..." name="email" type="email"></div>
+					<div><input id="settings-first-name" placeholder="First name..." name="first_name" type="text">
+					</div>
+					<div><input id="settings-last-name" placeholder="Last name..." name="last_name" type="text"></div>
+					<div><textarea id="settings-bio" placeholder="Bio..." name="bio"></textarea></div>
+					<div>
+						<button type="submit">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="pong_game_overlay" class="">
+		<canvas id="pong_game_canvas" width="800" height="600"></canvas>
+	</div>
+
+	<script src="{% static 'js/globals.js' %}"></script>
+	<script src="{% static 'js/chat/chat.js' %}"></script>
+	<script src="{% static 'js/chat/notification.js' %}"></script>
+	<script src="{% static 'js/users/podium.js' %}"></script>
+	<script src="{% static 'js/users/friends.js' %}"></script>
+	<script src="{% static 'js/users/profile.js' %}"></script>
+	<script src="{% static 'js/users/settings.js' %}"></script>
+	<script src="{% static 'js/users/block.js' %}"></script>
+	<script src="{% static 'js/users/search.js' %}"></script>
+	<script src="{% static 'js/pong/pong-game.js' %}"></script>
+	<script src="{% static 'js/general/navigation.js' %}"></script>
+	<script src="{% static 'js/users/auth.js' %}"></script>
+	<script src="{% static 'js/index.js' %}"></script>
+	<script src="{% static 'jquery/jquery.js' %}"></script>
+	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
 </body>
 

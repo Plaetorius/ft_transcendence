@@ -64,9 +64,9 @@ class PongPaddle(ObjectAbstract):
 		super().__init__()
 		self.shape		= Shape.PADDLE
 		
-		random.seed(controler + str(time.time()))
-		r = lambda: random.randint(75, 175)
-		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
+		random.seed(controler)
+		r = lambda: random.randint(190, 220)
+		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), 127, r())
 		
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
@@ -292,11 +292,11 @@ class	PongParty(Party):
 		pass
 
 	def	_game_start(self) -> bool:
+		self.reset_game()
 		self.update_world_state()
 		return True
 
 	def	_game_stop(self) -> bool:
-		self.reset_game()
 		return True
 
 	def	_game_loop(self) -> bool:

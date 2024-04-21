@@ -80,9 +80,9 @@ class ObjectPaddle(ObjectAbstract):
 		super().__init__()
 		self.shape		= Shape.PADDLE
 		
-		random.seed(controler + str(time.time()))
-		r = lambda: random.randint(75, 175)
-		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
+		random.seed(controler)
+		r = lambda: random.randint(190, 220)
+		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), 127, r())
 		
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
