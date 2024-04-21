@@ -467,8 +467,6 @@ class OAuthCallbackView(generics.GenericAPIView):
         response = requests.get(user_info_url, headers=headers)
         return response.json()
 
-#TODO view for Match History, returning the matches, the W/L ratio, the rank
-
 class PlayerMatchHistoryView(generics.ListAPIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated] 

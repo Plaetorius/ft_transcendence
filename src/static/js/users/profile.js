@@ -90,7 +90,6 @@ async function openProfileHandler(event) {
 	}
 }
 
-//TODO Only show relevant buttons: block if not blocked, unblock if blocked...
 function updateProfilePopup(user) {
     let titleElem = profilePopup.querySelector("h5");
     
