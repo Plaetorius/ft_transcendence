@@ -104,9 +104,6 @@ function authenticated() {
 
 document.getElementById("oauth-button").addEventListener("click", oauth_register);
 
-const encodedCallBackUrl = encodeURI(base_url + '/users/oauth2/callback');
-console.log(encodedCallBackUrl);
-
 function oauth_register() {
     const encodedCallBackUrl = encodeURI(base_url + '/users/oauth2/callback');
     const client_id = "u-s4t2ud-74b16c2e5ea3a21411f68f94d3baa9360412380b7ee6088672f7028ffcac8652";
