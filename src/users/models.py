@@ -66,7 +66,7 @@ class MatchHistory(models.Model):
     date_played = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.game_type.name} on {self.date_played.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.game_type} on {self.date_played.strftime('%Y-%m-%d %H:%M')}"
 
 class PlayerMatchHistory(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE)

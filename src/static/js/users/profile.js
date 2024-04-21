@@ -236,3 +236,31 @@ async function handleGotoProfileClick(username) {
     profilePopup.classList.add("d-none");
     profilePopup.classList.remove("d-block");
 }
+
+function getPlayerMatchHistory(username) {
+    fetch(`/users/match-history/${username}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('User not found');
+        }
+        return response.json();
+    })
+    .then(matchHistory => {
+        loadMatchHistory(matchHistory);
+    })
+    .catch(error => {
+        notification(error, 'cross', 'error');
+    });
+}
+
+function loadMatchHistory(matchHistory) {
+    console.log(matchHistory);
+}
+
+getPlayerMatchHistory("tgernez");

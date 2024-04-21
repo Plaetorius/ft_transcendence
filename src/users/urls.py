@@ -31,7 +31,7 @@ urlpatterns = [
     path('list-blocked/', UserListBlockedAPIView.as_view(), name="list-blocked-api"),
     path('edit-user/', UserEditAPIView.as_view(), name="edit-user-api"),
 	path('podium/', UserPodiumAPIView.as_view(), name="podium-api"),
-	path('match-history/<int:user_id>/', PlayerMatchHistoryView.as_view(), name='player-match-history'),
+	path('match-history/<str:username>/', PlayerMatchHistoryView.as_view(), name='player-match-history'),
 	path('oauth2/callback', OAuthCallbackView.as_view(), name='oauth-callback'),
 	path('check-session/', CheckSessionView.as_view(), name='check-session'),
 ]

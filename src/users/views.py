@@ -474,5 +474,5 @@ class PlayerMatchHistoryView(generics.ListAPIView):
     serializer_class = MatchHistorySerializer
 
     def get_queryset(self):
-        user_id = self.kwargs.get('user_id')
-        return MatchHistory.objects.filter(players__id=user_id)
+        username = self.kwargs.get('username')
+        return MatchHistory.objects.filter(players__username=username)
