@@ -262,6 +262,8 @@ function getPlayerMatchHistory(username) {
 async function loadMatchHistory(matchHistory, username) {
     const profileContainer = document.getElementById('profile-history');  // Ensure this element exists in your HTML
 
+    matchHistory.sort((a, b) => new Date(b.date_played) - new Date(a.date_played));
+
     for (const match of matchHistory) {
         const currentPlayer = match.players.find(player => player.username === username);
         const opponent = match.players.find(player => player.username !== username);
@@ -288,7 +290,7 @@ async function loadMatchHistory(matchHistory, username) {
                 </div>
                 <div class="col-2 m-0 p-0 d-flex flex-column align-items-center justify-content-center">
                     <div class="history-game-result">${resultText}</div>
-                    <div class="history-game-time">${match.duration}</div>
+                    <div class="history-game-time">${match.duration.split('.')[0]}</div>
                     <div class="history-game-type">${match.game_type}</div>
                     <div class="history-time-since">${calculateTimeSince(match.date_played)}</div>
                 </div>

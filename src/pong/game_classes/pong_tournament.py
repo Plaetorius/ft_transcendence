@@ -10,11 +10,13 @@ from ..classes.math_vec2 import ( vec2 )
 from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
 from users.elo import ( game_result )
+from users.models import MatchHistory, PlayerMatchHistory
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 import uuid
 import time
+from datetime import timedelta
 from random import randint, uniform
 import math
 
@@ -93,6 +95,7 @@ class Match:
 		self.score: list[int]				 = 0
 		self.winner							 = None
 		self.objects						 = []
+		self.time 							 = time.time()
 		
 	# create terrain and ball
 	def __create_terrain__(self, j: int, t_party):
@@ -139,6 +142,28 @@ def __ispoweroftwo__(n: int) -> bool:
 @database_sync_to_async
 def get_user(field: str) -> User:
 	return User.objects.get(username=field)
+
+def send_history( name1: str, name2: str, winner: str, score, game_time, game_type: str):
+	user1 = async_to_sync(get_user)(name1)
+	user2 = async_to_sync(get_user)(name2)
+	elo = [user1.elo, user2.elo]
+	actual_time = time.time() - game_time
+	duration_timedelta = timedelta(seconds=actual_time)
+	if winner == name1:
+		elo_list = game_result(user1, user2, 1)
+	else:
+		elo_list = game_result(user2, user1, 1)
+	elo = [elo[i] - elo_list[i] for i in range(2)]
+	# Winner elo and score are always in first place
+	elo.sort(reverse=True)
+	score.sort(reverse=True)
+	match = MatchHistory.objects.create(game_type=game_type, duration=duration_timedelta)
+	pmh1 = PlayerMatchHistory.objects.create(player=user1, match=match, score=score[0], elo_change=elo[0])
+	pmh2 = PlayerMatchHistory.objects.create(player=user2, match=match, score=score[1], elo_change=elo[1])
+	match.save()
+	pmh1.save()
+	pmh2.save()
+
 
 
 ########################
@@ -245,22 +270,6 @@ class pongTournament(Party):
 		self.__create_Matches__()
 		return True
 
-
-	# send history of match to database
-	def send_history(self, match: Match):
-		user1 = async_to_sync(get_user)(match.players[0].name)
-		user2 = async_to_sync(get_user)(match.players[1].name)
-		winner = match.winner
-		looser = next((player for player in match.players if player.name != winner), None)
-		if winner == user1:
-			elo_list = game_result(user1, user2, 1)
-			# or elo_list = game_result(winner, looser, 1) but we need user1 and user2 for database i think ?
-		else:
-			elo_list = game_result(user2, user1, 1)
-		score  = match.score
-		#todo add database, TOM FAIT LE STP
-
-
 	# check if player scored
 	def player_scored(self, player: PlayerTournament):
 		#todo create front for score and timer
@@ -272,7 +281,8 @@ class pongTournament(Party):
 					player.in_game = False
 					joueur.in_game = False
 					joueur.loose = True
-					#! ADD MATCH HISTORY HERE AND ELO 
+					#todo import send_history
+					send_history(player.name, joueur.name, player.name, [player.score, joueur.score], player.matchs.time, "Ranked")
 					#self.send_history(player.matchs)
 					player.matchs.players.remove(joueur)
 					self.autPlayer.remove(joueur)
@@ -316,7 +326,7 @@ class pongTournament(Party):
 			self.activateTimer = True
 			self.timer = time.time() + self.timerupdate
 
-		# check if the player is already in the game
+		# check if the player is al1.1430385ready in the game
 		temp_player = next((test for test in self.autPlayer if player.id == test.id), None)
 		
 		# check if the game is started for stop player to join
