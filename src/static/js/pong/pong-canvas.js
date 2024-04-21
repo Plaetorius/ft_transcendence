@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-// import { EffectComposer, RenderPass, ShaderPass, SobelOperatorShader, FontLoader, TextGeometry } from 'addons/Addons.js';
-// import { pong_websocket } from './pong-game.js';
+import { EffectComposer, RenderPass, ShaderPass, SobelOperatorShader, FontLoader, TextGeometry, DotScreenShader, DotScreenPass, HalftonePass } from 'addons/Addons.js';
+
 
 
 let container;
@@ -68,6 +68,12 @@ function initGamePong() {
 	renderer.setSize(canvas_width, canvas_height);
 	container.appendChild(renderer.domElement);
 
+	renderer.domElement.style.border = "2px solid black";
+	renderer.domElement.style.boxShadow = "0 0 8px rgba(0, 0, 0, 1)";
+	// renderer.domElement.style.borderRadius = "5px";
+	// container.style.border = "2px solid black";
+	// container.style.borderRadius = "10px 0 0 10px";
+
 
 	// var canvas = renderer.domElement,
 	// 	context = canvas.getContext('2d');
@@ -104,23 +110,27 @@ function initGamePong() {
 	scene.add(new THREE.AmbientLight(0xffffff));
 	scene.add(skybox);
 
-	// composer = new EffectComposer(renderer);
+	composer = new EffectComposer(renderer);
 
 	// // Ajoute un RenderPass à l'EffectComposer
-	// const renderPass = new RenderPass(scene, camera);
-	// composer.addPass(renderPass);
+	const renderPass = new RenderPass(scene, camera);
+	composer.addPass(renderPass);
 
 	// Ajoute un FilmPass à l'EffectComposer
 	// const filmPass = new FilmPass(0.5, 0.5, 1000, false);
 	// const filmPass = new GlitchPass();
 	// // const stensilPass = new MaskPass(scene, camera);
-	// const shaderMaterial = new THREE.ShaderMaterial(SobelOperatorShader)
-	// const shaderPass = new ShaderPass(shaderMaterial, "tDiffuse")
-	// shaderMaterial.uniforms.resolution.value.x = window.innerWidth
-	// shaderMaterial.uniforms.resolution.value.y = window.innerHeight
+	// const shaderMaterial = new THREE.ShaderMaterial(DotScreenShader)
+	const shaderPass = new DotScreenPass(new THREE.Vector2(1, 1), /* angle */ 1.4, 1.5);
+	
+
+	// const half_pass = new HalftonePass(new THREE.Vector2(1, 1), /* angle */ 1.4, 1);
+
+	// shaderMaterial.uniforms.resolution.value.x = renderer.width
+	// shaderMaterial.uniforms.resolution.value.y = renderer.height
 
 	// // composer.addPass(filmPass);
-	// composer.addPass(shaderPass);
+	composer.addPass(half_pass);
 
 	// Cubes meshes creation
 	group = new THREE.Group();
@@ -286,7 +296,7 @@ function updateOrCreateObject(id, position, rotation, size, shape, color, text =
 		// 		object.userText = text;
 			// }
 			// object.position.y = size.y;
-			object.lookAt(camera.position);
+			// object.lookAt(camera.position);
 		// }
 	}
 }
@@ -371,8 +381,8 @@ function renderGamePong() {
 		setPlayerList();
 	}
 	skybox.position.copy(camera.position);
-	//composer.render();
-	renderer.render(scene, camera);
+	composer.render();
+	// renderer.render(scene, camera);
 
 	delta = delta % interval;
 }

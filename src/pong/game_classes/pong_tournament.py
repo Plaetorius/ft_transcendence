@@ -316,7 +316,7 @@ class pongTournament(Party):
 						# destroy and kick last player
 						self.end = True
 						temp_player1.in_game = False
-						self.game_event_message("You Win the tournament !", 2.0, [temp_player1])
+						self.game_event_message("You Win the tournament !", 2.0, 'boom', [temp_player1])
 						self.autPlayer.remove(temp_player1)
 						self.game_event_disconnect(temp_player1)
 		if self.end == False:
@@ -344,7 +344,7 @@ class pongTournament(Party):
 		player.matchs.score[0] = player.matchs.players[0].score
 		player.matchs.score[1] = player.matchs.players[1].score
 		# player.matchs.texte.text = (f"{player.matchs.score[0]} | {player.matchs.score[1]}")
-		self.game_event_message(f"score : {player.matchs.score[0]} | {player.matchs.score[1]}", 1, player.matchs.players)
+		self.game_event_message(f"score : {player.matchs.score[0]} | {player.matchs.score[1]}", 3.0, '', player.matchs.players)
 		if player.score >= 5 and player.matchs.winner == None:
 			player.matchs.winner = player.name
 			for joueur in player.matchs.players:
@@ -352,7 +352,7 @@ class pongTournament(Party):
 					player.in_game = False
 					joueur.in_game = False
 					joueur.loose = True
-					self.game_event_message("You loose the match ! looooser....", 2.0, [joueur])
+					self.game_event_message("You loose the match ! looooser....", 4.0, 'error', [joueur])
 					#! ADD MATCH HISTORY HERE AND ELO 
 					#self.send_history(player.matchs)
 					player.matchs.players.remove(joueur)
@@ -363,7 +363,7 @@ class pongTournament(Party):
 					player.matchs.winner = player.name
 					self.all_match_end()
 		else:
-			self.game_event_message(f"player: '{player.name}' scored", 1, player.matchs.players)
+			self.game_event_message(f"player: '{player.name}' scored", 3, 'boom', player.matchs.players)
 
 	# method for class party
 	def	_game_start(self) -> bool:
@@ -386,13 +386,13 @@ class pongTournament(Party):
 					self.activateTimer = False
 				else:
 					self.timer += self.timerupdate
-					self.game_event_message("You need to be a power of two to start the game", 1.0)
-					self.game_event_message("game start in 10 second", 1.0)
+					self.game_event_message("Player not pow of two", 3.0, 'error')
+					self.game_event_message("Game start in 10 second", 3.0, 'error')
 		# check if the game is started
 		if self.gameStarted == True:
 			if len(self.matchs) == 0:
 				self.remove_all_object()
-				self.game_event_message("TOURNAMENT BEGIN !", 1.0)
+				self.game_event_message("TOURNAMENT BEGIN !", 3.0, 'success')
 				self.__create_Matches__()
 				if self.end == False:
 					self.autPlayer = self.playersT.copy()
@@ -419,8 +419,7 @@ class pongTournament(Party):
 				self.objects.append(temp_player.paddle)
 				self.autPlayer.append(temp_player)
 			self.playersT.append(temp_player)
-			self.game_event_message(f"game start every 10s", 1.0, [temp_player])
-			self.game_event_message(f"player '{temp_player.name}' joined the tournament", 1.0)
+			self.game_event_message(f"Player '{temp_player.name}' joined the tournament", 1.0)
 			return True
 		return False
 
@@ -428,7 +427,7 @@ class pongTournament(Party):
 	def	_game_leave(self, player: Player) -> bool:
 		playerdelet = next((test for test in self.playersT if player.id == test.id), None)
 		if playerdelet != None:
-			self.game_event_message(f"player '{playerdelet.name}' leave the tournament", 1.0)
+			self.game_event_message(f"Player '{playerdelet.name}' leave the tournament", 1.0)
 			self.playersT.remove(playerdelet)
 		if (len(self.playersT) == 0):
 			self.reset_game()

@@ -7,7 +7,7 @@ from .models import User
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import AnonymousUser
-
+ 
 
 
 class UserNotification(AsyncWebsocketConsumer):
