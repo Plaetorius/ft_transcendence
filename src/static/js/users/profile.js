@@ -17,6 +17,7 @@ function getProfile() {
 		document.getElementById("profile-picture").src = user.profile_picture_url;
 		loadMyProfile();
         actualiseFriendsSection();
+        getPlayerMatchHistory(user.username);
     })
     .catch(error => {
 		notification(error, 'cross', 'error');
@@ -259,8 +260,14 @@ function getPlayerMatchHistory(username) {
     });
 }
 
+let isLoadingHistory = false;
+
 async function loadMatchHistory(matchHistory, username) {
-    const profileContainer = document.getElementById('profile-history');  // Ensure this element exists in your HTML
+    if (isLoadingHistory) return; 
+    isLoadingHistory = true; 
+
+    const profileContainer = document.getElementById('profile-history'); 
+    profileContainer.innerHTML = '';
 
     matchHistory.sort((a, b) => new Date(b.date_played) - new Date(a.date_played));
 
@@ -308,6 +315,7 @@ async function loadMatchHistory(matchHistory, username) {
         // Append to the main container
         profileContainer.appendChild(matchDiv);
     }
+    isLoadingHistory = false;
 }
 
 function calculateTimeSince(datePlayed) {
@@ -331,5 +339,3 @@ function calculateTimeSince(datePlayed) {
         return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
     }
 }
-
-getPlayerMatchHistory("tgernez");

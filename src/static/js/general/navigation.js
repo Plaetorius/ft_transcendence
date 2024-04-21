@@ -80,12 +80,14 @@ function setActiveSection(sectionId, stateObj = {}) {
                 loadGames();
                 break;
             case 'profile':
+                console.log('profile');
 				getProfile();
 				setupSettingsForm();
                 break;
             case 'user':
                 if (stateObj.username) {
                     loadUserProfile(stateObj.username); 
+                    getPlayerMatchHistory(stateObj.username);
                 } else {
                     navigateToSection('home');
                 }
