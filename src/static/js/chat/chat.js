@@ -69,6 +69,58 @@ async function fetchBlockedUsers() {
     }
 }
 
+document.getElementById('clash-button').addEventListener('click', createClash);
+
+async function createClash() {
+    const clash_uid = await fetchPongCreation(); 
+    if (chatSocket.readyState === WebSocket.OPEN) {
+        chatSocket.send(JSON.stringify({
+            message: `/clash ${clash_uid}`,
+        }));
+    }
+}
+
+
+function createDomInvitation(sender, uid) {
+    let invitationDiv = document.createElement('div');
+    let profileDiv = document.createElement('div');
+    let imgElem = document.createElement('img');
+    let invitationContentDiv = document.createElement('div');
+    let pElem = document.createElement('p');
+    let acceptBtn = document.createElement('button');
+
+    invitationDiv.classList.add('invitation', 'd-flex');
+    imgElem.src = `${sender.profile_picture}`;
+    imgElem.className = 'open-profile';
+    imgElem.setAttribute('data-username', sender.username);
+    imgElem.draggable = false;
+
+    pElem.innerHTML = `${sender.username} created a game!`;
+
+    acceptBtn.innerHTML = 'Clash!';
+    acceptBtn.classList.add('accept-invitation');
+    acceptBtn.setAttribute('data-username', sender.username);
+    acceptBtn.onclick = () => { 
+        closeChatPopup(undefined);
+        navigateToSection('games');
+        pongJoinGame(uid);
+    };
+
+    profileDiv.appendChild(imgElem);
+
+    invitationContentDiv.className = 'invitation-content';
+    invitationContentDiv.appendChild(pElem);
+    invitationContentDiv.appendChild(acceptBtn);
+
+    invitationDiv.appendChild(profileDiv);
+    invitationDiv.appendChild(invitationContentDiv);
+
+    document.getElementById('messages').appendChild(invitationDiv);
+
+    // After appending the message, scroll to the last message
+    scrollToLastMessages();
+}
+
 function createDomMessage(message, sender) {
     let messageDiv = document.createElement('div');
     let profileDiv = document.createElement('div');
@@ -151,6 +203,11 @@ async function enterRoom(room_id, username) {
         const data = JSON.parse(e.data);
         const message = data.message;
         const sender = data.sender;
+        if (message.startsWith('/clash')) {
+            const uid = message.split(' ')[1];
+            createDomInvitation(sender, uid);
+            return ;
+        }
         createDomMessage(message, sender);
     };
 
@@ -188,6 +245,11 @@ const chatPopup = document.getElementById("chat-popup");
 
 // Close for Chats
 function closeChatPopup(event) {
+    if (event === undefined) {
+        removeChatDisplayAndListeners();
+		chatSocket.close();
+        return ;
+    }
 	if (!chatPopup.contains(event.target) && !event.target.matches('.open-chat')) {
 		event.stopPropagation();
 		removeChatDisplayAndListeners();

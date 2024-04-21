@@ -13,7 +13,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         model = ChatRoom
         fields = '__all__'
 
-
 class MessageSerializer(serializers.ModelSerializer):
     sender_username = serializers.SerializerMethodField()
     sender_pp_url = serializers.SerializerMethodField()
