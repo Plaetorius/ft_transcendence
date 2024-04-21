@@ -69,6 +69,47 @@ async function fetchBlockedUsers() {
     }
 }
 
+function createDomInvitation(sender) {
+    let invitationDiv = document.createElement('div');
+    let profileDiv = document.createElement('div');
+    let imgElem = document.createElement('img');
+    let invitationContentDiv = document.createElement('div');
+    let pElem = document.createElement('p');
+    let acceptBtn = document.createElement('button');
+    let declineBtn = document.createElement('button');
+
+    invitationDiv.classList.add('invitation', 'd-flex');
+    imgElem.src = `${sender.profile_picture}`;
+    imgElem.className = 'open-profile';
+    imgElem.setAttribute('data-username', sender.username);
+    imgElem.draggable = false;
+
+    pElem.innerHTML = `You have received a chat invitation from ${sender.username}`;
+
+    acceptBtn.innerHTML = 'Accept';
+    acceptBtn.classList.add('accept-invitation');
+    acceptBtn.setAttribute('data-username', sender.username);
+
+    declineBtn.innerHTML = 'Decline';
+    declineBtn.classList.add('decline-invitation');
+    declineBtn.setAttribute('data-username', sender.username);
+
+    profileDiv.appendChild(imgElem);
+
+    invitationContentDiv.className = 'invitation-content';
+    invitationContentDiv.appendChild(pElem);
+    invitationContentDiv.appendChild(acceptBtn);
+    invitationContentDiv.appendChild(declineBtn);
+
+    invitationDiv.appendChild(profileDiv);
+    invitationDiv.appendChild(invitationContentDiv);
+
+    document.getElementById('messages').appendChild(invitationDiv);
+
+    // After appending the message, scroll to the last message
+    scrollToLastMessages();
+}
+
 function createDomMessage(message, sender) {
     let messageDiv = document.createElement('div');
     let profileDiv = document.createElement('div');
