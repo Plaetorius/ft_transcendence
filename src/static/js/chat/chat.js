@@ -1,25 +1,28 @@
-function getChatRoom(username) {
-	const cookie = getCookie('csrftoken');
-	fetch(`chat/room-id/${username}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include',
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Username not found');
-		}
-		return response.json();
-	})
-	.then(data => {
-		enterRoom(data.room_id, username);
-
-	})
-	.catch(error => {
-		notification(error, 'cross', 'error');
-	});
+async function getChatRoom(username) {
+    return fetch(`chat/room-id/${username}`, {  // Make sure to return the fetch promise
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'include',
+    })
+    .then(response => response.json().then(data => ({
+        status: response.status,
+        data
+    })))
+    .then(result => {
+        if (result.status >= 200 && result.status < 300) {
+            enterRoom(result.data.room_id, username);
+            return true;  // Resolve with true on success
+        } else {
+            throw new Error(result.data.error || 'An unknown error occurred');
+        }
+    })
+    .catch(error => {
+        notification(error.message, 'cross', 'error');
+        return false;  // Resolve with false on failure
+    });
 }
 
 let chatSocket = null;

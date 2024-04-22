@@ -42,6 +42,9 @@ prune-volumes:
 exec:
 	docker-compose exec $(service) $(cmd)
 
+static:
+	docker-compose exec web bash -c "python /code/src/manage.py collectstatic --noinput"
+
 start:
 	docker-compose up --build
 

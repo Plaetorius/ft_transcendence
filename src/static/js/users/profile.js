@@ -163,13 +163,16 @@ function closeProfileHandle(event) {
 }
 
 function handleChatClick(username) {
-	hide_popups();
-	getChatRoom(username);
-	chatPopup.classList.remove("d-none");
-	chatPopup.classList.add("d-block");
-	blur_background();
-	document.addEventListener('click', closeChatPopup);
-	scrollToLastMessages();
+    hide_popups();
+    getChatRoom(username).then(success => {
+        if (success) {
+            chatPopup.classList.remove("d-none");
+            chatPopup.classList.add("d-block");
+            blur_background();
+            document.addEventListener('click', closeChatPopup);
+            scrollToLastMessages();
+        }
+    });
 }
 
 function handleAddFriendClick(username) {
