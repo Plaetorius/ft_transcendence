@@ -27,7 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
         else:
             # Check if the user is a member of the room
-            if await self.is_member_of_room(room, self.scope['user']):
+            if await self.is_member_of_room(room, self.scope['user']) and await self.room_has_other_members(room, self.scope['user']):
                 # Join room group if user is authenticated and a member of the room
                 await self.channel_layer.group_add(
                     self.room_group_name,
@@ -116,3 +116,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.scope["user"] = User.objects.get(id=user_id)
             except (InvalidToken, TokenError, User.DoesNotExist):
                 self.scope["user"] = AnonymousUser()
+
+    @database_sync_to_async
+    def room_has_other_members(self, room, user):
+        # Check if the room has more members other than the current user
+        return room.members.exclude(id=user.id).exists()

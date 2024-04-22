@@ -371,7 +371,7 @@ function loadPlayerRank(stats, containerId) {
     loadingRank = true;
 
     document.getElementById(`${containerId}-rank`).innerHTML = `<span>Rank: </span>#${stats.rank}`;
-    document.getElementById(`${containerId}-winrate`).innerHTML = `<span>Winrate: </span>${stats.win_rate.split('.')[0]}%`;
+    document.getElementById(`${containerId}-winrate`).innerHTML = `<span>Winrate: </span>${Math.round(stats.win_rate)}%`;
     loadingRank = false;
 
 }
