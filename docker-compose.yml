@@ -12,6 +12,8 @@ services:
     command: ./start_django.sh
     volumes:
       - ./src:/code/src
+      - static_volume:/code/src/staticfiles
+      - media_volume:/code/src/media
     ports:
       - "8000:8000"
     depends_on:
@@ -39,10 +41,15 @@ services:
       - "1026:443"
     depends_on:
       - web
-
-
+    volumes:
+      - static_volume:/usr/share/nginx/html/static
+      - media_volume:/usr/share/nginx/html/media
 volumes:
   postgres_data:
     driver: local
   portainer_data:
+    driver: local
+  static_volume:
+    driver: local
+  media_volume:
     driver: local
