@@ -271,29 +271,34 @@ class Party():
 
 
 	def game_event_disconnect(self, player: Player) -> bool:
-		print(f"####	Party: Event: Player {player.name} disconnecting from party {self.uuid}")
 		self.event_list.append({"type": "party_disconnect", "player_id": player.id})
 
-	def game_event_message(self, message: str, time: float,  players: list[Player] = None) -> bool:
+	def game_event_message(self, message: str, time: float, img: str = "",  players: list[Player] = None) -> bool:
 
 		# Send message to all players in the party if players is None
 		if (players == None):
 			players = self.players
 
-		print(f"####	Party: Event: Sending message {message}")
-		print(f"####	Party: Event: Sending players {[player.id for player in players]}")
+		self.event_list.append({"type": "party_title", "img": img, "text": message, "time": time, "players": [player.id for player in players]})
 
-		print(f"####	Party: Event: Sending message {message} to players {[player.id for player in players]} in party {self.uuid}")
-		self.event_list.append({"type": "party_title", "text": message, "time": time, "players": [player.id for player in players]})
+	
+	def game_event_global_message(self, message: str, time: float) -> bool:
+
+		self.event_list.append(
+		{
+        	    'type': 'user.notification',
+        	    'text_message': "A new tournament started !",
+        	    'path_to_icon': None,
+        	    'context': None,
+        	})
 
 	def game_run_event(self):
 		for event in self.event_list:
-			print(f"####	Party: Sending event to party {self.uuid}")
-			print(f"####	Party: Sending event to party {self.party_channel_name}")
-			print(f"####	Party: Sending event to party {event}")
-
 			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, event)
+				if event['type'] != "user.notification":
+					async_to_sync(self.channel_layer.group_send)(self.party_channel_name, event)
+				else:
+					async_to_sync(self.channel_layer.group_send)("global_notification", event)
 			except Exception as e:
 				print(f"####	Party: Event: ERROR: Could not send event {event} {e}")
 		self.event_list.clear()

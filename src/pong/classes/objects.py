@@ -19,6 +19,7 @@ class Shape(Enum):
 	PADDLE = 1
 	BALL = 2
 	BOX = 3
+	TEXT = 4
 
 class Collision(Enum):
 	NONE		= 0
@@ -79,9 +80,9 @@ class ObjectPaddle(ObjectAbstract):
 		super().__init__()
 		self.shape		= Shape.PADDLE
 		
-		random.seed(controler + str(time.time()))
-		r = lambda: random.randint(75, 175)
-		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
+		random.seed(controler)
+		r = lambda: random.randint(190, 220)
+		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), 127, r())
 		
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
@@ -110,19 +111,7 @@ class ObjectPaddle(ObjectAbstract):
 			direction.x += -val_cos
 			direction.y += +val_sin
 
-		# normalize velocity to value
-		# disp = direction.__abs__()
-		# if (disp > 1.0):
-		# 	direction = direction / disp
-
-		self.vel = direction * 16
 		self.vel = direction * 8
-
-		# if (key_values.get('a', False)):
-		# 	self.rot = self.rot + 0.1
-
-		# if (key_values.get('e', False)):
-		# 	self.rot = self.rot - 0.1
   
 		pass
 
@@ -134,7 +123,7 @@ class ObjectBall(ObjectAbstract):
 	def __init__(self):
 		super().__init__()
 		self.shape		= Shape.BALL
-		self.color		= '#31363F'
+		self.color		= '#0066b1'
 		self.collide	= Collision.BOUNCE
 		self.size		= vec2(40, 40)
 		self.rot		= uniform(0, 2 * math.pi)
@@ -146,3 +135,12 @@ class ObjectBall(ObjectAbstract):
 		self.pos		= self.pos + self.vel
 		self.vel		= self.dir * 8
 		pass
+
+class ObjectText(ObjectAbstract):
+	def __init__(self):
+		super().__init__()
+		self.shape		= Shape.TEXT
+		self.color		= '#EEEEEE'
+		self.size		= vec2(10, 0)
+		self.controler	= None
+		self.collide	= Collision.NONE
