@@ -10,13 +10,15 @@ from ..classes.math_vec2 import ( vec2 )
 from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
 from users.elo import ( game_result )
+from channels.layers import get_channel_layer
+from datetime import timedelta
 from users.models import MatchHistory, PlayerMatchHistory
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 import uuid
 import time
-from datetime import timedelta
+import random
 from random import randint, uniform
 import math
 
@@ -25,8 +27,86 @@ import math
 # GLOBALS VARIABLES #
 #####################
 
-size_terrain	= 250
+TERRAIN_SIZE: vec2	= vec2(300, 600)
 space_terrain	= 50
+
+
+####################
+# GLOBAL FUNCTIONS #
+####################
+
+# check if the number is a power of two
+def __ispoweroftwo__(n: int) -> bool:
+	test = n & (n-1) == 0 and n != 0 and n != 1
+	return test
+
+# get user from database
+@database_sync_to_async
+def get_user(field: str) -> User:
+	return User.objects.get(username=field)
+
+# send history to database
+def send_history( name1: str, name2: str, winner: str, score, game_time, game_type: str):
+	user1 = async_to_sync(get_user)(name1)
+	user2 = async_to_sync(get_user)(name2)
+	elo = [user1.elo, user2.elo]
+	actual_time = time.time() - game_time
+	duration_timedelta = timedelta(seconds=actual_time)
+	if winner == name1:
+		elo_list = game_result(user1, user2, 1)
+	else:
+		elo_list = game_result(user2, user1, 1)
+	elo = [elo[i] - elo_list[i] for i in range(2)]
+	# Winner elo and score are always in first place
+	elo.sort(reverse=True)
+	score.sort(reverse=True)
+	match = MatchHistory.objects.create(game_type=game_type, duration=duration_timedelta)
+	pmh1 = PlayerMatchHistory.objects.create(player=user1, match=match, score=score[0], elo_change=elo[0])
+	pmh2 = PlayerMatchHistory.objects.create(player=user2, match=match, score=score[1], elo_change=elo[1])
+	match.save()
+	pmh1.save()
+	pmh2.save()
+
+
+##########################
+# CLASS TOURNAMENTPADDLE #
+##########################
+
+class TournamentPaddle(ObjectAbstract):
+	def __init__(self, controler: str):
+		super().__init__()
+		self.shape		= Shape.PADDLE
+		
+		self.size		= vec2(64, 12)
+		self.collide	= Collision.STOP
+		self.controler	= controler
+		random.seed(controler + str(time.time()))
+		r = lambda: random.randint(75, 175)
+		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
+
+		pass
+
+	def control(self, key_values):
+		val_sin = math.sin(self.rot)
+		val_cos = math.cos(self.rot)
+
+		direction = vec2(0, 0)
+		if (key_values.get('a', False)):
+			direction.x += +val_cos
+			direction.y += -val_sin
+		
+		if (key_values.get('d', False)):
+			direction.x += -val_cos
+			direction.y += +val_sin
+
+		self.vel = direction * 10
+  
+		pass
+
+	def update(self):
+		self.pos = self.pos + self.vel
+		pass
+	
 
 
 ########################
@@ -38,32 +118,51 @@ class TournamentBall(ObjectAbstract):
 		super().__init__()
 		self.shape		= Shape.BALL
 		self.size		= vec2(20, 20)
-		self.rot		= (0, math.pi)[randint(0, 1)] + uniform(-math.pi / 4, math.pi / 4)
 		self.speed		= 16
-		self.dir		= vec2(math.sin(self.rot), math.cos(self.rot))
-		self.vel		= self.dir * self.speed
+		self.accel		= 0.02
+		self.vel		= vec2(0, 0)
 		self.match		= match
 		self.t_party	= t_party
 		self.collide	= Collision.BOUNCE
 
+		self.fake_init()
+
 	def fake_init(self):
+		self.bouge		= 0
 		self.rot 		= (0, math.pi)[randint(0, 1)]  + uniform(-math.pi / 4, math.pi / 4)
-		self.pos 		= self.match.objects[0].pos
+		self.pos 		= self.match.terrain.pos
 		self.dir 		= vec2(math.sin(self.rot), math.cos(self.rot))
-		self.vel 		= self.dir * self.speed
+		self.vel 		= vec2(0, 0)
+		self.first		= 0
+		self.speed 		= 0
+		self.old_dir 	= self.dir
 
 	def update(self):
 		if self.match.winner != None:
 			return
-		if (self.pos.y > (size_terrain * 4) / 2):
+
+		if (self.pos.y > TERRAIN_SIZE.y / 2):
 			self.t_party.player_scored(self.match.players[1])
 			self.fake_init()
-		if (self.pos.y < -(size_terrain * 4) / 2):
+		if (self.pos.y < -TERRAIN_SIZE.y / 2):
 			self.t_party.player_scored(self.match.players[0])
 			self.fake_init()
 		
-		self.pos		= self.pos + self.vel
-		self.vel		= self.dir * self.speed
+		if ((self.old_dir.y < 0 and self.dir.y >= 0) or (self.old_dir.y >= 0 and self.dir.y < 0)):
+			self.speed = self.speed * (1.0 + self.accel)
+
+		if self.bouge >= 50:
+			if self.first == 0:
+				self.speed = 16
+				self.first = 1
+			self.pos = self.pos + self.vel
+		else :
+			self.bouge += 1
+			self.speed = 0
+
+		self.vel	= self.dir * self.speed
+		self.old_dir = self.dir
+
 		pass
 
 
@@ -91,31 +190,33 @@ class PlayerTournament(Player):
 
 class Match:
 	def __init__(self, players: list[PlayerTournament]):
-		self.players: list[PlayerTournament] = players.copy()
-		self.score: list[int]				 = 0
+		self.players: list[PlayerTournament] = players
+		self.score							 = [0, 0]
 		self.winner							 = None
 		self.objects						 = []
+		self.ball:TournamentBall			 = None
+		self.terrain : TournamentTerrain	 = None
 		self.time 							 = time.time()
 		
 	# create terrain and ball
 	def __create_terrain__(self, j: int, t_party):
-		self.objects		= []
-		terrain 			= ObjectTerrain()
-		terrain.size 		= vec2(3, 4) * size_terrain
-		terrain.pos.x 		= j * 3 * size_terrain + (j * space_terrain)
-		terrain.pos.y 		= 0
-		self.objects.append(terrain)
+		self.objects			= []
+		self.terrain 			= ObjectTerrain()
+		self.terrain.size 		= TERRAIN_SIZE
+		self.terrain.pos.x 		= j * TERRAIN_SIZE.x + (j * space_terrain)
+		self.terrain.pos.y 		= 0
+		self.objects.append(self.terrain)
 		mur1 				= ObjectAbstract()
-		mur1.size.y 		= size_terrain * 4
-		mur1.pos 			= vec2(terrain.pos.x - size_terrain * 3 / 2, 0)
+		mur1.size.y 		= TERRAIN_SIZE.y
+		mur1.pos 			= vec2(self.terrain.pos.x - TERRAIN_SIZE.x / 2, 0)
 		self.objects.append(mur1)
 		mur2 				= ObjectAbstract()
-		mur2.size.y 		= size_terrain * 4
-		mur2.pos 			= vec2(terrain.pos.x + size_terrain * 3 / 2, 0)
+		mur2.size.y 		= TERRAIN_SIZE.y
+		mur2.pos 			= vec2(self.terrain.pos.x + TERRAIN_SIZE.x / 2, 0)
 		self.objects.append(mur2)
-		ball 				= TournamentBall(self, t_party)
-		ball.pos 			= vec2((j * 3 * size_terrain) + (j * space_terrain), 0)
-		self.objects.append(ball)
+		self.ball 				= TournamentBall(self, t_party)
+		self.ball.pos 			= vec2((j * TERRAIN_SIZE.x) + (j * space_terrain), 0)
+		self.objects.append(self.ball)
 		t_party.objects.extend(self.objects)
 
 	def to_dict(self):
@@ -127,43 +228,6 @@ class Match:
 
 	def __str__(self):
 		return f"Match between {self.players[0].name} and {self.players[1].name}"
-
-
-####################
-# GLOBAL FUNCTIONS #
-####################
-
-# check if the number is a power of two
-def __ispoweroftwo__(n: int) -> bool:
-	test = n & (n-1) == 0 and n != 0 and n != 1
-	return test
-
-# get user from database
-@database_sync_to_async
-def get_user(field: str) -> User:
-	return User.objects.get(username=field)
-
-def send_history( name1: str, name2: str, winner: str, score, game_time, game_type: str):
-	user1 = async_to_sync(get_user)(name1)
-	user2 = async_to_sync(get_user)(name2)
-	elo = [user1.elo, user2.elo]
-	actual_time = time.time() - game_time
-	duration_timedelta = timedelta(seconds=actual_time)
-	if winner == name1:
-		elo_list = game_result(user1, user2, 1)
-	else:
-		elo_list = game_result(user2, user1, 1)
-	elo = [elo[i] - elo_list[i] for i in range(2)]
-	# Winner elo and score are always in first place
-	elo.sort(reverse=True)
-	score.sort(reverse=True)
-	match = MatchHistory.objects.create(game_type=game_type, duration=duration_timedelta)
-	pmh1 = PlayerMatchHistory.objects.create(player=user1, match=match, score=score[0], elo_change=elo[0])
-	pmh2 = PlayerMatchHistory.objects.create(player=user2, match=match, score=score[1], elo_change=elo[1])
-	match.save()
-	pmh1.save()
-	pmh2.save()
-
 
 
 ########################
@@ -182,7 +246,6 @@ class pongTournament(Party):
 		self.playersT: list [PlayerTournament]	= []
 		self.autPlayer:	list [PlayerTournament]	= []
 		self.matchs: list[Match]				= []
-		self.tick								= 0
 		self.end: bool							= False
 
 
@@ -191,19 +254,18 @@ class pongTournament(Party):
 		for j, matchs in enumerate(self.matchs):
 			for i, player in enumerate(matchs.players):
 				if i & 1 == 0:
-					player.paddle.pos.x = j * 3 * size_terrain + (j * space_terrain)
-					player.paddle.pos.y = size_terrain * 2
+					player.paddle.pos.x = j * TERRAIN_SIZE.x + (j * space_terrain)
+					player.paddle.pos.y = TERRAIN_SIZE.y / 2
 					player.paddle.rot = math.pi
 				else:
-					player.paddle.pos.x = j * 3 * size_terrain + (j * space_terrain)
-					player.paddle.pos.y = -size_terrain * 2
+					player.paddle.pos.x = j * TERRAIN_SIZE.x + (j * space_terrain)
+					player.paddle.pos.y = -TERRAIN_SIZE.y / 2
 					player.paddle.rot = 0
 
 
 	# reset all player paddle before create new match
-	def reset_autPlayer_paddle(self):
-		self.obj_to_remove.extend([obj for obj in self.objects if obj.shape == Shape.PADDLE])
-
+	def remove_all_object(self):
+		self.obj_to_remove.extend(self.objects)
 
 	# reset all paddle
 	def reset_paddles(self):
@@ -211,9 +273,8 @@ class pongTournament(Party):
 			if player.paddle != None:
 				self.obj_to_remove.append(player.paddle)
 		for test in self.playersT:
-			test.paddle = ObjectPaddle(test.name)
-			test.paddle.pos = vec2(-1000, -1000)
-			test.paddle.size = vec2(120, 20)
+			test.paddle = TournamentPaddle(test.name)
+			test.paddle.pos = vec2(-2000, -2000)
 			self.objects.append(test.paddle)
 
 
@@ -223,9 +284,10 @@ class pongTournament(Party):
 		self.activateTimer	= False
 		self.timer 			= self.timerupdate
 		self.autPlayer 		= []
-		self.tick			= 0
 		self.end: bool		= False
+		self.remove_all_object()
 
+		self.game_event_global_message("A new tournament started !", 3.0)
 
 	# create all matches
 	def __create_Matches__(self):
@@ -246,18 +308,13 @@ class pongTournament(Party):
 						# destroy and kick last player
 						self.end = True
 						temp_player1.in_game = False
+						self.game_event_message("You Win the tournament !", 4.0, 'boom', [temp_player1])
 						self.autPlayer.remove(temp_player1)
-						# reset game
 						self.game_event_disconnect(temp_player1)
-						# reset all player for reset game
-						# self.playersT = []
-						# POTENTIQL FIX
-						# self.reset_game()
 		if self.end == False:
 			self.autPlayer = self.playersT.copy()
 		self.reset_paddles()
 		self.teleport_players()
-
 
 	# check if all matchs are ended
 	def all_match_end(self) -> bool:
@@ -270,20 +327,22 @@ class pongTournament(Party):
 		self.__create_Matches__()
 		return True
 
+
 	# check if player scored
 	def player_scored(self, player: PlayerTournament):
-		#todo create front for score and timer
 		player.score += 1
+		player.matchs.score[0] = player.matchs.players[0].score
+		player.matchs.score[1] = player.matchs.players[1].score
+		self.game_event_message(f"score : {player.matchs.score[0]} | {player.matchs.score[1]}", 3.0, '', player.matchs.players)
 		if player.score >= 5 and player.matchs.winner == None:
 			player.matchs.winner = player.name
 			for joueur in player.matchs.players:
-				if joueur != player and joueur != None:
+				if joueur != player and joueur != None: 
 					player.in_game = False
 					joueur.in_game = False
 					joueur.loose = True
-					#todo import send_history
 					send_history(player.name, joueur.name, player.name, [player.score, joueur.score], player.matchs.time, "Ranked")
-					#self.send_history(player.matchs)
+					self.game_event_message("You loose the match ! looooser....", 4.0, 'error', [joueur])
 					player.matchs.players.remove(joueur)
 					self.autPlayer.remove(joueur)
 					self.obj_to_remove.append(joueur.paddle)
@@ -291,7 +350,8 @@ class pongTournament(Party):
 					player.score = 0
 					player.matchs.winner = player.name
 					self.all_match_end()
-
+		else:
+			self.game_event_message(f"player: '{player.name}' scored", 3, 'boom', player.matchs.players)
 
 	# method for class party
 	def	_game_start(self) -> bool:
@@ -303,7 +363,6 @@ class pongTournament(Party):
 	# loop for the game
 	def	_game_loop(self) -> bool:
 		actual_time = time.time()
-		self.tick += 1
 		# check if the players is ready to start the game (power of two)
 		if self.gameStarted == False and self.activateTimer == True:
 			if actual_time > self.timer:
@@ -312,10 +371,13 @@ class pongTournament(Party):
 					self.activateTimer = False
 				else:
 					self.timer += self.timerupdate
+					self.game_event_message("Player not pow of two", 3.0, 'error')
+					self.game_event_message("Game start in 10 second", 3.0, 'error')
 		# check if the game is started
 		if self.gameStarted == True:
 			if len(self.matchs) == 0:
-				self.reset_autPlayer_paddle()
+				self.remove_all_object()
+				self.game_event_message("TOURNAMENT BEGIN !", 3.0, 'success')
 				self.__create_Matches__()
 				if self.end == False:
 					self.autPlayer = self.playersT.copy()
@@ -326,7 +388,7 @@ class pongTournament(Party):
 			self.activateTimer = True
 			self.timer = time.time() + self.timerupdate
 
-		# check if the player is al1.1430385ready in the game
+		# check if the player is already in the game
 		temp_player = next((test for test in self.autPlayer if player.id == test.id), None)
 		
 		# check if the game is started for stop player to join
@@ -338,11 +400,11 @@ class pongTournament(Party):
 		if len(self.playersT) < self.max_players:
 			if temp_player == None:
 				temp_player = PlayerTournament(player)
-				temp_player.paddle = ObjectPaddle(temp_player.name)
-				temp_player.paddle.size = vec2(120, 20)
+				temp_player.paddle = TournamentPaddle(temp_player.name)
 				self.objects.append(temp_player.paddle)
 				self.autPlayer.append(temp_player)
 			self.playersT.append(temp_player)
+			self.game_event_message(f"Player '{temp_player.name}' joined the tournament", 1.0)
 			return True
 		return False
 
@@ -350,6 +412,7 @@ class pongTournament(Party):
 	def	_game_leave(self, player: Player) -> bool:
 		playerdelet = next((test for test in self.playersT if player.id == test.id), None)
 		if playerdelet != None:
+			self.game_event_message(f"Player '{playerdelet.name}' leave the tournament", 1.0)
 			self.playersT.remove(playerdelet)
 		if (len(self.playersT) == 0):
 			self.reset_game()
