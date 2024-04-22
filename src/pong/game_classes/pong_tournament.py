@@ -53,9 +53,9 @@ def send_history( name1: str, name2: str, winner: str, score, game_time, game_ty
 	actual_time = time.time() - game_time
 	duration_timedelta = timedelta(seconds=actual_time)
 	if winner == name1:
-		elo_list = game_result(user1, user2, 1)
+		elo_list = game_result(user1, user2)
 	else:
-		elo_list = game_result(user2, user1, 1)
+		elo_list = game_result(user2, user1)
 	elo = [elo[i] - elo_list[i] for i in range(2)]
 	# Winner elo and score are always in first place
 	elo.sort(reverse=True)
