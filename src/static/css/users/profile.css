@@ -104,8 +104,11 @@ span.online-status.offline {
 	background-position: center;
 	color: black;
 	font-size: large;
-	font-weight: medium;
-	
+	font-weight: medium;	
+}
+
+#profile-popup-bio {
+	word-wrap: break-word;
 }
 
 #settings-popup h5 {
@@ -156,6 +159,7 @@ span.online-status.offline {
 	background: none;
 	border: none;
 	border-bottom: 0.15rem rgb(97, 69, 18) solid;
+	word-wrap: break-word;
 }
 
 
