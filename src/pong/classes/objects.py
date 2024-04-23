@@ -44,9 +44,10 @@ class ObjectAbstract:
 		self.dir			= vec2(0, 0)
 		self.vel			= vec2(0, 0)
 		self.size			= vec2(16, 16)
-		self.rot			= 0
+		self.rot: float		= 0.0
 		
 		self.collide		= Collision.IMMOVABLE
+		self.camera			= {'username': '', 'mode': 'third_person'}
 	
 	def control(self, key_values):
 		pass
@@ -64,6 +65,7 @@ class ObjectAbstract:
 			"size": self.size.to_dict(),
 			"rot": self.rot,
 			"color": self.color,
+			"camera": self.camera,
 		}
 	
 class ObjectTerrain(ObjectAbstract):
@@ -87,6 +89,7 @@ class ObjectPaddle(ObjectAbstract):
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
 		self.controler	= controler
+		self.camera		= {'username': controler, 'mode': 'third_person'}
 		pass
 
 	def control(self, key_values):

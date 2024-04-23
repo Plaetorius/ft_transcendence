@@ -173,11 +173,9 @@ async function createPartyList() {
 		raw_list = await getPartyList();
 		if (!raw_list) {
 			console.log('No parties available');
-			return;
 		}
 		if (raw_list.length === 0) {
-			console.log('No parties available');
-			return;
+			console.log('No parties available')
 		}
 
 		const radioButtons = document.querySelectorAll('input[name="gamemode"]');
@@ -188,6 +186,8 @@ async function createPartyList() {
 				selected_game_mode = event.target.value;
 			});
 		}
+
+		console.log('Selected gamemode:', selected_game_mode);
 
 		let button = document.getElementById('button-create');
 
@@ -245,11 +245,6 @@ async function loadGamesLobby() {
 	const lobbyContainer = document.getElementById('pong-game');
 	if (lobbyContainer) {
 		lobbyContainer.innerHTML = '';
-
-		const partyUuidInput = document.createElement('input');
-		partyUuidInput.setAttribute('type', 'text');
-		partyUuidInput.setAttribute('id', 'party-uuid');
-		partyUuidInput.setAttribute('value', "PLEASE FIX - NOT USED ANYMORE");
 
 		const createPartyButton = document.createElement('button');
 		createPartyButton.setAttribute('type', 'button');

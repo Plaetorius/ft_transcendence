@@ -178,10 +178,8 @@ class FakeMatch():
 	def teleport_all_paddles(self):
 		self.player1.paddle.pos.x = self.center.x
 		self.player1.paddle.pos.y = TERRAIN_SIZE.y / 2
-		self.player1.paddle.rot = math.pi
 		self.player2.paddle.pos.x = self.center.x
 		self.player2.paddle.pos.y = -TERRAIN_SIZE.y / 2
-		self.player2.paddle.rot = 0
 
 
 	def start_match(self):

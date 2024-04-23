@@ -101,6 +101,8 @@ class PongPaddle(ObjectAbstract):
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
 		self.controler	= controler
+		self.camera['username'] = controler
+		self.camera['mode'] = 'third_person'
 		pass
 
 	def control(self, key_values):
@@ -134,7 +136,7 @@ class	PongParty(Party):
 		# Default party settings
 		self.name			= "1V1 Pong"
 		self.max_players	= 8
-		self.S_PER_UPDATE	= 1.0 / 20.0
+		self.S_PER_UPDATE	= 1.0 / 30.0
 		self.timer			= time.time()
 
 		# Set game to it's default state
@@ -236,6 +238,7 @@ class	PongParty(Party):
 				terrain = ObjectTerrain()
 				terrain.size = vec2(width, width) * 20
 				terrain.pos = vec2(x * width * 22, y * width * 22)
+				terrain.rot = width
 				terrain.color = '#ffe1ba'
 				self.objects.append(terrain)
 
