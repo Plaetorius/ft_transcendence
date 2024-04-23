@@ -29,14 +29,26 @@ class MazePaddle(ObjectAbstract):
 		self.size		= vec2(4, 4)
 		self.collide	= Collision.STOP
 		self.controler	= controler
+
+		self.rot: float	= 0.0
+
+		self.camera['username'] = controler
+		self.camera['mode'] = 'first_person'
+
 		pass
 
 	def control(self, key_values):
+
+		if (key_values.get('q', False)):
+			self.rot += 0.1
+		
+		if (key_values.get('e', False)):
+			self.rot -= 0.1
+
 		val_sin = math.sin(self.rot)
 		val_cos = math.cos(self.rot)
 
 		direction = vec2(0, 0)
-		
 		if (key_values.get('w', False)):
 			direction.x += +val_sin
 			direction.y += +val_cos
@@ -52,12 +64,6 @@ class MazePaddle(ObjectAbstract):
 		if (key_values.get('d', False)):
 			direction.x += -val_cos
 			direction.y += +val_sin
-
-		if (key_values.get('q', False)):
-			self.rot = self.rot + 0.1
-
-		if (key_values.get('e', False)):
-			self.rot = self.rot - 0.1
 
 		self.vel = direction * 8
   
@@ -97,6 +103,17 @@ class Maze(Party):
 					wall.pos = -wall.pos
 					wall.color = '#ff0000'
 					self.objects.append(wall)
+
+	# def generate_terrain(self):
+	# 	start_line = 0
+	# 	end_line = 0
+	# 	for y in range(self.maze_size):
+	# 		for x in range(self.maze_size):
+	# 			if (self.maze[y][x] == 1):
+	# 				if (start_line == 0):
+	# 					start_line = y
+	# 				end_line = y
+
 
 	# def generate_terrain(self):
 	# 	self.mid_point = vec2(self.maze_size / 2, self.maze_size / 2)

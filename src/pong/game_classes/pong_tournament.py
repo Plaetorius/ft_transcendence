@@ -84,6 +84,9 @@ class TournamentPaddle(ObjectAbstract):
 		r = lambda: random.randint(75, 175)
 		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
 
+		self.camera['username'] = controler
+		self.camera['mode'] = 'third_person'
+
 		pass
 
 	def control(self, key_values):
@@ -414,7 +417,7 @@ class pongTournament(Party):
 					self.gameStarted = True
 					self.activateTimer = False
 				else:
-					self.timer += self.timerupdate
+					self.timer = time.time() + self.timerupdate
 					self.game_event_message("Player not pow of two", 3.0, 'error')
 					self.game_event_message("Game start in 10 second", 3.0, 'error')
 		# check if the game is started
