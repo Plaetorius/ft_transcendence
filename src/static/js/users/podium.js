@@ -83,15 +83,15 @@ function createRankingList(users) {
         position.textContent = `${index + 4}.`;
         
         const img = document.createElement('img');
-        img.src = globals.user.profile_picture_url;
+        img.src = user.profile_picture_url;
         img.draggable = false;
         img.className = 'podium-profile open-profile';
-        img.setAttribute('data-username', globals.user.username);
+        img.setAttribute('data-username', user.username);
         
         const usernameSpan = document.createElement('span');
         usernameSpan.className = 'podium-profile open-profile d-flex align-items-center';
-        usernameSpan.setAttribute('data-username', globals.user.username);
-        usernameSpan.textContent = globals.user.username;
+        usernameSpan.setAttribute('data-username', user.username);
+        usernameSpan.textContent = user.username;
 
         col.appendChild(position);
         col.appendChild(img);

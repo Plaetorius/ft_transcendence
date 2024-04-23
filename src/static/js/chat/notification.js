@@ -30,6 +30,7 @@ function appendAndRemoveNotification(element_list, message, type, delay = 3000) 
 
 	listItem.classList.add('notif-item');
 
+
 	if (type)
 		listItem.classList.add(type);
 
