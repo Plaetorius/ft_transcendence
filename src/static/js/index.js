@@ -12,11 +12,11 @@ import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentica
 import { block, unblock } from '/static/js/users/block.js';
 import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
 import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
-import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick } from '/static/js/users/profile.js';
+import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick, getPlayerMatchHistory, loadMatchHistory, calculateTimeSince, getPlayerRank, loadPlayerRank} from '/static/js/users/profile.js';
 import { getUser } from '/static/js/users/search.js';
 import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
 
-import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import {globals, body, header, nav, main, pages, base_url } from '/static/js/globals.js';
 
 
 const newspaper_title = document.getElementById('newspaperTitle');

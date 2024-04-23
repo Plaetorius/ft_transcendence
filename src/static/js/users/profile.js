@@ -17,7 +17,7 @@ import { getPodium, createPodium, createRankingList } from '/static/js/users/pod
 import { getUser } from '/static/js/users/search.js';
 import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
 
-import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import {globals, body, header, nav, main, pages, base_url } from '/static/js/globals.js';
 import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
 
 
@@ -40,8 +40,8 @@ function getProfile() {
 			document.getElementById("profile-picture").src = userData.profile_picture_url;
 			loadMyProfile();
 			actualiseFriendsSection();
-			getPlayerMatchHistory(user.username, 'profile-history');
-      		getPlayerRank(user.username, 'profile');
+			getPlayerMatchHistory(globals.user.username, 'profile-history');
+      		getPlayerRank(globals.user.username, 'profile');
 		})
 		.catch(error => {
 			notification(error, 'cross', 'error');
@@ -408,4 +408,4 @@ function loadPlayerRank(stats, containerId) {
 
 }
 
-export { profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick };
+export { profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick, getPlayerMatchHistory, loadMatchHistory, calculateTimeSince, getPlayerRank, loadPlayerRank };

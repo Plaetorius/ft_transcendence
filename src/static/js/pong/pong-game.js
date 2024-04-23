@@ -15,7 +15,7 @@ import { profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler,
 import { getUser } from '/static/js/users/search.js';
 import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
 
-import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import {globals, body, header, nav, main, pages, base_url } from '/static/js/globals.js';
 import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
 
 // Import the GameCanister class
