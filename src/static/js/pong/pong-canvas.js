@@ -67,7 +67,7 @@ function initGamePong() {
 	camera = new THREE.PerspectiveCamera(65, canvas_width / canvas_height, 0.1, 5000);
 	camera.position.x = 0;
 	camera.position.y = 500;
-	camera.position.z = -0.001;
+	camera.position.z = 0.001;
 	// camera.position.z = 400;
 
 	camera.lookAt(0, 0, 0);
