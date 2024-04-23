@@ -38,10 +38,15 @@ def sanitize_bio(value):
 def validate_image(file):
     valid_extensions = ['jpg', 'jpeg', 'png']
     extension = file.name.rsplit('.', 1)[1].lower()
+    filename = file.name.rsplit('/', 1)[-1]
+
+    if filename == "default.jpg":
+        raise ValidationError('The file name "default.jpg" is reserved and cannot be used.')
+
     if extension not in valid_extensions:
         raise ValidationError('Unsupported file extension.')
     
-    max_size = 4 * 1024 * 1024 # Max size 4MB
+    max_size = 4 * 1024 * 1024  # Max size 4MB
     if file.size > max_size:
         raise ValidationError('Image file too large ( > 4MB)')
 

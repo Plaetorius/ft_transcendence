@@ -45,7 +45,12 @@ exec:
 static:
 	docker-compose exec web bash -c "python /code/src/manage.py collectstatic --noinput"
 
+clear_volumes:
+	@echo "Removing all Docker volumes..."
+	docker volume rm $(shell docker volume ls -q | ft_transcendence_ )
+	@echo "All volumes have been removed."
+
 start:
 	docker-compose up --build
 
-.PHONY: build up up-detached down stop logs prune prune-all prune-volumes exec start
+.PHONY: build up up-detached down stop logs prune prune-all prune-volumes exec static clear_volumes start
