@@ -38,7 +38,7 @@ async function getPodium() {
         createPodium(users);
         createRankingList(users);
     } catch (error) {
-        notificationr(error, 'cross', 'error');
+        notification(error, 'cross', 'error');
     }
 }
 

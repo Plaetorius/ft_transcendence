@@ -269,7 +269,9 @@ async function handleGotoProfileClick(username) {
 }
 
 function getPlayerMatchHistory(username, containerId) {
-    fetch(`/users/match-history/${username}`, {
+	if (!username)
+		return ;
+	fetch(`/users/match-history/${username}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -371,6 +373,8 @@ function calculateTimeSince(datePlayed) {
 }
 
 function getPlayerRank(username, containerId) {
+	if (!username)
+		return ;
     fetch(`/users/rank/${username}/`, {
         method: 'GET',
         headers: {
