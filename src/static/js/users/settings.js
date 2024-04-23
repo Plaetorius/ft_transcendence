@@ -64,28 +64,48 @@ profilePictureInput.addEventListener('change', function() {
 
 // Handle form submission
 async function handleSettingsFormSubmit(e) {
-	e.preventDefault();
-	const formData = new FormData(settingsForm);
-	const profilePictureInput = document.getElementById('profile-picture-input');
-	if (profilePictureInput.files.length > 0) {
-		formData.append('profile_picture', profilePictureInput.files[0]);
-	}
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+    const profilePictureInput = document.getElementById('profile-picture-input');
 
-    const response = await fetch('/users/edit-user/', {
-        method: 'PATCH',
-        credentials: 'include',
-        body: formData,
-    });
+    // Check if file is larger than 4MB
+    if (profilePictureInput.files.length > 0) {
+        const file = profilePictureInput.files[0];
+        const maxSize = 4 * 1024 * 1024; // 4MB in bytes
 
-    if (!response.ok) {
-        response.json().then(err => handleErrors(err.error));
-        setupSettingsForm();
-        return ;
+        if (file.size > maxSize) {
+            notification('File is too large. Maximum size is 4MB.', 'cross', 'error');
+            return; // Stop the function if the file is too large
+        }
+        formData.append('profile_picture', file);
     }
-    const data = await response.json();
-    setupSettingsForm();
-    getProfile();
-    notification('Profile updated!', 'check', 'success');
+
+    try {
+        const response = await fetch('/users/edit-user/', {
+            method: 'PATCH',
+            credentials: 'include',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            if (response.headers.get('Content-Type').includes('application/json')) {
+                // Process JSON error response
+                const errorData = await response.json();
+                handleErrors(errorData.error || 'Failed to update profile');
+            } else {
+                // Handle non-JSON responses
+                const errorText = await response.text();
+                handleErrors(`Try a smaller file`);
+            }
+        } else {
+            const data = await response.json();
+            setupSettingsForm();
+            getProfile();
+            notification('Profile updated!', 'check', 'success');
+        }
+    } catch (error) {
+        notification('An error occurred while updating your profile.', 'cross', 'error');
+    }
 }
 
 settingsForm.addEventListener('submit', handleSettingsFormSubmit);
