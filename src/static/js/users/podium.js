@@ -1,3 +1,24 @@
+
+
+import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
+
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { loadGames } from '/static/js/pong/pong-game.js';
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
+import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick } from '/static/js/users/profile.js';
+import { getUser } from '/static/js/users/search.js';
+import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+
 async function getPodium() {
     try {
         const response = await fetch(`/users/podium/`, {
@@ -62,15 +83,15 @@ function createRankingList(users) {
         position.textContent = `${index + 4}.`;
         
         const img = document.createElement('img');
-        img.src = user.profile_picture_url;
+        img.src = globals.user.profile_picture_url;
         img.draggable = false;
         img.className = 'podium-profile open-profile';
-        img.setAttribute('data-username', user.username);
+        img.setAttribute('data-username', globals.user.username);
         
         const usernameSpan = document.createElement('span');
         usernameSpan.className = 'podium-profile open-profile d-flex align-items-center';
-        usernameSpan.setAttribute('data-username', user.username);
-        usernameSpan.textContent = user.username;
+        usernameSpan.setAttribute('data-username', globals.user.username);
+        usernameSpan.textContent = globals.user.username;
 
         col.appendChild(position);
         col.appendChild(img);
@@ -80,3 +101,5 @@ function createRankingList(users) {
         listContainer.appendChild(row);
     });
 }
+
+export { getPodium, createPodium, createRankingList };

@@ -201,6 +201,55 @@
 				</div>
 			</div>
 			<div id="pong-game" class="container-fluid pong-game mt-2 d-flex flex-column align-items-center">
+				<div id="games_main_div">
+
+					<div id="party_list_container">
+						<h2>Games List</h2>
+						<ul id="party_list">
+						</ul>
+					</div>
+
+					<div id="party_menu_container">
+						<div id="party_menu_title">
+							<h2>Party Settings</h2>
+						</div>
+						<div id="party_menu_content">
+							<legend>Game Modes:</legend>
+							<fieldset>
+								<label for="tournaments">
+									<input type="radio" id="tournaments" name="gamemode" value="tournament" checked />
+									<div> Tournament </div>
+								</label>
+								<label for="versus">
+									<input type="radio" id="versus" name="gamemode" value="versus" />
+									<div> 1vs1 online </div>
+								</label>
+								<label for="local_1v1">
+									<input type="radio" id="local_1v1" name="gamemode" value="local_1v1" />
+									<div> 1vs1 local </div>
+								</label>
+								<label for="local_2v2">
+									<input type="radio" id="local_2v2" name="gamemode" value="local_2v2" />
+									<div>2vs2 local</div>
+								</label>
+								<label for="maze">
+									<input type="radio" id="maze" name="gamemode" value="maze" />
+									<div>Maze
+									</div>
+								</label>
+							</fieldset>
+							<div id="party_menu_content_create">
+								<form id="createPartyForm">
+									<element id="button-refresh" class="noselect">Refresh</element>
+									<element id="button-create" class="noselect">Create !!!</element>
+								</form>
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</section>
 
@@ -481,25 +530,25 @@
 		</div>
 	</div>
 
-	<div id="pong_game_overlay" class="">
+	<div id="pong_game_overlay" class="game_div" class="" width="100%" height="100%">
 		<canvas id="pong_game_canvas" width="800" height="600"></canvas>
 	</div>
 
-	<script src="{% static 'js/globals.js' %}"></script>
-	<script src="{% static 'js/chat/chat.js' %}"></script>
-	<script src="{% static 'js/chat/notification.js' %}"></script>
-	<script src="{% static 'js/users/podium.js' %}"></script>
-	<script src="{% static 'js/users/friends.js' %}"></script>
-	<script src="{% static 'js/users/profile.js' %}"></script>
-	<script src="{% static 'js/users/settings.js' %}"></script>
-	<script src="{% static 'js/users/block.js' %}"></script>
-	<script src="{% static 'js/users/search.js' %}"></script>
-	<script src="{% static 'js/pong/pong-game.js' %}"></script>
-	<script src="{% static 'js/general/navigation.js' %}"></script>
-	<script src="{% static 'js/users/auth.js' %}"></script>
-	<script src="{% static 'js/index.js' %}"></script>
-	<script src="{% static 'jquery/jquery.js' %}"></script>
-	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<script type='module' src="{% static 'js/globals.js' %}"></script>
+	<script type='module' src="{% static 'js/general/navigation.js' %}"></script>
+	<script type='module' src="{% static 'js/chat/chat.js' %}"></script>
+	<script type='module' src="{% static 'js/chat/notification.js' %}"></script>
+	<script type='module' src="{% static 'js/users/podium.js' %}"></script>
+	<script type='module' src="{% static 'js/users/friends.js' %}"></script>
+	<script type='module' src="{% static 'js/users/profile.js' %}"></script>
+	<script type='module' src="{% static 'js/users/settings.js' %}"></script>
+	<script type='module' src="{% static 'js/users/block.js' %}"></script>
+	<script type='module' src="{% static 'js/users/search.js' %}"></script>
+	<script type='module' src="{% static 'js/pong/pong-game.js' %}"></script>
+	<script type='module' src="{% static 'js/users/auth.js' %}"></script>
+	<script type='module' src="{% static 'js/index.js' %}"></script>
+	<script type='module' src="{% static 'jquery/jquery.js' %}"></script>
+	<script type='module' src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
 </body>
 

@@ -1,8 +1,24 @@
 // Import the notification function
-let pong_websocket = null;
-let party_uuid = "Party uuid";
-let party_joined = "";
 
+import { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import { appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
+
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
+import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
+import { profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick } from '/static/js/users/profile.js';
+import { getUser } from '/static/js/users/search.js';
+import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+// Import the GameCanister class
 
 ///////////////////////////////////////
 ///////////////////////////////////////
@@ -21,7 +37,7 @@ async function loadHtmlElement(file_path) {
 	text = await response.text();
 
 	const parser = new DOMParser();
-	dom = parser.parseFromString(text, "text/html");
+	const dom = parser.parseFromString(text, "text/html");
 
 	return (dom.body.firstChild);
 }
@@ -32,9 +48,9 @@ async function loadHtmlElement(file_path) {
 ///////////////////////////////////////
 
 
-async function fetchPongCreation() {
+async function fetchPongCreation(gamemode) {
 	try {
-		const response = await fetch(`pong/create_party/`, {
+		const response = await fetch(`pong/create_party/${gamemode}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -101,33 +117,7 @@ async function getPartyById(_party_uuid) {
 
 
 function pongJoinGame(party_uuid) {
-	pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party_uuid}/`);
-	pong_websocket.onopen = function (event) {
-		notification(`Joined game:${party_uuid.substring(0, 5)}`, null, '');
-		console.log("Pong WebSocket connection established.");
-
-		party_joined = party_uuid;
-		loadGames();
-	};
-	pong_websocket.onmessage = async function (event) {
-		// Update UI to display the received message
-	};
-	pong_websocket.onerror = function (event) {
-		notification(`Failed to join game:${party_uuid}`, null, 'error');
-		console.error("Pong WebSocket error:", event);
-		console.log("error code is: ", event.code);
-		console.log("error message is: ", event.message);
-	};
-	pong_websocket.onclose = function (event) {
-		console.log("Pong WebSocket connection closed.");
-		console.log("close code is: ", event.code);
-		console.log("close reason is: ", event.reason);
-
-		party_joined = "";
-		pong_websocket = null;
-		loadGames();
-	
-	};
+	g_game_canister.game_join(party_uuid);
 }
 
 
@@ -166,9 +156,12 @@ function cyrb128(str) {
 	return [h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0];
 }
 
+let partyToJoin = '';
+let selected_game_mode = '';
+
 async function createPartyList() {
 
-	const party_list = document.getElementsByClassName('party_list')[0];
+	const party_list = document.getElementById('party_list');
 	if (party_list) {
 		party_list.innerHTML = '';
 
@@ -183,6 +176,31 @@ async function createPartyList() {
 			return;
 		}
 
+		const radioButtons = document.querySelectorAll('input[name="gamemode"]');
+
+		for (let radioButton of radioButtons) {
+			radioButton.addEventListener('change', (event) => {
+				console.log('Selected gamemode:', event.target.value);
+				selected_game_mode = event.target.value;
+			});
+		}
+
+		let button = document.getElementById('button-create');
+
+		button.onclick = async function () {
+			partyToJoin = await fetchPongCreation(selected_game_mode);
+			await createPartyList();
+
+			notification(`Created ${selected_game_mode}`, null, null);
+		};
+
+
+		let refresh = document.getElementById('button-refresh');
+
+		refresh.onclick = async function () {
+			await createPartyList();
+		};
+
 
 		const default_party_card = await loadHtmlElement('../static/js/pong/party_list_card.html');
 
@@ -190,24 +208,23 @@ async function createPartyList() {
 
 			let party_card = default_party_card.cloneNode(true);
 
-			party_card.setAttribute('id', `party_card_${party['uuid']}`);
-			party_card.getElementsByClassName('party_card_name')[0].innerHTML = party['name'];
-			party_card.getElementsByClassName('party_card_uuid')[0].innerHTML = party['uuid'].slice(0, 6);
-			party_card.getElementsByClassName('party_card_players')[0].innerHTML = `${party['players'].length}/${party['max_players']}`;
+			party_card.children[0].innerHTML = party['name'];
+			party_card.children[1].children[0].innerHTML = party['uuid'];
+			party_card.children[1].children[1].innerHTML = `${party['players'].length}/${party['max_players']}`;
 
-			// updateCard(party_card, party['uuid']);
+			// // updateCard(party_card, party['uuid']);
 
-			// const color_table = ['#00286d', '#ffce00', '#dae5e5', '#ff1a00', '#0b0b0b'];
-			const color_table = ['#398a74', '#394f8a', '#4b398a', '#8a394f', '#39788a'];
+			// // const color_table = ['#00286d', '#ffce00', '#dae5e5', '#ff1a00', '#0b0b0b'];
+			// const color_table = ['#398a74', '#394f8a', '#4b398a', '#8a394f', '#39788a'];
 
-			const randomNumber = cyrb128(party['uuid'])[0];
-			const randomColor = color_table[randomNumber % 5];
-			party_card.getElementsByClassName('party_card_image')[0].style.backgroundColor = randomColor;
+			// const randomNumber = cyrb128(party['uuid'])[0];
+			// const randomColor = color_table[randomNumber % 5];
+			// party_card.getElementsByClassName('party_card_image')[0].style.backgroundColor = randomColor;
 
-			// party_card.setAttribute('id', `party_card_${party['uuid']}`);
-			// party_card.getElementsByClassName('party_card_name')[0].innerHTML = party['name'];
-			// party_card.getElementsByClassName('party_card_uuid')[0].innerHTML = party['uuid'].slice(0, 6);
-			// party_card.getElementsByClassName('party_card_players')[0].innerHTML = `${party['players'].length}/${party['max_players']}`;
+			// // party_card.setAttribute('id', `party_card_${party['uuid']}`);
+			// // party_card.getElementsByClassName('party_card_name')[0].innerHTML = party['name'];
+			// // party_card.getElementsByClassName('party_card_uuid')[0].innerHTML = party['uuid'].slice(0, 6);
+			// // party_card.getElementsByClassName('party_card_players')[0].innerHTML = `${party['players'].length}/${party['max_players']}`;
 
 			party_card.onclick = function () {
 				// Implement the logic to connect to the chosen party
@@ -219,82 +236,6 @@ async function createPartyList() {
 	}
 }
 
-// async function createPartyList() {
-
-// 	const party_list = document.getElementById('party-list');
-// 	if (party_list) {
-// 		party_list.innerHTML = '';
-
-// 		let raw_list = [];
-// 		raw_list = await getPartyList();
-// 		if (!raw_list) {
-// 			console.log('No parties available');
-// 			return;
-// 		}
-// 		if (raw_list.length === 0) {
-// 			console.log('No parties available');
-// 			return;
-// 		}
-
-// 		console.log('Raw list:', raw_list);
-
-// 		raw_list['parties'].forEach(party => {
-// 			const partyItem = document.createElement('li');
-// 			const partyButJoin = document.createElement('button');
-
-// 			partyButJoin.setAttribute('id', 'button_alan');
-// 			partyButJoin.style.backgroundColor = '#86b985';
-// 			partyButJoin.innerHTML = `${party['name']}`; // Display the party UUID
-// 			partyButJoin.onclick = function () {
-// 				// Implement the logic to connect to the chosen party
-// 				pong_websocket = new WebSocket(`wss://${window.location.host}/ws/pong/${party['uuid']}/?token=${gtoken}`);
-// 				pong_websocket.onopen = function (event) {
-// 					notification(`Joined game:${party['uuid']}`, null, null);
-// 					console.log("Pong WebSocket connection established.");
-// 					createPartyList();
-// 				};
-// 				pong_websocket.onmessage = async function (event) {
-// 					// Update UI to display the received message
-// 					createPartyList();
-// 					console.log("PONGGAME:", event.data);
-
-// 				};
-// 				pong_websocket.onerror = function (event) {
-// 					notification(`Failed to join game:${party['uuid']}`, null, null);
-// 					console.error("Pong WebSocket error:", event);
-// 					console.log("error code is: ", event.code);
-// 					console.log("error message is: ", event.reason);
-// 				};
-// 				pong_websocket.onclose = function (event) {
-// 					if (event.error)
-// 						notification(`Left game:${party['uuid']}`, null, null);
-// 					createPartyList();
-// 					console.log("Pong WebSocket connection closed.");
-// 					console.log("close code is: ", event.code);
-// 					console.log("close reason is: ", event.reason);
-// 				};
-// 			}
-// 			const partyButCopy = document.createElement('button');
-// 			partyButCopy.setAttribute('id', 'button_alan');
-// 			partyButCopy.innerHTML = `Copy`;
-// 			partyButCopy.style.backgroundColor = '#9FE2BF';
-
-// 			partyButCopy.onclick = function () {
-
-// 				navigator.clipboard.writeText(party['uuid']);
-// 				notification(`Copied game:${party['uuid']}`, null, null);
-// 				party_uuid = party['uuid'];
-// 				document.getElementById('party-uuid').value = party_uuid;
-// 			}
-
-// 			partyItem.appendChild(partyButJoin);
-// 			partyItem.appendChild(partyButCopy);
-// 			partyItem.setAttribute('value', party['uuid']);
-
-// 			party_list.appendChild(partyItem);
-// 		});
-// 	}
-// }
 
 async function loadGamesLobby() {
 	const lobbyContainer = document.getElementById('pong-game');
@@ -304,7 +245,7 @@ async function loadGamesLobby() {
 		const partyUuidInput = document.createElement('input');
 		partyUuidInput.setAttribute('type', 'text');
 		partyUuidInput.setAttribute('id', 'party-uuid');
-		partyUuidInput.setAttribute('value', party_uuid);
+		partyUuidInput.setAttribute('value', "PLEASE FIX - NOT USED ANYMORE");
 
 		const createPartyButton = document.createElement('button');
 		createPartyButton.setAttribute('type', 'button');
@@ -359,46 +300,48 @@ function isWebSocketOpen(ws) {
 	return ws !== null && ws.readyState === WebSocket.OPEN;
 }
 
-function unloadGames() {
-	console.log('Unloading games');
-	if (isWebSocketOpen(pong_websocket) === true) {
-		pong_websocket.close();
-		pong_websocket = null;
-	}
-	const lobbyContainer = document.getElementById('pong-game');
-	if (lobbyContainer) {
-		lobbyContainer.innerHTML = '';
-	}
-}
+// function unloadGames() {
+// 	console.log('Unloading games');
+// 	if (isWebSocketOpen(pong_websocket) === true) {
+// 		pong_websocket.close();
+// 		pong_websocket = null;
+// 	}
+// 	const lobbyContainer = document.getElementById('pong-game');
+// 	if (lobbyContainer) {
+// 		lobbyContainer.innerHTML = '';
+// 	}
+// }
 
-async function loadGames() {
+
+function loadGames() {
 	console.log('Loading games');
-	if (party_joined === "") {
-		loadGamesLobby();
-	} else {
-		const lobbyContainer = document.getElementById('pong-game');
-		let gameScript = document.getElementById('game-script');
-		lobbyContainer.innerHTML = '';
+
+	// loadGamesLobby();
+
+	createPartyList();
+
+	if (g_game_canister.party_joined !== "") {
+		// const party = await getPartyById(party_joined);
+		g_game_canister.game_join(party_joined);
+
+
 		// notification('Already in a game', null, null);
 
-		const gameContainer = document.createElement('div');
-		gameContainer.setAttribute('id', 'game-canvas');
-		gameContainer.setAttribute('width', '1100');
-		gameContainer.setAttribute('height', '700');
-		lobbyContainer.appendChild(gameContainer);
 
-		console.log('Game script:', gameScript);
-		if (gameScript != null) {
-			console.log('Removing existing game script');
-			gameScript.remove();
-		}
-		gameScript = document.createElement('script');
-		gameScript.setAttribute('id', 'game-script');
-		gameScript.setAttribute('type', 'module');
-		gameScript.setAttribute('src', '../static/js/pong/pong-canvas.js');
-		lobbyContainer.appendChild(gameScript);
+		// console.log('Game script:', gameScript);
+		// if (gameScript != null) {
+		// 	console.log('Removing existing game script');
+		// 	gameScript.remove();
+		// }
+		// gameScript = document.createElement('script');
+		// gameScript.setAttribute('id', 'game-script');
+		// gameScript.setAttribute('type', 'module');
+		// gameScript.setAttribute('src', '../static/js/pong/pong-canvas.js');
+		// lobbyContainer.appendChild(gameScript);
 	}
 }
+
+export { loadGames };
 
 // async function loadGames() {
 // 	if (!user)

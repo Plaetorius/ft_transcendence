@@ -1,3 +1,24 @@
+
+
+import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
+
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { loadGames } from '/static/js/pong/pong-game.js';
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
+import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick } from '/static/js/users/profile.js';
+import { getUser } from '/static/js/users/search.js';
+import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+
 function createActionButton(iconSrc, title, username) {
     const button = document.createElement('button');
     button.classList.add('profile-action-button');
@@ -14,8 +35,7 @@ function createActionButton(iconSrc, title, username) {
 }
 
 function loadAndDisplayFriends() {
-	if (!user)
-		return ;
+
     getFriends().then(data => {        
         const friendshipsContainer = document.getElementById('friendships');
         
@@ -68,12 +88,13 @@ function loadAndDisplayFriends() {
             friendshipsContainer.appendChild(rowDiv);
         });
     }).catch(error => {
-        notification(`Failed to get friends`, 'cross', 'error');
+		// console.error(error);
+        // notification(`Failed to get friends`, 'cross', 'error');
     });
 }
 
 async function getFriends() {
-	const response = await fetch(`/users/friends/${user.username}`, {
+	const response = await fetch(`/users/friends/${globals.user.username}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -129,3 +150,5 @@ function actualiseFriendsSection() {
 	loadAndDisplayFriends();
 	initializeListeners();
 }
+
+export { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection };
