@@ -1,6 +1,6 @@
 // Import the notification function
 
-import { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomInvitation, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
 import { appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
 
 import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
@@ -49,6 +49,8 @@ async function loadHtmlElement(file_path) {
 
 
 async function fetchPongCreation(gamemode) {
+	if (gamemode === undefined)
+		return ;
 	gamemode.trim();
 	if (!gamemode) gamemode = 'tournament';
 	try {
@@ -343,7 +345,7 @@ function loadGames() {
 	}
 }
 
-export { loadGames };
+export { loadGames, fetchPongCreation, pongJoinGame};
 
 // async function loadGames() {
 // 	if (!user)

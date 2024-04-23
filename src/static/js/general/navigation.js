@@ -1,10 +1,10 @@
 
 
 
-import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomInvitation, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
 import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
 
-import { loadGames } from '/static/js/pong/pong-game.js';
+import { loadGames, fetchPongCreation, pongJoinGame  } from '/static/js/pong/pong-game.js';
 import { g_game_canister } from '/static/js/pong/pong-canister.js';
 
 import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';

@@ -2,7 +2,7 @@ import {appendAndRemoveNotification, notification } from '/static/js/chat/notifi
 
 import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
 
-import { loadGames } from '/static/js/pong/pong-game.js';
+import { loadGames, fetchPongCreation, pongJoinGame  } from '/static/js/pong/pong-game.js';
 import { g_game_canister } from '/static/js/pong/pong-canister.js';
 
 import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
@@ -90,7 +90,8 @@ async function fetchBlockedUsers() {
 document.getElementById('clash-button').addEventListener('click', createClash);
 
 async function createClash() {
-    const clash_uid = await fetchPongCreation(); 
+    const clash_uid = await fetchPongCreation('versus');
+    pongJoinGame(clash_uid);
     if (chatSocket.readyState === WebSocket.OPEN) {
         chatSocket.send(JSON.stringify({
             message: `/clash ${clash_uid}`,
@@ -313,4 +314,4 @@ function clearChatHeader() {
 }
 
 
-export { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader };
+export { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomInvitation, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader };
