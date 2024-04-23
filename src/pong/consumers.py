@@ -57,7 +57,7 @@ class PartyManager():
 		self.small_parties: dict[str, SmallParty]	= {}
 		self.in_games: dict[str, Party]				= {}
 		self.channel_layer							= get_channel_layer()
-		self.create_party("", pongTournament())
+		self.create_party("Default Tournament", pongTournament())
 
 	def create_party(self, name: str, party_type = None) -> Party:
 		if party_type == None:
