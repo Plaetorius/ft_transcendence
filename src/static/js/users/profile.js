@@ -1,3 +1,26 @@
+
+
+
+
+import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
+
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { loadGames } from '/static/js/pong/pong-game.js';
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
+import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
+import { getUser } from '/static/js/users/search.js';
+import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+
 function getProfile() {
 	fetch('/users/profile/', {
 			method: 'GET',
@@ -13,22 +36,23 @@ function getProfile() {
 			return response.json();
 		})
 		.then(userData => {
-			user = userData;
-			document.getElementById("profile-picture").src = user.profile_picture_url;
+			globals.user = userData;
+			document.getElementById("profile-picture").src = userData.profile_picture_url;
 			loadMyProfile();
 			actualiseFriendsSection();
 		})
 		.catch(error => {
 			notification(error, 'cross', 'error');
+			console.log(error);
 		});
 }
 
 function loadMyProfile() {
-	document.getElementById("profile-picture").src = user.profile_picture_url;
-	document.getElementById("header-profile-picture").src = user.profile_picture_url;
-	document.getElementById("profile-username").innerHTML = `<span class="online-status online"></span>${user.username}`;
-	document.getElementById("profile-elo").innerHTML = `<span>Elo: </span>${user.elo}`;
-	const dateJoined = new Date(user.date_joined);
+	document.getElementById("profile-picture").src = globals.user.profile_picture_url;
+	document.getElementById("header-profile-picture").src = globals.user.profile_picture_url;
+	document.getElementById("profile-username").innerHTML = `<span class="online-status online"></span>${globals.user.username}`;
+	document.getElementById("profile-elo").innerHTML = `<span>Elo: </span>${globals.user.elo}`;
+	const dateJoined = new Date(globals.user.date_joined);
 	const formattedDate = [
 		dateJoined.getDate().toString().padStart(2, '0'),
 		(dateJoined.getMonth() + 1).toString().padStart(2, '0'),
@@ -179,7 +203,7 @@ function handleAddFriendClick(username) {
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
 		// Handle failure, perhaps show a message to the user
-		notification(`Failed to add friend: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+		notification(`${error.error ? error.error : 'An error occurred'}`, "cross", "error");
 	});
 }
 
@@ -191,7 +215,7 @@ function handleRemoveFriendClick(username) {
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
 		// Handle failure, perhaps show a message to the user
-		notification(`Failed to removed friend: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+		notification(`${error.error ? error.error : 'An error occurred'}`, "cross", "error");
 	});
 }
 
@@ -213,7 +237,7 @@ function handleUnblockClick(username) {
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
 		// Handle failure, perhaps show a message to the user
-		notificationSocket(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+		notification(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
 	});
 }
 
@@ -238,3 +262,5 @@ async function handleGotoProfileClick(username) {
 	profilePopup.classList.add("d-none");
 	profilePopup.classList.remove("d-block");
 }
+
+export { profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick };

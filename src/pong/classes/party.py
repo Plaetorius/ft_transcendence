@@ -198,21 +198,17 @@ class Party():
 	def game_stop(self) -> bool:
 		try:
 			if self.running == True:
-				
+				print(f"####	Party: Stopping party {self.uuid} THREAD ...")
+
 				# Call custom _game_stop method
 				if (self._game_stop() == False):
 					raise Exception("game_stop failed")
+			
 				print(f"####	Party: Party stopped {self.uuid}")
-				
-				# try:
-				# 	async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_stopped"}) # Send update to all players
-				# except Exception as e:
-				# 	print(f"####	Party: ERROR: {e}")
-				
-				print(f"####	Party: Stopping party {self.uuid} THREAD ...")
 				self.running = False
 				if (self.thread_error == False):
 					self.thread.join()
+				
 				print(f"####	Party: Party stopped {self.uuid} THREAD !")
 				return True
 			raise Exception("game not started")
@@ -222,8 +218,6 @@ class Party():
 
 	def game_join(self, player: Player) -> bool:
 		try:
-			if (self.running == True and 0):
-				raise Exception("game already started")
 			temp_player = next((p for p in self.players if p.id == player.id), None)
 			if (temp_player != None):
 				raise Exception("player already in party")
@@ -253,7 +247,7 @@ class Party():
 			if (self._game_leave(temp_player) == False):
 				print(f"####	Party: Player {temp_player.name} could not leave party {self.uuid} (game_leave failed)")
 				return False
-		
+				
 			self.players.remove(temp_player)
 			
 			if (len(self.players) == 0 and self.running == True):
@@ -269,6 +263,20 @@ class Party():
 		if (rdata != None):
 			self._received_data[rdata] = data['keys']
 
+	def game_send_update(self):
+
+		# Send update to all players
+		try:
+			async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_update", "obj_to_remove": [obj.uuid for obj in self.obj_to_remove]})
+		except Exception as e:
+			print(f"####	Party: ERROR: {e}")
+			
+			self.thread_error = True
+			self.game_stop()
+			
+			return False
+		return True
+
 
 	def game_event_disconnect(self, player: Player) -> bool:
 		self.event_list.append({"type": "party_disconnect", "player_id": player.id})
@@ -281,13 +289,13 @@ class Party():
 
 		self.event_list.append({"type": "party_title", "img": img, "text": message, "time": time, "players": [player.id for player in players]})
 
-	
+
 	def game_event_global_message(self, message: str, time: float) -> bool:
 
 		self.event_list.append(
 		{
         	    'type': 'user.notification',
-        	    'text_message': "A new tournament started !",
+        	    'text_message': message,
         	    'path_to_icon': None,
         	    'context': None,
         	})
@@ -300,7 +308,7 @@ class Party():
 				else:
 					async_to_sync(self.channel_layer.group_send)("global_notification", event)
 			except Exception as e:
-				print(f"####	Party: Event: ERROR: Could not send event {event} {e}")
+				print(f"####	Party: Event: ERRORERRORERRORERROR: Could not send event {event} {e}")
 		self.event_list.clear()
 
 	def game_loop(self):
@@ -309,7 +317,7 @@ class Party():
 		loop_end_tick = time.time() + self.S_PER_UPDATE
 		loop_offset = 0
 
-		while self.running:
+		while self.running or len(self.event_list) > 0:
 
 			# Update received data and clear it's buffer
 			self.received_data = self._received_data.copy()
@@ -340,14 +348,7 @@ class Party():
 					self.objects.remove(obj)
 			
 			# Send update to all players
-			try:
-				async_to_sync(self.channel_layer.group_send)(self.party_channel_name, {"type": "party_update", "obj_to_remove": [obj.uuid for obj in self.obj_to_remove]}) # Send update to all players
-			except Exception as e:
-				print(f"####	Party: ERROR: {e}")
-				
-				self.thread_error = True
-				self.game_stop()
-				
+			if (self.game_send_update() == False):
 				return
 
 			# Send update to all players
@@ -371,6 +372,8 @@ class Party():
 				time.sleep(loop_offset)
 
 		self.thread_error = False
+		print(f"####	Party: THREAD STOPPED gracefully")
+		print(f"####		With {len(self.event_list)} events left")
 
 	def to_dict(self):
 		return {

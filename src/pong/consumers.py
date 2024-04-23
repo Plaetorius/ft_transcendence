@@ -55,13 +55,13 @@ class PartyManager():
 		self.small_parties: dict[str, SmallParty]	= {}
 		self.in_games: dict[str, Party]				= {}
 		self.channel_layer							= get_channel_layer()
-		self.create_party("bot", pongTournament())
+		self.create_party("", pongTournament())
 
 	def create_party(self, name: str, party_type = None) -> Party:
 		if party_type == None:
 			party_type = PongParty()
 		party = party_type
-		party.name = party.name + f"_{name}"
+		party.name = name
 		self.parties[party.uuid] = party
 		print(f"####	PartyManager: Party {party.uuid} created")
 		
@@ -125,14 +125,13 @@ class PartyManager():
 		if party == None:
 			print(f"####	PartyManager: Player {player.name} could not leave party {party_uuid} (party not found)")
 			return False
+		
 		small_party = self.small_parties[party_uuid]
-
 		# Try to leave the party
 		success = party.game_leave(player)
 		if (success == True):
 			small_party.players.remove(player)
 			del self.in_games[player.id]
-			self.parties[party_uuid].game_leave(player)
 			return True
 		
 		print(f"####	PartyManager: Player {player.name} could not leave party {party_uuid} (party not found)")
@@ -216,11 +215,11 @@ class PartyConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		print(f"####	PartyConsumer: ERROR CODE: {close_code}")
-		await self.channel_layer.group_discard(self.party_channel_name, self.channel_name)
 
 		if (self.player == None):
 			return
 		await g_party_manager.leave_party(self.party_uuid, self.player)
+		await self.channel_layer.group_discard(self.party_channel_name, self.channel_name)
 		print(f"####	PartyConsumer: Disconnect from channel {self.party_channel_name} (party:{self.party_uuid})")
 
 	# Receive message from WebSocket
@@ -267,9 +266,6 @@ class PartyConsumer(AsyncWebsocketConsumer):
 			'img': event['img'],
 			'time': event['time'],
 		}
-
-		print("Sending title message")
-		print(message)
 
 		try:
 			await self.send(text_data=json.dumps(message))
