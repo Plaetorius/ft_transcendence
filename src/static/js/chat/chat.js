@@ -134,6 +134,11 @@ function createDomInvitation(sender, uid) {
     invitationDiv.appendChild(profileDiv);
     invitationDiv.appendChild(invitationContentDiv);
 
+    if (blocked_list && blocked_list.includes(sender.username)) {
+		invitationDiv.classList.remove("d-flex");
+        invitationDiv.classList.add("d-none");
+    }
+
     document.getElementById('messages').appendChild(invitationDiv);
 
     // After appending the message, scroll to the last message
