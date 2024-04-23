@@ -35,6 +35,11 @@ function createPodium(users) {
             img.className = 'podium-profile open-profile';
             img.setAttribute('data-username', users[index].username);
             container.appendChild(img);
+            const username = document.createElement('span');
+            username.className = 'podium-profile open-profile';
+            username.setAttribute('data-username', users[index].username);
+            username.textContent = users[index].username;
+            container.appendChild(username);
         }
     });
 }
