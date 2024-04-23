@@ -202,7 +202,7 @@ function handleChatClick(username) {
 function handleAddFriendClick(username) {
 	addFriend(username).then(data => {
 		// Handle success, update the UI accordingly
-		notification(`Friend added: ${data.success}`, "check", "success");
+		notification(`${data.success}!`, "check", "success");
 		actualiseFriendsSection();
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
@@ -214,7 +214,7 @@ function handleAddFriendClick(username) {
 function handleRemoveFriendClick(username) {
 	removeFriend(username).then(data => {
 		// Handle success, update the UI accordingly
-		notification(`Friend removed: ${data.success}`, "check", "success");
+		notification(`${data.success}!`, "check", "success");
 		actualiseFriendsSection();
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
@@ -226,23 +226,22 @@ function handleRemoveFriendClick(username) {
 function handleBlockClick(username) {
 	block(username).then(data => {
 		// Handle success, update the UI accordingly
-		notification(`Blocked ${data.success}!`, "check", "cross");
+		notification(`${data.success}!`, "check", "success");
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
 		// Handle failure, perhaps show a message to the user
-		notification(`Failed to block: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+		notification(`${error.error ? error.error : 'An error occurred'}`, "cross", "error");
 	});
 }
 
 function handleUnblockClick(username) {
 	unblock(username).then(data => {
 		// Handle success, update the UI accordingly
-		notification(`Unblock: ${data.success}`, "check", "error");
+		notification(`${data.success}!`, "check", "success");
 	}).catch(error => {
 		// Log the backend error message if it exists, otherwise log a default error message
 		// Handle failure, perhaps show a message to the user
-		notification(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
-		notification(`Failed to unblock: ${error.error ? error.error : 'An error occurred'}`, "cross", "error");
+		notification(`${error.error ? error.error : 'An error occurred'}`, "cross", "error");
 	});
 }
 
