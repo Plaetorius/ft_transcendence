@@ -368,6 +368,7 @@ class GameCanister {
 						this.camera.position.y = 500;
 						this.camera.position.z = pos.z - 0.001;
 						this.camera.lookAt(pos.x, 0, pos.z);
+						this.camera.rotateZ(rot);
 					}
 
 				}

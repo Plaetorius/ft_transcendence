@@ -33,7 +33,7 @@ class MazePaddle(ObjectAbstract):
 		self.rot: float	= 0.0
 
 		self.camera['username'] = controler
-		self.camera['mode'] = 'first_person'
+		self.camera['mode'] = 'top_down'
 
 		pass
 
@@ -81,11 +81,11 @@ class Maze(Party):
 		self.gameStarted = False
 		self.timerStart = time.time()
 		self.already_joined: dict[str]	= []
-		self.maze_size = 15
+		self.maze_size = 63
 		self.maze = []
 
-	def generate_terrain2(self):
-		self.mid_point = vec2(self.maze_size/ 2, self.maze_size / 2)
+	def generate_terrain(self):
+		self.mid_point = vec2(int(self.maze_size / 2 - 0.5), int(self.maze_size / 2 - 0.5))
 		for x in range(self.maze_size):
 			for y in range(self.maze_size):
 				if self.maze[y][x] == 1:
@@ -104,111 +104,47 @@ class Maze(Party):
 					wall.color = '#ff0000'
 					self.objects.append(wall)
 
-	# def generate_terrain(self):
-	# 	start_line = 0
-	# 	end_line = 0
-	# 	for y in range(self.maze_size):
-	# 		for x in range(self.maze_size):
-	# 			if (self.maze[y][x] == 1):
-	# 				if (start_line == 0):
-	# 					start_line = y
-	# 				end_line = y
+	def generate_terrain2(self):
+		self.mid_point = vec2(self.maze_size/ 2, self.maze_size / 2)
+		for x in range(self.maze_size):
+			start_line = 0
+			end_line = 0
+			for y in range(self.maze_size):
+				if (self.maze[y][x] == 1 and y < self.maze_size - 1):
+					if (start_line == 0):
+						start_line = y
+					end_line = y
+				elif (start_line != 0):
+					if (start_line != end_line):
+						wall = ObjectAbstract()
+						wall.collide = Collision.NONE
+						wall.shape = Shape.BOX
+						wall.size = vec2(1, end_line - start_line + 1) * BOX_SIZE
+						wall.pos = vec2(x, start_line + (end_line - start_line) / 2) * BOX_SIZE
+						wall.pos = -wall.pos
+						self.objects.append(wall)
+					start_line = 0
+					end_line = 0
+		for y in range(self.maze_size):
+			start_line = 0
+			end_line = 0
+			for x in range(self.maze_size):
+				if (self.maze[y][x] == 1 and x < self.maze_size - 1):
+					if (start_line == 0):
+						start_line = x
+					end_line = x
+				elif (start_line != 0):
+					if (start_line != end_line):
+						wall = ObjectAbstract()
+						wall.collide = Collision.NONE
+						wall.shape = Shape.BOX
+						wall.size = vec2(end_line - start_line + 1, 1) * BOX_SIZE
+						wall.pos = vec2(start_line + (end_line - start_line) / 2, y) * BOX_SIZE
+						wall.pos = -wall.pos
+						self.objects.append(wall)
+					start_line = 0
+					end_line = 0
 
-
-	# def generate_terrain(self):
-	# 	self.mid_point = vec2(self.maze_size / 2, self.maze_size / 2)
-	# 	maxed = (self.maze_size / 2) * BOX_SIZE.x
-
-	# 	for x in range(self.maze_size):
-	# 		ranger_min = 0
-	# 		ranger_max = 0
-	# 		for y in range(self.maze_size):
-	# 			if self.maze[y][x] == 1:
-	# 				ranger_max += 1
-	# 			elif self.maze[y][x] == 0 and ranger_max > ranger_min and ranger_max - ranger_min > 1:
-	# 				wall = ObjectAbstract()
-	# 				wall.shape = Shape.BOX
-	# 				wall.size = vec2((ranger_max - ranger_min) * BOX_SIZE.x,  BOX_SIZE.y)
-	# 				wall.pos = vec2(y * BOX_SIZE.x, x * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-	# 				wall.pos = -wall.pos
-	# 				wall.color = '#0066b1'
-	# 				self.objects.append(wall)
-	# 				print(ranger_max - ranger_min)
-	# 				ranger_max = x
-	# 				ranger_min = x
-	# 			elif ranger_max - ranger_min == 1:
-	# 				wall = ObjectAbstract()
-	# 				wall.shape = Shape.BOX
-	# 				wall.size = vec2(BOX_SIZE.y, BOX_SIZE.x)
-	# 				wall.pos = vec2(y * BOX_SIZE.x, x * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-	# 				wall.pos = -wall.pos
-	# 				wall.color = '#00ff00'
-	# 				self.objects.append(wall)
-	# 				ranger_max = x
-	# 				ranger_min = x
-	# 			elif self.maze[y][x] == 3:
-	# 				wall = ObjectAbstract()
-	# 				wall.shape = Shape.BOX
-	# 				wall.size = vec2(BOX_SIZE.x, BOX_SIZE.y)
-	# 				wall.pos = vec2(y * BOX_SIZE.x, x * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-	# 				wall.pos = -wall.pos
-	# 				wall.color = '#ff0000'
-	# 				self.objects.append(wall)
-	# 				ranger_max = x
-	# 				ranger_min = x
-	# 	print("------------------------------------------------------------")
-	# 	# for y in range(self.maze_size):
-	# 	# 	ranger_min = 0
-	# 	# 	ranger_max = 0
-	# 	# 	for x in range(self.maze_size):
-	# 	# 		if self.maze[y][x] == 1: 
-	# 	# 			ranger_max += 1
-	# 	# 		elif self.maze[y][x] == 0 and ranger_max > ranger_min and ranger_max - ranger_min > 1:
-	# 	# 			wall = ObjectAbstract()intin == 1:
-	# 	# 			wall = ObjectAbstract()
-	# 	# 			wall.shape = Shape.BOX
-	# 	# 			wall.size = vec2(BOX_SIZE.y, BOX_SIZE.x)
-	# 	# 			wall.pos = vec2(y * BOX_SIZE.x, x * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-	# 	# 			wall.pos = -wall.pos
-	# 	# 			wall.color = '#00ff00'
-	# 	# 			self.objects.append(wall)
-	# 	# 			ranger_max = x
-	# 	# 			ranger_min = x
-	# 	# 		elif self.maze[y][x] == 3:
-	# 	# 			wall = ObjectAbstract()
-	# 	# 			wall.shape = Shape.BOX
-	# 	# 			wall.size = vec2(BOX_SIZE.x, BOX_SIZE.y)
-	# 	# 			wall.pos = vec2(y * BOX_SIZE.x, x * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-	# 	# 			wall.pos = -wall.pos
-	# 	# 			wall.color = '#ff0000'
-	# 	# 			self.objects.append(wall)
-	# 	# 			ranger_max = x
-	# 	# 			ranger_min = x
-	# 	#create contour	walls
-	# 	wall = ObjectAbstract()
-	# 	wall.shape = Shape.BOX
-	# 	wall.color = '#8b5c29'
-	# 	wall.size = vec2(BOX_SIZE.y * self.maze_size, BOX_SIZE.x) # haut
-	# 	wall.pos = vec2(0, maxed)
-	# 	self.objects.append(wall)
-	# 	wall = ObjectAbstract()
-	# 	wall.shape = Shape.BOX
-	# 	wall.color = '#8b5c29'
-	# 	wall.size = vec2(BOX_SIZE.y * self.maze_size,BOX_SIZE.x) # bas
-	# 	wall.pos = vec2(0, -maxed)
-	# 	self.objects.append(wall)
-	# 	wall = ObjectAbstract()
-	# 	wall.shape = Shape.BOX
-	# 	wall.color = '#8b5c29'
-	# 	wall.size = vec2( BOX_SIZE.y , self.maze_size * BOX_SIZE.x) # gauche
-	# 	wall.pos = vec2(maxed, 0)
-	# 	self.objects.append(wall)
-	# 	wall = ObjectAbstract()
-	# 	wall.shape = Shape.BOX
-	# 	wall.color = '#8b5c29'
-	# 	wall.size = vec2( BOX_SIZE.y, self.maze_size * BOX_SIZE.x)	# droite
-	# 	wall.pos = vec2(-maxed, 0)
-	# 	self.objects.append(wall)
 
 	def createpaddle(self, player):
 		paddle = MazePaddle(player.name)
@@ -267,8 +203,6 @@ class Maze(Party):
 			for j in range(self.maze_size):
 				self.maze[i].append(1)
 		self.maze = self.generate_maze(self.maze, round((self.maze_size - 1) / 2), round((self.maze_size - 1) / 2))
-		for i in range(self.maze_size):
-			print(self.maze[i])
 		self.generate_terrain2()
 		# self.generate_terrain()
 
