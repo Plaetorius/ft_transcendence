@@ -44,3 +44,19 @@ async function onPageReload() {
 
 onPageReload();
 
+document.querySelectorAll('.sentence').forEach(sentence => {
+    sentence.addEventListener('mouseover', () => {
+        sentence.classList.add('active');
+    });
+    sentence.addEventListener('mouseout', () => {
+        sentence.classList.remove('active');
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const sentences = document.querySelectorAll('.appear-on-load');
+    sentences.forEach((span, index) => {
+        // Delay each sentence's animation start time
+        span.style.animationDelay = `${index * 0.03}s`;
+    });
+});

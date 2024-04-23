@@ -211,3 +211,32 @@ p{
     width: 100%;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#home .sentence {
+    position: relative;
+    color: black; /* Initial text color */
+    background-color: transparent; /* Initial background color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+#home .sentence:hover {
+    /* border: rgba(0, 0, 0, 0.267) 2px solid; Add border on hover */
+    background-color: rgba(0, 0, 0, 0.637); /* Change background color on hover */
+    color: whitesmoke; /* Change text color on hover to match the background */
+}
+
+#home .appear-on-load {
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+}
