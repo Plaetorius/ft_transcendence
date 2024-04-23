@@ -75,7 +75,7 @@ def collide_box_to_box(obj1: ObjectAbstract, obj2: ObjectAbstract):
 
 	hit_pos = obj1.pos + obj1.vel * hit[1]
 	
-	normal_diff = (hit_pos - obj2.pos) / (box_size / 2)
+	normal_diff = (hit_pos - obj2.pos) / (box_size)
 
 	# Calculate the normal of the collision
 	lose_vel = vec2(0.0, 0.0)

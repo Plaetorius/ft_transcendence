@@ -1,6 +1,6 @@
 from ..classes.party import ( Party )
 from ..classes.player import ( Player )
-from ..classes.objects import ( Shape, Collision, ObjectAbstract)
+from ..classes.objects import ( Shape, Collision, ObjectAbstract, ObjectBall, ObjectTerrain)
 from ..classes.math_vec2 import ( vec2 )
 from random import randint, uniform
 from enum import Enum
@@ -15,7 +15,7 @@ import random, math, time
 # - si tu rentre avant, tu es joueur
 # - mettre un timer avant que la game soit reset (exemple 5min) ? ou juste attendre que tout le monde ait fini / quiter
 
-BOX_SIZE = vec2(20, 20)
+BOX_SIZE = vec2(16, 16)
 
 class MazePaddle(ObjectAbstract):
 	def __init__(self, controler: str):
@@ -26,7 +26,7 @@ class MazePaddle(ObjectAbstract):
 		r = lambda: random.randint(190, 220)
 		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), 127, r())
 		
-		self.size		= vec2(4, 4)
+		self.size		= vec2(8, 8)
 		self.collide	= Collision.STOP
 		self.controler	= controler
 
@@ -76,36 +76,19 @@ class MazePaddle(ObjectAbstract):
 class Maze(Party):
 	def __init__(self):
 		super().__init__()
+		self.max_players = 1
 		self.joueurs = []
 		self.spectateurs = []
 		self.gameStarted = False
 		self.timerStart = time.time()
-		self.already_joined: dict[str]	= []
-		self.maze_size = 63
+		self.already_joined	= []
+		self.maze_size = 31
 		self.maze = []
+		self.walls = []
 
 	def generate_terrain(self):
-		self.mid_point = vec2(int(self.maze_size / 2 - 0.5), int(self.maze_size / 2 - 0.5))
-		for x in range(self.maze_size):
-			for y in range(self.maze_size):
-				if self.maze[y][x] == 1:
-					wall = ObjectAbstract()
-					wall.shape = Shape.BOX
-					wall.size = vec2(BOX_SIZE.x, BOX_SIZE.y)
-					wall.pos = vec2(x * BOX_SIZE.x, y * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-					wall.pos = -wall.pos
-					self.objects.append(wall)
-				elif self.maze[y][x] == 3:
-					wall = ObjectAbstract()
-					wall.shape = Shape.BOX
-					wall.size = vec2(BOX_SIZE.x, BOX_SIZE.y)
-					wall.pos = vec2(x * BOX_SIZE.x, y * BOX_SIZE.y) - self.mid_point * BOX_SIZE
-					wall.pos = -wall.pos
-					wall.color = '#ff0000'
-					self.objects.append(wall)
-
-	def generate_terrain2(self):
-		self.mid_point = vec2(self.maze_size/ 2, self.maze_size / 2)
+		self.obj_to_remove.extend(self.objects)
+		self.mid_point = vec2(self.maze_size / 2 - 0.5, self.maze_size / 2 - 0.5)
 		for x in range(self.maze_size):
 			start_line = 0
 			end_line = 0
@@ -117,10 +100,11 @@ class Maze(Party):
 				elif (start_line != 0):
 					if (start_line != end_line):
 						wall = ObjectAbstract()
-						wall.collide = Collision.NONE
+						wall.collide = Collision.STOP
 						wall.shape = Shape.BOX
+						wall.color = '#355228'
 						wall.size = vec2(1, end_line - start_line + 1) * BOX_SIZE
-						wall.pos = vec2(x, start_line + (end_line - start_line) / 2) * BOX_SIZE
+						wall.pos = (vec2(x, start_line + (end_line - start_line) / 2) - self.mid_point) * BOX_SIZE
 						wall.pos = -wall.pos
 						self.objects.append(wall)
 					start_line = 0
@@ -136,21 +120,29 @@ class Maze(Party):
 				elif (start_line != 0):
 					if (start_line != end_line):
 						wall = ObjectAbstract()
-						wall.collide = Collision.NONE
+						wall.collide = Collision.STOP
 						wall.shape = Shape.BOX
+						wall.color = '#355228'
 						wall.size = vec2(end_line - start_line + 1, 1) * BOX_SIZE
-						wall.pos = vec2(start_line + (end_line - start_line) / 2, y) * BOX_SIZE
+						wall.pos = (vec2(start_line + (end_line - start_line) / 2, y) - self.mid_point) * BOX_SIZE
 						wall.pos = -wall.pos
 						self.objects.append(wall)
 					start_line = 0
 					end_line = 0
+		terrain = ObjectTerrain()
+		terrain.size = vec2(self.maze_size, self.maze_size) * BOX_SIZE
+		terrain.color = '#968d72'
+		self.objects.append(terrain)
+
+		for player in self.players:
+			self.createpaddle(player)
 
 
 	def createpaddle(self, player):
-		paddle = MazePaddle(player.name)
-		paddle.color = '#ff0000'
-		paddle.pos = vec2(10, 10)
-		self.objects.append(paddle) 
+		player.paddle = MazePaddle(player.name)
+		player.paddle.color = '#ff0000'
+		player.paddle.pos = vec2(0, 0)
+		self.objects.append(player.paddle) 
 
 
 	def generate_maze(self, maze, x, y):
@@ -203,8 +195,7 @@ class Maze(Party):
 			for j in range(self.maze_size):
 				self.maze[i].append(1)
 		self.maze = self.generate_maze(self.maze, round((self.maze_size - 1) / 2), round((self.maze_size - 1) / 2))
-		self.generate_terrain2()
-		# self.generate_terrain()
+		self.generate_terrain()
 
 	def reset_game(self):
 		self.joueurs = []
@@ -212,33 +203,27 @@ class Maze(Party):
 		self.gameStarted = False
 		self.timerStart = time.time()
 		self.already_joined = []
-		self.obj_to_remove.extend(self.objects)
+		self.walls = []
 
 
 	def	_game_start(self) -> bool:
+		self.gameStarted = True
+		self.create_map()
 		return True
 
 	def	_game_stop(self) -> bool:
+		self.reset_game()
 		return True
 
 	def	_game_loop(self) -> bool:
 		return True
 	
 	def	_game_join(self, player: Player) -> bool:
-		if (not (player.name in self.already_joined)):
-			if self.gameStarted == True:
-				self.spectateurs.append(player)
-			else:
-				self.joueurs.append(player)
-				self.createpaddle(player)
-			self.already_joined.append(player.name)
-		if (len(self.joueurs) == 1):
-			self.gameStarted = True
-			self.create_map()
+		if (len(self.players) == 1):
+			self.createpaddle(player)
 		return True
 
 	def	_game_leave(self, player: Player) -> bool:
-		self.reset_game()
 		return True
 
 	# Game send update

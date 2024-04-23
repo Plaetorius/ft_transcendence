@@ -365,7 +365,7 @@ class GameCanister {
 						this.camera.lookAt(pos.x, 100, pos.z);
 					} else if (obj['camera']['mode'] == 'top_down') {
 						this.camera.position.x = pos.x;
-						this.camera.position.y = 500;
+						this.camera.position.y = 400;
 						this.camera.position.z = pos.z - 0.001;
 						this.camera.lookAt(pos.x, 0, pos.z);
 						this.camera.rotateZ(rot);
