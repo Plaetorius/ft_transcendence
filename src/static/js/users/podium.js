@@ -22,13 +22,12 @@ async function getPodium() {
 }
 
 function createPodium(users) {
-    // Assuming the first three users are the top players for the podium
     const podiumPlaces = ['first-place', 'second-place', 'third-place'];
 
     podiumPlaces.forEach((place, index) => {
-        if (users[index]) { // Check if the user exists
+        if (users[index]) {
             const container = document.getElementById(place);
-            container.innerHTML = ''; // Clear existing content
+            container.innerHTML = '';
             const img = document.createElement('img');
             img.src = users[index].profile_picture_url ? users[index].profile_picture_url : '../media/profile_pictures/default.jpg';
             img.draggable = false;
