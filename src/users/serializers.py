@@ -185,6 +185,9 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
+        username = data.get('username')
+        if User.objects.filter(username=username).exists() or OAuthCred.objects.filter(user__username=username).exists():
+            raise serializers.ValidationError("This username is already in use with another account.")
         user = authenticate(username=data.get('username'), password=data.get('password'))
         if user and user.is_active:
             return user
