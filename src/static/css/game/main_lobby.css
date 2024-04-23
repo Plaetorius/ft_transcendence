@@ -7,148 +7,556 @@
 	-ms-user-select: none;
 }
 
-.party_list {
-	display: grid;
-	grid-template-columns: repeat(4, 10fr);
-	gap: 10px;
-	grid-auto-rows: minmax(100px, auto);
+/* RIGHT NOW */
 
+#games_main_div {
+	position: fixed;
 
-	justify-content: space-evenly;
-	padding: 0px;
-}
-
-
-.party_card {
-	/* flex: 0 1 calc(25% - 1em); */
-
-	/* transform:rotate(2deg); */
-	/* flex: 0 0 200px;
-	flex-direction: column; */
-
-	margin: 10px;
-	width: 300px;
-	height: 200px;
-
-	/* background-color: #f5e0ab; */
-	/* background-image: './static/media/pong.png'; */
-	/* background-position: center; */
-	/* background-size: cover; */
-	/* background-image:	url("../../backgrounds/transparent_simple_noise.png"); */
-	/* background-image:	cross-fade(url("../../backgrounds/transparent_simple_noise.png") 50%, url('black.png') 50%); */
-	/* '../../backgrounds/old-paper-background.jpg' */
-	background-color: #f5e0ab;
-	border: 5px solid black;
-	box-shadow: 0 0 0 7px #fff, 0 0 8px 5px #000;
-
-	transition:
-		transform 0.25s,
-		rotate 0.25s;
-}
-
-.party_card:hover {
-	transform: translate(5px, -8px) rotate(1.5deg);
-}
-
-.party_card_image {
-	position: relative;
-	width: 100%;
-	height: 65%;
-	background-color: #017cc0;
-	border-bottom: 5px solid #000;
-	z-index: 1;
-}
-
-.party_card_image>img {
-	position: absolute;
-	z-index: 2;
-	height: 100%;
-	object-fit: contain;
-}
-
-.party_card_image>img {
-	width: 100%;
-	height: 100%;
-	margin-top: 0px;
-	margin-left: 0px;
-}
-
-.party_card_text {
-	width: 100%;
-	height: 35%;
-	padding-top: 2px;
-}
-
-.party_card_text>h2 {
-	font-size: 2rem;
-	letter-spacing: 8px;
-	line-height: 26px;
-	text-align: center;
-	margin-bottom: 0px;
-	color: #2E5579;
-}
-
-.party_card_text>div {
 	display: flex;
-	justify-content: space-between;
-	/* padding: 2px; */
-	padding-top: 0px;
+	flex-direction: horizontal;
+	justify-content: center;
+	/* align-items: center; */
+
+	width: 95%;
+	height: 700px;
+
+	border: #000 1px solid;
 }
 
-.party_card_text>div>div {
+#party_list_container {
+	flex: 3;
+
+	justify-content: center;
+	align-items: center;
+
+	padding: 10px;
+
+	/* background: linear-gradient(to left, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 10px); */
+
+	display: flex;
+	flex-flow: column;
+
+	background:
+		/* linear-gradient(-180deg, rgba(0, 0, 0, 0), 90%, #2f2f2f), */
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.5), rgba(201, 201, 201, 0.5)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+	background-size: cover;
+	/* <------ */
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+#party_list_container h2 {
+	font-family: BlinkMacSystemFont;
+	font-size: 2.5em;
+	font-weight: 2;
+
+	text-align: center;
+
+	border-bottom: 1px solid #3a3a3a;
+
+	margin-bottom: 20px;
+
+	flex: 1;
+}
+
+
+#party_menu_container {
+	flex: 1;
+
+	justify-content: center;
+	align-items: center;
+
+	border-left: #000 1px solid;
+
+	padding: 10px;
+	background:
+		/* linear-gradient(-180deg, rgba(0, 0, 0, 0), 90%, #2f2f2f), */
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.6), rgba(201, 201, 201, 0.6)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+}
+
+#party_menu_title {
+	font-family: BlinkMacSystemFont;
+	font-size: 2.5em;
+	font-weight: 2;
+
+	border-bottom: 1px solid #3a3a3a;
+
+	text-align: center;
+}
+
+#party_menu_content {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+
+	padding: 10px;
+
 }
 
-.party_card_text>div>div:first-child {
-	/* border:5px solid black; */
-	border-left: none;
-	border-bottom: none;
-	max-width: 65%;
+#party_menu_content fieldset {
+	flex: 2;
+
+	width: 100%;
+
+	border-bottom: #000 1px solid;
+
+	flex-direction: column;
+	justify-content: left;
+	align-items: left;
+
+	font-size: 1.5em;
+	font-weight: 2;
 }
 
-.party_card_text>div>div:first-child>span {
-	font-size: 1.0rem;
-	line-height: 20px;
-	font-weight: 500;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+#party_menu_content fieldset label {
+	padding: unset;
+	/* padding: 10px; */
 }
 
-.party_card_text>div>div:first-child>span:first-child {
-	font-size: 1.2rem;
-	line-height: 20px;
-	font-weight: 600;
+#party_menu_content fieldset label input {
+	position: fixed;
+	opacity: 0;
+	pointer-events: none;
+
 }
 
-.party_card_text>div>div:last-child {
-	border: 5px solid black;
-	border-right: none;
-	border-bottom: none;
+#party_menu_content fieldset label {
+
+	width: 100%;
+	height: 40px;
+
+	border: 2px solid #000;
+	/* margin: 10px; */
+
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.3), rgba(201, 201, 201, 0.3)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+
+	transition:
+		box-shadow 0.25s,
+		border-color 0.25s,
+		scale 0.25s,
+		transform 0.25s;
+
 }
 
-.party_card_text>div>div:last-child>span {
+#party_menu_content fieldset label:hover {
+	transform: scale(105%);
+	box-shadow: 0px 0px 2px 0px #000;
+}
+
+
+#party_menu_content fieldset label:has(input[type="radio"]:checked) {
+	transform: translate(-14px, 0px);
+	border: 4px solid darkred;
+	border-color: darkred;
+
+
+}
+
+#party_menu_content fieldset label div {
+	
+	display: float;
+
+	width: 90%;
+	height: 100%;
+
+	text-align: left;
+	margin-left: 10px;
+
+	font-family: BlinkMacSystemFont;
+
+	font-size: 1.2em;
+	font-weight: 100;
+	line-height: 120%;
+
+	/* background-color: #000; */
+
+}
+
+
+#party_menu_content legend {
+	font-family: BlinkMacSystemFont;
+	font-size: 2em;
+	font-weight: 2;
+
+	text-align: center;
+}
+
+#party_menu_content_create {
+	width: 100%;
+	height: 160px;
+
+	padding: 10px;
+}
+
+
+/* BUTTON */
+
+#createPartyForm {
 	display: flex;
-	justify-content: flex-end;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+
+	width: 100%;
+	height: 100px;
+
+	padding: unset;
+	margin: unset;
+	margin: 5px;
+
+	text-align: center;
 }
 
-.party_card_text>div>div:last-child>span:first-child {
-	font-size: 1.0rem;
-	line-height: 9px;
-	font-weight: 600;
+#button-refresh {
+	-webkit-touch-callout: none;
+	/* iOS Safari */
+	-webkit-user-select: none;
+	/* Safari */
+	-khtml-user-select: none;
+	/* Konqueror HTML */
+	-moz-user-select: none;
+	/* Old versions of Firefox */
+	-ms-user-select: none;
+	/* Internet Explorer/Edge */
+	user-select: none;
+	/* Non-prefixed version, currently */
+
+	flex: 3;
+
+	font-family: BlinkMacSystemFont;
+	font-size: 1.5em;
+	font-weight: 2;
+
+	border: 1px solid #000;
+	margin: 5px;
+
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.3), rgba(201, 201, 201, 0.3)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+
+	cursor: pointer;
+
+	transition: width 0.25s, scale 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
-.party_card_text>div>div:last-child>span:last-child {
-	font-size: 1.6rem;
-	font-weight: 700;
-	line-height: 28px;
+#button-refresh:hover {
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.45), rgba(201, 201, 201, 0.45)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+	transform: scale(110%);
+	box-shadow: 0px 0px 4px 0px #000;
+
 }
 
-#ingame_player_list {
-	position: absolute;
-	top: 0.25rem;
-	left: 0.25rem;
-	border: 2px dashed blue;
+#button-refresh:active {
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.45), rgba(201, 201, 201, 0.45)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+	transform: scale(100%);
+	box-shadow: 0px 0px 4px 0px #000 inset;
 
+}
+
+.noselect {
+	-webkit-touch-callout: none;
+	/* iOS Safari */
+	-webkit-user-select: none;
+	/* Safari */
+	-khtml-user-select: none;
+	/* Konqueror HTML */
+	-moz-user-select: none;
+	/* Old versions of Firefox */
+	-ms-user-select: none;
+	/* Internet Explorer/Edge */
+	user-select: none;
+	/* Non-prefixed version, currently
+									supported by Chrome, Edge, Opera and Firefox */
+}
+
+#button-create {
+	-webkit-touch-callout: none;
+	/* iOS Safari */
+	-webkit-user-select: none;
+	/* Safari */
+	-khtml-user-select: none;
+	/* Konqueror HTML */
+	-moz-user-select: none;
+	/* Old versions of Firefox */
+	-ms-user-select: none;
+	/* Internet Explorer/Edge */
+	user-select: none;
+	/* Non-prefixed version, currently */
+
+	flex: 5;
+
+	font-family: BlinkMacSystemFont;
+	font-size: 1.5em;
+	font-weight: 2;
+
+	border: 1px solid #000;
+	margin: 5px;
+
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.3), rgba(201, 201, 201, 0.3)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+
+	cursor: pointer;
+
+	transition: width 0.25s, scale 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+#button-create:hover {
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.45), rgba(201, 201, 201, 0.45)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+	transform: scale(110%);
+
+	box-shadow: 0px 0px 4px 0px #000;
+
+}
+
+#button-create:active {
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.45), rgba(201, 201, 201, 0.45)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+	transform: scale(100%);
+	box-shadow: 0px 0px 4px 0px #000 inset;
+
+}
+
+/* SEE LATER */
+
+#party_list {
+	direction: rtl;
+
+	display: list-item;
+	list-style-type: none;
+
+	width: 100%;
+	height: 100%;
+
+	padding: 0px;
+	margin: 0px;
+
+	flex: 10;
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	border: #000 1px solid;
+
+	scroll-behavior: smooth;
+
+	background:
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.45), rgba(201, 201, 201, 0.45)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat center;
+	background-blend-mode: screen;
+
+	/* background-size: 100%; */
+}
+
+#party_list::-webkit-scrollbar {
+	width: 12px;
+	/* width of the entire scrollbar */
+}
+
+#party_list::-webkit-scrollbar-track {
+	background: none;
+	background: rgba(0, 0, 0, 0);
+	/* color of the tracking area */
+}
+
+#party_list::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0);
+	/* color of the scroll thumb */
+	border-radius: 20px;
+	/* roundness of the scroll thumb */
+	border: 1px solid black;
+	/* creates padding around scroll thumb */
+
+	background: radial-gradient(circle, rgba(0, 0, 0, 0), #000);
+
+	z-index: 1000;
+}
+
+/* DONT SEE */
+
+#party_card {
+	direction: ltr;
+
+	width: 90%;
+	height: 110px;
+
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	/* border-right: 1px solid black; */
+
+	/* background: linear-gradient(-180deg, rgba(0, 0, 0, 0), 90%, #2f2f2f),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat left;
+	background: linear-gradient(-175deg, rgba(0, 0, 0, 0), 90%, black); */
+
+	background:
+		/* linear-gradient(-180deg, rgba(0, 0, 0, 0), 90%, #2f2f2f), */
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.4), rgba(201, 201, 201, 0.4)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat left;
+	background-blend-mode: screen;
+
+	text-wrap: nowrap;
+
+	float: right;
+
+	margin: 5px;
+	margin-bottom: 15px;
+	margin-right: 0px;
+
+	padding: 5px;
+	padding-right: 0px;
+
+	transition: width 0.25s, scale 0.25s, transform 0.25s;
+}
+
+#party_card:hover {
+	width: 98%;
+	transform: scale(1.1), translate(-5px, 0px);
+}
+
+#party_card:active {
+	background:
+		linear-gradient(-175deg, rgba(0, 0, 0, 0), 90%, white),
+		linear-gradient(to bottom, rgba(201, 201, 201, 0.4), rgba(201, 201, 201, 0.4)),
+		url('../../backgrounds/old-paper-background.jpg') no-repeat left;
+	background-blend-mode: screen;
+}
+
+#party_card_name {
+
+	font-family: BlinkMacSystemFont;
+
+	text-align: left;
+	font-size: 2.5em;
+	font-weight: 2;
+
+	width: 100%;
+	height: 60%;
+
+	border-bottom: 1px solid #3a3a3a;
+
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#party_card div:last-child {
+	bottom: 0px;
+
+	display: flex;
+	justify-content: space-between;
+	/* align-items: center; */
+
+	font-family: BlinkMacSystemFont;
+	font-size: 1.5em;
+	font-weight: 1;
+
+	margin-top: 5px;
+
+	width: unset;
+}
+
+#party_card_uuid {
+	flex: 1;
+	text-align: left;
+
+	margin-left: 10px;
+}
+
+#party_card_players_count {
+	flex: 1;
+	text-align: right;
+	margin-right: 10px;
+}
+
+
+
+/* Game Popup */
+
+@keyframes fadeDown {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		display: none;
+		opacity: 0;
+	}
+}
+
+@keyframes fadeUp {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		display: block;
+		opacity: 1;
+	}
+}
+
+.game_div {
+	position: fixed;
+
+	top: 0px;
+	left: 0px;
+
+	width: 100%;
+	height: 100%;
+
+	justify-content: center;
+	align-items: center;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	-webkit-filter: blur(0.6px);
+	filter: blur(0.6px);
+
+	z-index: 9000;
+
+	opacity: 0;
+	animation: fadeDown 0.5s forwards;
+}
+
+.game_div.show {
+	opacity: 1;
+	display: block;
+	animation: fadeUp 0.5s forwards;
+}
+
+
+#pong_game_canvas {
+	position: relative;
+	width: 80%;
+	height: 80%;
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	background-color: darkslategrey;
+	border: 2px solid black;
+
+	z-index: 9010;
 }

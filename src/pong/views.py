@@ -13,14 +13,41 @@ from users.views import CookieJWTAuthentication
 
 from .consumers import g_party_manager
 
+from .game_classes.pong_game import PongParty
+from .game_classes.pong_tournament import pongTournament
+from .game_classes.maze_game import Maze
+from .game_classes.pong_tournament_local import PongTournamentLocal
+
 
 class CreatePartyAPIView(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
 
 	def get(self, request, *args, **kwargs):
+
 		# Create a new party
-		party = g_party_manager.create_party(f"{request.user.username}'s party")
+		if ('gamemode' not in kwargs):
+			gamemode = 'versus'
+		else:
+			gamemode = kwargs['gamemode']
+
+
+
+		if (gamemode == 'maze'):
+			party_mode = Maze()		# TODO TODO TODO TODO TODO TODO
+		elif (gamemode == 'tournament'):
+			party_mode = pongTournament()
+		elif (gamemode == 'local_1v1'):		# TODO TODO TODO TODO TODO TODO
+			party_mode = PongTournamentLocal(False)
+		elif (gamemode == 'local_2v2'):
+			party_mode = PongTournamentLocal(True)
+		else:
+			gamemode = 'versus'
+			party_mode = PongParty()
+
+		print(f"#################################   INFO: User {request.user.username} is trying to create a party with gamemode {gamemode}")
+
+		party = g_party_manager.create_party(f"{gamemode} {request.user.username}", party_mode)
 		# Return the UUID of the created party
 		return Response({'party_uuid': party.uuid}, status=status.HTTP_201_CREATED)
 

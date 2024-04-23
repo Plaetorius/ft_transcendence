@@ -84,6 +84,9 @@ class TournamentPaddle(ObjectAbstract):
 		r = lambda: random.randint(75, 175)
 		self.color		= '#{:02x}{:02x}{:02x}'.format(r(), r(), r())
 
+		self.camera['username'] = controler
+		self.camera['mode'] = 'third_person'
+
 		pass
 
 	def control(self, key_values):
@@ -206,13 +209,13 @@ class Match:
 		self.terrain.pos.x 		= j * TERRAIN_SIZE.x + (j * space_terrain)
 		self.terrain.pos.y 		= 0
 		self.objects.append(self.terrain)
-		mur1 				= ObjectAbstract()
-		mur1.size.y 		= TERRAIN_SIZE.y
-		mur1.pos 			= vec2(self.terrain.pos.x - TERRAIN_SIZE.x / 2, 0)
+		mur1 					= ObjectAbstract()
+		mur1.size.y 			= TERRAIN_SIZE.y
+		mur1.pos 				= vec2(self.terrain.pos.x - TERRAIN_SIZE.x / 2, 0)
 		self.objects.append(mur1)
-		mur2 				= ObjectAbstract()
-		mur2.size.y 		= TERRAIN_SIZE.y
-		mur2.pos 			= vec2(self.terrain.pos.x + TERRAIN_SIZE.x / 2, 0)
+		mur2 					= ObjectAbstract()
+		mur2.size.y 			= TERRAIN_SIZE.y
+		mur2.pos 				= vec2(self.terrain.pos.x + TERRAIN_SIZE.x / 2, 0)
 		self.objects.append(mur2)
 		self.ball 				= TournamentBall(self, t_party)
 		self.ball.pos 			= vec2((j * TERRAIN_SIZE.x) + (j * space_terrain), 0)
@@ -308,7 +311,7 @@ class pongTournament(Party):
 						# destroy and kick last player
 						self.end = True
 						temp_player1.in_game = False
-						self.game_event_message("You Win the tournament !", 4.0, 'boom', [temp_player1])
+						self.game_event_message("You win the tournament !", 4.0, 'boom', [temp_player1])
 						self.autPlayer.remove(temp_player1)
 						self.game_event_disconnect(temp_player1)
 		if self.end == False:
@@ -326,6 +329,50 @@ class pongTournament(Party):
 			player.paddle = None
 		self.__create_Matches__()
 		return True
+
+	def create_lobby(self):
+		for y in range(-2, 3):
+			for x in range(-2, 3):
+				dist = abs(x) + abs(y) # manhattan distance
+
+				width = 1 + dist
+				
+				terrain = ObjectTerrain()
+				terrain.size = vec2(width, width) * 20
+				terrain.pos = vec2(x * width * 22, y * width * 22)
+				terrain.color = '#ffe1ba'
+				self.objects.append(terrain)
+
+				pass
+			pass
+		
+		border_size = vec2(600, 600)
+
+		# Create Terrain borders
+		box = ObjectAbstract()
+		box.color = '#8b5c29'
+		box.shape = Shape.BOX
+		box.size = vec2(4, border_size.y)
+		box.pos = vec2(border_size.x / 2, 0)
+		self.objects.append(box)
+		box = ObjectAbstract()
+		box.color = '#8b5c29'
+		box.shape = Shape.BOX
+		box.size = vec2(4, border_size.y)
+		box.pos = vec2(-border_size.x / 2, 0)
+		self.objects.append(box)
+		box = ObjectAbstract()
+		box.color = '#8b5c29'
+		box.shape = Shape.BOX
+		box.size = vec2(border_size.x, 4)
+		box.pos = vec2(0, border_size.y / 2)
+		self.objects.append(box)
+		box = ObjectAbstract()
+		box.color = '#8b5c29'
+		box.shape = Shape.BOX
+		box.size = vec2(border_size.x, 4)
+		box.pos = vec2(0, -border_size.y / 2)
+		self.objects.append(box)
 
 
 	# check if player scored
@@ -370,23 +417,20 @@ class pongTournament(Party):
 					self.gameStarted = True
 					self.activateTimer = False
 				else:
-					self.timer += self.timerupdate
+					self.timer = time.time() + self.timerupdate
 					self.game_event_message("Player not pow of two", 3.0, 'error')
 					self.game_event_message("Game start in 10 second", 3.0, 'error')
 		# check if the game is started
 		if self.gameStarted == True:
 			if len(self.matchs) == 0:
 				self.remove_all_object()
-				self.game_event_message("TOURNAMENT BEGIN !", 3.0, 'success')
+				self.game_event_message("Tournament begin !", 3.0, 'success')
 				self.__create_Matches__()
 				if self.end == False:
 					self.autPlayer = self.playersT.copy()
 			return True
 
 	def	_game_join(self, player: Player) -> bool:
-		if self.activateTimer == False:
-			self.activateTimer = True
-			self.timer = time.time() + self.timerupdate
 
 		# check if the player is already in the game
 		temp_player = next((test for test in self.autPlayer if player.id == test.id), None)
@@ -396,14 +440,23 @@ class pongTournament(Party):
 			if temp_player == None:
 				return False
 
+		if self.activateTimer == False:
+			self.activateTimer = True
+			self.timer = time.time() + self.timerupdate
+
 		# check if the player is already in the game for create new player
 		if len(self.playersT) < self.max_players:
 			if temp_player == None:
 				temp_player = PlayerTournament(player)
-				temp_player.paddle = TournamentPaddle(temp_player.name)
+				temp_player.paddle = ObjectPaddle(temp_player.name)
+				temp_player.paddle.size = vec2(16, 16)
+				temp_player.paddle.pos = vec2(0, 0)
+				temp_player.paddle.controler = temp_player.name
 				self.objects.append(temp_player.paddle)
 				self.autPlayer.append(temp_player)
 			self.playersT.append(temp_player)
+			if len(self.playersT) == 1:
+				self.create_lobby()
 			self.game_event_message(f"Player '{temp_player.name}' joined the tournament", 1.0)
 			return True
 		return False

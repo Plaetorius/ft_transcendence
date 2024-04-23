@@ -1,3 +1,24 @@
+
+
+import {chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomInvitation, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader } from '/static/js/chat/chat.js';
+import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
+
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { loadGames, fetchPongCreation, pongJoinGame  } from '/static/js/pong/pong-game.js';
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
+import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
+import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick, getPlayerMatchHistory, loadMatchHistory, calculateTimeSince, getPlayerRank, loadPlayerRank} from '/static/js/users/profile.js';
+import { getUser } from '/static/js/users/search.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+
 const settingsPopup = document.getElementById("settings-popup");
 
 // Open Settings Popup
@@ -43,28 +64,48 @@ profilePictureInput.addEventListener('change', function() {
 
 // Handle form submission
 async function handleSettingsFormSubmit(e) {
-	e.preventDefault();
-	const formData = new FormData(settingsForm);
-	const profilePictureInput = document.getElementById('profile-picture-input');
-	if (profilePictureInput.files.length > 0) {
-		formData.append('profile_picture', profilePictureInput.files[0]);
-	}
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+    const profilePictureInput = document.getElementById('profile-picture-input');
 
-    const response = await fetch('/users/edit-user/', {
-        method: 'PATCH',
-        credentials: 'include',
-        body: formData,
-    });
+    // Check if file is larger than 4MB
+    if (profilePictureInput.files.length > 0) {
+        const file = profilePictureInput.files[0];
+        const maxSize = 4 * 1024 * 1024; // 4MB in bytes
 
-    if (!response.ok) {
-        response.json().then(err => handleErrors(err.error));
-        setupSettingsForm();
-        return ;
+        if (file.size > maxSize) {
+            notification('File is too large. Maximum size is 4MB.', 'cross', 'error');
+            return; // Stop the function if the file is too large
+        }
+        formData.append('profile_picture', file);
     }
-    const data = await response.json();
-    setupSettingsForm();
-    getProfile();
-    notification('Profile updated!', 'check', 'success');
+
+    try {
+        const response = await fetch('/users/edit-user/', {
+            method: 'PATCH',
+            credentials: 'include',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            if (response.headers.get('Content-Type').includes('application/json')) {
+                // Process JSON error response
+                const errorData = await response.json();
+                handleErrors(errorData.error || 'Failed to update profile');
+            } else {
+                // Handle non-JSON responses
+                const errorText = await response.text();
+                handleErrors(`Try a smaller file`);
+            }
+        } else {
+            const data = await response.json();
+            setupSettingsForm();
+            getProfile();
+            notification('Profile updated!', 'check', 'success');
+        }
+    } catch (error) {
+        notification('An error occurred while updating your profile.', 'cross', 'error');
+    }
 }
 
 settingsForm.addEventListener('submit', handleSettingsFormSubmit);
@@ -113,3 +154,5 @@ async function getAllInfo() {
 		notification(error, 'cross', 'error');
     }
 }
+
+export { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo };

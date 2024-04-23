@@ -1,27 +1,47 @@
-function getChatRoom(username) {
-	const cookie = getCookie('csrftoken');
-	fetch(`chat/room-id/${username}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		credentials: 'include',
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Username not found');
-		}
-		return response.json();
-	})
-	.then(data => {
-		enterRoom(data.room_id, username);
+import {appendAndRemoveNotification, notification } from '/static/js/chat/notification.js';
 
-	})
-	.catch(error => {
-		notification(error, 'cross', 'error');
-	});
+import { navigateToSection, setActiveSection, hide_popups, initializeListeners, removeListeners, loadUserProfile } from '/static/js/general/navigation.js';
+
+import { loadGames, fetchPongCreation, pongJoinGame  } from '/static/js/pong/pong-game.js';
+import { g_game_canister } from '/static/js/pong/pong-canister.js';
+
+import { getCookie, handleErrors, authenticated, oauth_register, checkAuthentication } from '/static/js/users/auth.js';
+import { block, unblock } from '/static/js/users/block.js';
+import { createActionButton, loadAndDisplayFriends, getFriends, addFriend, removeFriend, actualiseFriendsSection } from '/static/js/users/friends.js';
+import { getPodium, createPodium, createRankingList } from '/static/js/users/podium.js';
+import {profilePopup, getProfile, loadMyProfile, setOnline, openProfileHandler, updateProfilePopup, closeProfileHandle, handleChatClick, handleAddFriendClick, handleRemoveFriendClick, handleBlockClick, handleUnblockClick, handleGotoProfileClick, getPlayerMatchHistory, loadMatchHistory, calculateTimeSince, getPlayerRank, loadPlayerRank} from '/static/js/users/profile.js';
+import { getUser } from '/static/js/users/search.js';
+import { settingsPopup, handleSettingsFormSubmit, setupSettingsForm, getAllInfo } from '/static/js/users/settings.js';
+
+import { body, header, nav, main, pages, globals, base_url } from '/static/js/globals.js';
+import { blur_background, unblur_background, onPageReload } from '/static/js/index.js';
+
+async function getChatRoom(username) {
+    return fetch(`chat/room-id/${username}`, {  // Make sure to return the fetch promise
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'include',
+    })
+    .then(response => response.json().then(data => ({
+        status: response.status,
+        data
+    })))
+    .then(result => {
+        if (result.status >= 200 && result.status < 300) {
+            enterRoom(result.data.room_id, username);
+            return true;  // Resolve with true on success
+        } else {
+            throw new Error(result.data.error || 'An unknown error occurred');
+        }
+    })
+    .catch(error => {
+        notification(error.message, 'cross', 'error');
+        return false;  // Resolve with false on failure
+    });
 }
-
 let chatSocket = null;
 let blocked_list;
 
@@ -70,7 +90,8 @@ async function fetchBlockedUsers() {
 document.getElementById('clash-button').addEventListener('click', createClash);
 
 async function createClash() {
-    const clash_uid = await fetchPongCreation(); 
+    const clash_uid = await fetchPongCreation('versus');
+    pongJoinGame(clash_uid);
     if (chatSocket.readyState === WebSocket.OPEN) {
         chatSocket.send(JSON.stringify({
             message: `/clash ${clash_uid}`,
@@ -126,12 +147,12 @@ function createDomMessage(message, sender) {
     let messageContentDiv = document.createElement('div');
     let pElem = document.createElement('p');
 
-    // Applying classes based on whether the message is sent or received
-    messageDiv.classList.add('message', 'd-flex');
-    if (user.username === sender.username) {
-        // Message sent by the current user
-        messageDiv.classList.add('flex-row-reverse');
-    }
+	// Applying classes based on whether the message is sent or received
+	messageDiv.classList.add('message', 'd-flex');
+	if (globals.user.username === sender.username) {
+		// Message sent by the current user
+		messageDiv.classList.add('flex-row-reverse');
+	}
 
     imgElem.src = `${sender.profile_picture}`;
     imgElem.className = 'open-profile';
@@ -291,3 +312,6 @@ function clearChatHeader() {
         statusSpan.classList.remove("offline");
     }
 }
+
+
+export { chatPopup, getChatRoom, fetchRoomMessages, fetchBlockedUsers, createDomInvitation, createDomMessage, updateChatPopup, enterRoom, handleSendMessage, closeChatPopup, removeChatDisplayAndListeners, scrollToLastMessages, clearChatHeader };

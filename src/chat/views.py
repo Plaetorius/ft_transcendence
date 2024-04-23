@@ -27,24 +27,29 @@ class RoomId(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
-        # Get request user
         sender = request.user
-        # Try get username user
+
+        if sender.username == username:
+            return Response(
+                {
+                    'error': 'Cannot create or access a room with yourself'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             receiver = User.objects.get(username=username)
-        # Exception if doesn't exist
         except User.DoesNotExist:
-            # Return error message, no ChatRoom ID and NOT FOUND HTTP Response
             return Response(
-                {'error': 'User not found'},
+                {
+                    'error': 'User not found'
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        # Check if room exists
+
         chatrooms = ChatRoom.objects.filter(members=sender, is_direct_message=True).filter(members=receiver)
         if chatrooms.exists():
-            # Safety
             chatroom = chatrooms.first()
-            # Send the response with the ChatRoom ID and OK HTTP Response
             return Response(
                 {
                     'success': 'Room found',
@@ -52,16 +57,23 @@ class RoomId(APIView):
                 },
                 status=status.HTTP_200_OK,
             )
-        # Create the chatroom if doesn't exist
-        chatroom = ChatRoom.objects.create(is_direct_message=True)
-        chatroom.members.add(sender, receiver)
-        # Send the response with the ChatRoom ID and creation HTTP Response
-        return Response(
+
+        if sender != receiver:
+            chatroom = ChatRoom.objects.create(is_direct_message=True)
+            chatroom.members.add(sender, receiver)
+            return Response(
                 {
                     'success': 'Room created',
                     'room_id': chatroom.id,
                 },
                 status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                {
+                    'error': 'Cannot create a room with yourself'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 class RoomMessages(APIView):

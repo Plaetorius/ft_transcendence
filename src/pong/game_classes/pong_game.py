@@ -9,9 +9,39 @@ from random import uniform, randint
 
 import random, math, json, uuid, time
 
-
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
+from users.elo import ( game_result )
+from channels.layers import get_channel_layer
+from datetime import timedelta
+from users.models import MatchHistory, PlayerMatchHistory
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
+# get user from database
+@database_sync_to_async
+def get_user(field: str) -> User:
+	return User.objects.get(username=field)
+
+# send history to database
+def send_history( name1: str, name2: str, score, game_time, game_type: str):
+	user1 = async_to_sync(get_user)(name1)
+	user2 = async_to_sync(get_user)(name2)
+	actual_time = time.time() - game_time
+	duration_timedelta = timedelta(seconds=actual_time)
+	elo = [0, 0]
+	# Winner elo and score are always in first place
+	elo.sort(reverse=True)
+	score.sort(reverse=True)
+	match = MatchHistory.objects.create(game_type=game_type, duration=duration_timedelta)
+	pmh1 = PlayerMatchHistory.objects.create(player=user1, match=match, score=score[0], elo_change=elo[0])
+	pmh2 = PlayerMatchHistory.objects.create(player=user2, match=match, score=score[1], elo_change=elo[1])
+	match.save()
+	pmh1.save()
+	pmh2.save()
+
+
 
 	#####################
 	#  ENUM GAME STATE  #
@@ -71,6 +101,8 @@ class PongPaddle(ObjectAbstract):
 		self.size		= vec2(32, 23)
 		self.collide	= Collision.STOP
 		self.controler	= controler
+		self.camera['username'] = controler
+		self.camera['mode'] = 'third_person'
 		pass
 
 	def control(self, key_values):
@@ -104,7 +136,8 @@ class	PongParty(Party):
 		# Default party settings
 		self.name			= "1V1 Pong"
 		self.max_players	= 8
-		self.S_PER_UPDATE	= 1.0 / 20.0
+		self.S_PER_UPDATE	= 1.0 / 30.0
+		self.timer			= time.time()
 
 		# Set game to it's default state
 		self.reset_game()
@@ -139,6 +172,7 @@ class	PongParty(Party):
 	def create_game_world(self):
 		
 		# Remove all objects
+		self.timer = time.time()
 		self.obj_to_remove.extend(self.objects)
 		
 		# Create Terrain
@@ -169,7 +203,7 @@ class	PongParty(Party):
 		self.objects.append(self.in_game_ball)
 		
 
-		self.in_game_players = random.sample(self.players, 2)
+		self.in_game_players = random.sample(self.players, 2).copy()
 
 		# Create IN_GAME_PLAYERS
 		self.in_game_players[0].score = 0
@@ -204,6 +238,7 @@ class	PongParty(Party):
 				terrain = ObjectTerrain()
 				terrain.size = vec2(width, width) * 20
 				terrain.pos = vec2(x * width * 22, y * width * 22)
+				terrain.rot = width
 				terrain.color = '#ffe1ba'
 				self.objects.append(terrain)
 
@@ -255,7 +290,7 @@ class	PongParty(Party):
 		if (self.game_state == GameState.LOBBY):
 			self.next_state = GameState.SETTING_UP
 			self.create_game_lobby()
-		elif (self.game_state == GameState.SETTING_UP and len(self.players) < 2):
+		elif (self.game_state == GameState.SETTING_UP and (len(self.players) < 2 and len(self.in_game_players) < 2)):
 			self.next_state = GameState.LOBBY
 			self.state_timer = time.time() + 999999.0
 			self.game_event_message("Not enough players", 4.0, 'error')
@@ -272,9 +307,11 @@ class	PongParty(Party):
 			if (self.in_game_players[0].score >= self.SCORE_MAX or self.in_game_players[1].score >= self.SCORE_MAX):
 				player = self.in_game_players[0] if self.in_game_players[0].score >= self.SCORE_MAX else self.in_game_players[1]
 				list_of_non_players = [p for p in self.players if next((p2 for p2 in self.in_game_players if p2.id == p.id), None) == None]
+				looser = [p for p in self.in_game_players if p.id != player.id]
 				self.game_event_message(f"'{player.name.upper()}'  WON !", 6.0, 'boom', list_of_non_players)
 				self.game_event_message(f"YOU  WON !!!", 6.0, 'boom', [player])
-				self.game_event_message(f"Your opponent won...", 6.0, 'error', [p for p in self.in_game_players if p.id != player.id])
+				self.game_event_message(f"Your opponent won...", 6.0, 'error', looser)
+				send_history(player.name, looser[0].name, [player.score, looser[0].score], self.timer, "Unranked")
 				self.reset_game()
 				self.update_world_state()
 			else:
@@ -332,7 +369,7 @@ class	PongParty(Party):
 		# GAME IS IN LOBBY
 		if (self.game_state == GameState.LOBBY):
 			if (not (player.name in self.already_joined)):
-				self.already_joined.append(player.name)
+				self.already_joined = player.name
 				player.my_paddle = ObjectPaddle(player.name)
 				player.my_paddle.size = vec2(16, 16)
 				player.my_paddle.pos = vec2(0, 0)

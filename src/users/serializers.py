@@ -38,10 +38,15 @@ def sanitize_bio(value):
 def validate_image(file):
     valid_extensions = ['jpg', 'jpeg', 'png']
     extension = file.name.rsplit('.', 1)[1].lower()
+    filename = file.name.rsplit('/', 1)[-1]
+
+    if filename == "default.jpg":
+        raise ValidationError('The file name "default.jpg" is reserved and cannot be used.')
+
     if extension not in valid_extensions:
         raise ValidationError('Unsupported file extension.')
     
-    max_size = 4 * 1024 * 1024 # Max size 4MB
+    max_size = 4 * 1024 * 1024  # Max size 4MB
     if file.size > max_size:
         raise ValidationError('Image file too large ( > 4MB)')
 
@@ -180,6 +185,9 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
+        username = data.get('username')
+        if User.objects.filter(username=username).exists() or OAuthCred.objects.filter(user__username=username).exists():
+            raise serializers.ValidationError("This username is already in use with another account.")
         user = authenticate(username=data.get('username'), password=data.get('password'))
         if user and user.is_active:
             return user

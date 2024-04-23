@@ -62,14 +62,14 @@
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-	
+
 	position: fixed;
 	bottom: 0;
 	right: 0;
 
 	gap: 10px;
 
-	z-index: 9000;
+	z-index: 99000;
 }
 
 .notif-container.show:not(:first-child) {
@@ -77,8 +77,10 @@
 }
 
 .notif-container .notif-item {
+	user-select: none;
+
 	background-color: #f0f0f0;
-	
+
 	border-radius: 10px 0 0 10px;
 
 	margin-bottom: 5px;
@@ -99,16 +101,19 @@
 	font-size: 16px;
 	font-weight: 2;
 	line-height: 56px;
-	
+
 	text-decoration: none;
 	text-align: left;
 	text-shadow: #f0f0f0 1px 1px 1px;
 
 	padding-left: 15px;
 
-	white-space: nowrap; /* Prevent text from wrapping */
-	overflow: hidden; /* Hide overflow content */
-	text-overflow: clip; /* Clip overflow content */
+	white-space: nowrap;
+	/* Prevent text from wrapping */
+	overflow: hidden;
+	/* Hide overflow content */
+	text-overflow: clip;
+	/* Clip overflow content */
 
 	opacity: 0;
 	transform: translateX(300px);
@@ -124,7 +129,7 @@
 
 .notif-container .notif-item.boom {
 	background-image: url("../../backgrounds/vault_boy_boom_cropped.png");
-	
+
 }
 
 .notif-container .notif-item.success {
