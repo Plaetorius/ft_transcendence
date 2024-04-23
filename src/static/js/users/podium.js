@@ -28,12 +28,15 @@ function createPodium(users) {
         if (users[index]) {
             const container = document.getElementById(place);
             container.innerHTML = '';
+            const divBorder = document.createElement('div');
+            divBorder.className = 'border';
             const img = document.createElement('img');
             img.src = users[index].profile_picture_url ? users[index].profile_picture_url : '../media/profile_pictures/default.jpg';
             img.draggable = false;
             img.className = 'podium-profile open-profile';
             img.setAttribute('data-username', users[index].username);
-            container.appendChild(img);
+            divBorder.appendChild(img);
+            container.appendChild(divBorder);
             const username = document.createElement('span');
             username.className = 'podium-profile open-profile';
             username.setAttribute('data-username', users[index].username);
