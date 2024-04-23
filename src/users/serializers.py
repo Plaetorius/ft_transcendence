@@ -185,9 +185,6 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        username = data.get('username')
-        if OAuthCred.objects.filter(user__username=username).exists():
-            raise serializers.ValidationError("Your account is linked with an external service. Please use that service to log in.")
         user = authenticate(username=username, password=data.get('password'))
         if user is None:
             raise serializers.ValidationError("Incorrect username or password.")

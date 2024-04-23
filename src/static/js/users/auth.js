@@ -37,12 +37,7 @@ function getCookie(name) {
 }
 
 function handleErrors(data) {
-    let errorMessage = 'Error:\n';
-
-	for (const [key, value] of Object.entries(data)) {
-		errorMessage += value[0] + " ";
-	}
-	notification(errorMessage, 'cross', 'error');
+	notification(data['detail'], 'cross', 'error');
 }
 
 // Registration
