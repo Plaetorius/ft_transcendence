@@ -28,6 +28,7 @@ from .classes.party import Party
 from .game_classes.pong_game import PongParty
 from .game_classes.pong_tournament import pongTournament
 from .game_classes.pong_tournament_local import PongTournamentLocal
+from .game_classes.maze_game import Maze
 
 
 ##
@@ -58,6 +59,7 @@ class PartyManager():
 		self.channel_layer							= get_channel_layer()
 		self.create_party("bot", pongTournament())
 		self.create_party("todo", PongTournamentLocal(False)) #todo add camera and button to implement this shit
+		self.create_party("hehe", Maze())
 
 	def create_party(self, name: str, party_type = None) -> Party:
 		if party_type == None:
