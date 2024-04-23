@@ -49,6 +49,8 @@ async function loadHtmlElement(file_path) {
 
 
 async function fetchPongCreation(gamemode) {
+	gamemode.trim();
+	if (!gamemode) gamemode = 'tournament';
 	try {
 		const response = await fetch(`pong/create_party/${gamemode}`, {
 			method: 'GET',

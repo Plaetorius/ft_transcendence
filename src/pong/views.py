@@ -15,6 +15,8 @@ from .consumers import g_party_manager
 
 from .game_classes.pong_game import PongParty
 from .game_classes.pong_tournament import pongTournament
+from .game_classes.maze_game import Maze
+from .game_classes.pong_tournament_local import PongTournamentLocal
 
 
 class CreatePartyAPIView(APIView):
@@ -32,13 +34,13 @@ class CreatePartyAPIView(APIView):
 
 
 		if (gamemode == 'maze'):
-			party_mode = PongParty()		# TODO TODO TODO TODO TODO TODO
+			party_mode = Maze()		# TODO TODO TODO TODO TODO TODO
 		elif (gamemode == 'tournament'):
 			party_mode = pongTournament()
 		elif (gamemode == 'local_1v1'):		# TODO TODO TODO TODO TODO TODO
-			party_mode = pongTournament()
+			party_mode = PongTournamentLocal(False)
 		elif (gamemode == 'local_2v2'):
-			party_mode = pongTournament()
+			party_mode = PongTournamentLocal(True)
 		else:
 			gamemode = 'versus'
 			party_mode = PongParty()
