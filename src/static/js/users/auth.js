@@ -37,7 +37,9 @@ function getCookie(name) {
 }
 
 function handleErrors(data) {
-	notification(data['detail'], 'cross', 'error');
+	for (const [key, value] of Object.entries(data)) {
+		notification(value[0], 'cross', 'error');
+	}
 }
 
 // Registration
@@ -99,8 +101,11 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     })
 	.then(data => {
 		if (data) {
-			handleErrors(data);
-		}
+            if (data.detail)
+                notification(data.detail, 'cross', 'error');
+            if (data.non_field_errors)
+                notification(data.non_field_errors[0], 'cross', 'error');
+        }
 	});
 });
 

@@ -117,10 +117,9 @@ class UserLoginAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data
-            return create_token_response(user=user, status_code=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        return create_token_response(user=user, status_code=status.HTTP_200_OK)
 
 class UserSearchAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer

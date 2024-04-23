@@ -185,10 +185,10 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        user = authenticate(username=username, password=data.get('password'))
-        if user is None:
-            raise serializers.ValidationError("Incorrect username or password.")
-        return user
+        user = authenticate(username=data.get('username'), password=data.get('password'))
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials")
 
 class FriendshipDetailSerializer(serializers.ModelSerializer):
     friend_details = serializers.SerializerMethodField()
