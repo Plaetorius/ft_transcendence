@@ -77,7 +77,7 @@ function setOnline() {
 
 	notificationSocket.onmessage = (e) => {
 		const data = JSON.parse(e.data);
-		console.log("DATA FOR GLOBAL MESSAGE :");
+		console.log("DATA FOR GLOBAL MESSAGE :"); // TODO remove
 		console.log(data);
 		notification(data.message, data.path_to_icon, data.context);
 	};
@@ -106,6 +106,7 @@ async function openProfileHandler(event) {
 		try {
 			// Await the getUser promise and then log the data
 			const userProfile = await getUser(targetElement.dataset.username);
+			getPlayerRank(targetElement.dataset.username, 'profile-popup');
 			updateProfilePopup(userProfile);
 			profilePopup.classList.remove("d-none");
 			profilePopup.classList.add("d-block");
@@ -251,6 +252,7 @@ async function handleGotoProfileClick(username) {
 		notification("User not found!", "cross", "error");
 		return;
 	}
+	getPlayerRank(username, 'user');
 	document.getElementById("user-picture").src = visited_user.profile_picture_url;
 	document.getElementById("user-username").innerHTML = `<span class="online-status online"></span>${visited_user.username}`;
 	document.getElementById("user-elo").innerHTML = `<span>Elo: </span>${visited_user.elo}`;
@@ -401,8 +403,8 @@ function loadPlayerRank(stats, containerId) {
     if (loadingRank) return;
     loadingRank = true;
 
-    document.getElementById(`${containerId}-rank`).innerHTML = `<span>Rank: </span>#${stats.rank}`;
-    document.getElementById(`${containerId}-winrate`).innerHTML = `<span>Winrate: </span>${Math.round(stats.win_rate)}%`;
+    document.getElementById(`${containerId}-rank`).innerHTML = `<span class="attribute">Rank: </span>#${stats.rank}`;
+    document.getElementById(`${containerId}-winrate`).innerHTML = `<span class="attribute">Winrate: </span>${Math.round(stats.win_rate)}%`;
     loadingRank = false;
 
 }
